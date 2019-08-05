@@ -1,0 +1,491 @@
+swagger: '2.0'
+info:
+  description: |
+    API de gestion des livres de notre bibliotheque
+  version: 1.0.0
+  title: Bibliotheque livres
+tags:
+- name: livre
+  description: Tous sur les livres !
+- name: reservation
+  description: Gérer les réservations
+
+paths:
+  /livre:
+    get:
+      tags:
+      - livre
+      summary: Lister des livres par le nom
+      description: Plusieurs valeurs peuvent être séparées par une virgule
+      operationId: findlivresByNom
+      produces:
+      - application/json
+      parameters:
+      - name: status
+        in: query
+        description: Valeurs qui ont besoin d'être considérée pour le filtre
+        required: true
+        type: array
+        items:
+          type: string
+          enum:
+          - available
+          - pending
+          - sold
+          default: available
+        collectionFormat: multi
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Livre'
+        400:
+          description: Invalid status value
+    post:
+      tags:
+      - livre
+      summary: Ajouter un nouveau livre
+      operationId: addLivre
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Un objet Livre doit être envoyé pour être ajouté
+        required: true
+        schema:
+          $ref: '#/definitions/Livre'
+      responses:
+        405:
+          description: Invalid input
+  /livre/{livreId}:
+    get:
+      tags:
+      - livre
+      summary: Trouve un livre par son ID
+      description: Trouve un livre par son ID
+      operationId: getlivreById
+      produces:
+      - application/json
+      parameters:
+      - name: livreId
+        in: path
+        description: ID of livre to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Livre'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: livre not found
+    put:
+      tags:
+      - livre
+      summary: Mettre à jour un livre avec un form data
+      operationId: updatelivreWithForm
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: livreId
+        in: path
+        description: ID du livre qui doit être mis à jour
+        required: true
+        type: integer
+        format: int64
+      - name: name
+        in: formData
+        description: Mettre à jour le nom du livre
+        required: false
+        type: string
+      - name: auteur
+        in: formData
+        description: Mettre à jour l'auteur d'un livre
+        required: false
+        type: string
+      - name: quantite
+        in: formData
+        description: Mettre à jour la quantité d'un livre
+        required: false
+        type: integer
+      responses:
+        405:
+          description: Invalid input
+    delete:
+      tags:
+      - livre
+      summary: Supprimer un livre
+      operationId: deletelivre
+      produces:
+      - application/json
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        type: string
+      - name: livreId
+        in: path
+        description: ID du livre à supprimer
+        required: true
+        type: integer
+        format: int64
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: livre not found
+          
+  /reservation:
+    get:
+      tags:
+      - reservation
+      summary: Trouver des réservations
+      description: Plusieurs valeurs peuvent être séparées par une virgule
+      operationId: findreservationsByNom
+      produces:
+      - application/json
+      parameters:
+      - name: status
+        in: query
+        description: Status values that need to be considered for filter
+        required: true
+        type: array
+        items:
+          type: string
+          enum:
+          - available
+          - pending
+          - sold
+          default: available
+        collectionFormat: multi
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Reservation'
+        400:
+          description: Invalid status value
+    post:
+      tags:
+      - reservation
+      summary: Ajouter une nouvelle réservation
+      operationId: addReservation
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Un objet Reservation doit être envoyé pour être ajouté
+        required: true
+        schema:
+          $ref: '#/definitions/Reservation'
+      responses:
+        405:
+          description: Invalid input
+  /reservation/{reservationId}:
+    get:
+      tags:
+      - reservation
+      summary: Trouve une réservation par son ID
+      description: Trouve une réservation par son ID
+      operationId: getReservationById
+      produces:
+      - application/json
+      parameters:
+      - name: reservationId
+        in: path
+        description: ID of livre to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Reservation'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: livre not found
+    delete:
+      tags:
+      - reservation
+      summary: Supprimer un livre
+      operationId: deleteReservation
+      produces:
+      - application/json
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        type: string
+      - name: reservationId
+        in: path
+        description: ID du livre à supprimer
+        required: true
+        type: integer
+        format: int64
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: livre not found
+  /reservation/{reservationId}/renew:
+    put:
+      tags:
+      - reservation
+      summary: Mettre à jour un livre avec un form data
+      operationId: updateReservationWithForm
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: reservationId
+        in: path
+        description: ID du livre qui doit être mis à jour
+        required: true
+        type: integer
+        format: int64
+      - name: name
+        in: formData
+        description: Mettre à jour le nom du livre
+        required: false
+        type: string
+      - name: auteur
+        in: formData
+        description: Mettre à jour l'auteur d'un livre
+        required: false
+        type: string
+      - name: quantite
+        in: formData
+        description: Mettre à jour la quantité d'un livre
+        required: false
+        type: integer
+      responses:
+        405:
+          description: Invalid input
+  /utilisateur:
+    get:
+      tags:
+      - utilisateur
+      summary: Trouver des réservations
+      description: Plusieurs valeurs peuvent être séparées par une virgule
+      operationId: findUtilisateursByNom
+      produces:
+      - application/json
+      parameters:
+      - name: status
+        in: query
+        description: Status values that need to be considered for filter
+        required: true
+        type: array
+        items:
+          type: string
+          enum:
+          - available
+          - pending
+          - sold
+          default: available
+        collectionFormat: multi
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Utilisateur'
+        400:
+          description: Invalid status value
+    post:
+      tags:
+      - utilisateur
+      summary: Ajouter une nouvelle réservation
+      operationId: addUtilisateur
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Un objet Reservation doit être envoyé pour être ajouté
+        required: true
+        schema:
+          $ref: '#/definitions/Utilisateur'
+      responses:
+        405:
+          description: Invalid input
+  /utilisateur/{utilisateurId}:
+    get:
+      tags:
+      - utilisateur
+      summary: Trouve une réservation par son ID
+      description: Trouve une réservation par son ID
+      operationId: getUtilisateurById
+      produces:
+      - application/json
+      parameters:
+      - name: utilisateurId
+        in: path
+        description: ID of livre to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Utilisateur'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: livre not found
+    put:
+      tags:
+      - utilisateur
+      summary: Mettre à jour un livre avec un form data
+      operationId: updateUtilisateurWithForm
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: utilisateurId
+        in: path
+        description: ID du livre qui doit être mis à jour
+        required: true
+        type: integer
+        format: int64
+      - name: name
+        in: formData
+        description: Mettre à jour le nom du livre
+        required: false
+        type: string
+      - name: auteur
+        in: formData
+        description: Mettre à jour l'auteur d'un livre
+        required: false
+        type: string
+      - name: quantite
+        in: formData
+        description: Mettre à jour la quantité d'un livre
+        required: false
+        type: integer
+      responses:
+        405:
+          description: Invalid input
+    delete:
+      tags:
+      - utilisateur
+      summary: Supprimer un livre
+      operationId: deleteUtilisateur
+      produces:
+      - application/json
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        type: string
+      - name: utilisateurId
+        in: path
+        description: ID du livre à supprimer
+        required: true
+        type: integer
+        format: int64
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: livre not found
+definitions:
+  Livre:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      nom:
+        type: string
+        example: Harry Potter
+      auteur:
+        type: string
+        example: J. K. Rowling
+      quantite:
+        type: integer
+        example: 52
+    xml:
+      name: Livre
+      
+  Reservation:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 9
+      livreId:
+        type: integer
+        format: int64
+        example: 62
+      dateDebut:
+        type: string
+        format: date-time
+        example: '2019-07-11T23:58:02.000Z'
+      dateFin:
+        type: string
+        format: date-time
+        example: '2019-08-11T23:58:02.000Z'
+    xml:
+      name: Reservation
+  Utilisateur:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 9
+      nomDeCompte:
+        type: string
+        example: 'SuperFab24'
+      motDePasse:
+        type: string
+        example: 'azerty123EstUnMauvaisMDP'
+      prenom:
+        type: string
+        example: 'Fabien'
+      nom:
+        type: string
+        example: 'Joseph'
+      dateCreation:
+        type: string
+        format: date-time
+        example: '2019-07-11T23:58:02.000Z'
+    xml:
+      name: Reservation
+  
+  
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+# Added by API Auto Mocking Plugin
+schemes:
+ - https
+ - http
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /fab24/bibliotheque-livres/1.0.0

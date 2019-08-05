@@ -1,0 +1,17 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html class="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="fragments/head.html :: head">
+</head>
+<body>
+<section class="hero is-large is-fullheight-with-navbar">
+    <div th:replace="fragments/header.html :: header"></div>
+    <div class="hero-body hero-body-less-padding">
+        <div class="container">
+            <h1 th:text="${livre.getNom()}"></h1>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/footer.html :: footer"></div>
+</body>
+</html>
