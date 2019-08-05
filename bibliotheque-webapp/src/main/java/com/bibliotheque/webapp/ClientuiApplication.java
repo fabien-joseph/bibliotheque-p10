@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.io.IOException;
 
 @SpringBootApplication
-public class WebappApplication {
+public class ClientuiApplication {
 
 	public static void main(String[] args) throws IOException {
 
@@ -34,7 +34,7 @@ public class WebappApplication {
 		System.out.println(service.getUtilisateurById(0L).execute().body());
 
 		 */
-		SpringApplication.run(WebappApplication.class, args);
+		SpringApplication.run(ClientuiApplication.class, args);
 	}
 
 }

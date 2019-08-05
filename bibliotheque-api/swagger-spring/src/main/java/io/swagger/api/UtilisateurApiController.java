@@ -63,6 +63,7 @@ public class UtilisateurApiController implements UtilisateurApi {
 
     public ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("utilisateurId") Long utilisateurId) {
         String accept = request.getHeader("Accept");
+        System.out.println("Entrée");
         if (accept != null && accept.contains("application/json")) {
             try {
                 return new ResponseEntity<Utilisateur>(objectMapper.readValue("{  \"motDePasse\" : \"azerty123EstUnMauvaisMDP\",  \"dateCreation\" : \"2019-07-11T23:58:02.000Z\",  \"nomDeCompte\" : \"SuperFab24\",  \"id\" : 9,  \"prenom\" : \"Fabien\",  \"nom\" : \"Joseph\"}", Utilisateur.class), HttpStatus.NOT_IMPLEMENTED);

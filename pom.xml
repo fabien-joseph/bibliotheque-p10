@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>bibliotheque-webapp</module>
         <module>bibliotheque-api</module>
+        <module>bibliotheque-webapp</module>
     </modules>
 
     <name>bibliotheque</name>
