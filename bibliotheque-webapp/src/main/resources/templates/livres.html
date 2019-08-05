@@ -1,0 +1,56 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html class="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="fragments/head.html :: head">
+</head>
+<body>
+<section class="hero is-large is-fullheight-with-navbar">
+    <div th:replace="fragments/header.html :: header"></div>
+    <div class="hero-body hero-body-less-padding">
+        <div class="container">
+            <div class="field search has-addons has-addons-centered">
+                <p class="control">
+                <span class="select is-medium">
+                    <label>
+<select>
+    <option th:value="''" selected disabled>Genre</option>
+    <option>Aucun</option>
+    <option>Biographie</option>
+    <option>Conte</option>
+    <option>Épopée</option>
+    <option>Fantastique</option>
+    <option>Horreur</option>
+    <option>Nouvelle</option>
+    <option>Roman</option>
+    <option>Science fiction</option>
+</select>
+</label>
+                </span>
+                </p>
+                <p class="control ">
+                    <label>
+                        <input class="input is-medium" type="text" placeholder="ex: Harry Potter">
+                    </label>
+                </p>
+                <p class="control is-medium">
+                    <a class="button is-medium background-dark-blue">
+                        Rechercher
+                    </a>
+                </p>
+            </div>
+
+            <div class="columns is-multiline">
+                <!--/*@thymesVar id="livres" type="List<com.bibliotheque.webapp.model.FakeLivre>"*/-->
+                <div class="column is-one-quarter" th:each="livre:${livres}">
+                    <a th:href="@{/livres/{id} (id=${livre.getId()})}">
+                        <figure class="image is-3by4">
+                            <img th:src="${livre.getImgUrl()}" th:alt="${livre.getNom()}"></figure>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/footer.html :: footer"></div>
+</body>
+</html>
