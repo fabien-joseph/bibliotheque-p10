@@ -1,0 +1,50 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html class="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="fragments/head.html :: head">
+</head>
+<body>
+<section class="hero is-fullheight">
+    <div th:replace="fragments/header.html :: header"></div>
+    <div class="hero-body is-white">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+                    <form action="" class="box">
+                        <div class="field">
+                            <label class="label">Email</label>
+                            <div class="control has-icons-left">
+                                <label>
+                                    <input type="email" placeholder="ex. bobsmith@gmail.com" class="input" required>
+                                </label>
+                                <span class="icon is-small is-left">
+                  <i class="fa fa-envelope"></i>
+                </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Password</label>
+                            <div class="control has-icons-left">
+                                <label>
+                                    <input type="password" placeholder="*******" class="input" required>
+                                </label>
+                                <span class="icon is-small is-left">
+                  <i class="fa fa-lock"></i>
+                </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <a href="/inscription" class="has-text-link">Vous n'êtes pas inscrit ? Cliquez ici</a>
+                        </div>
+                        <div class="field">
+                            <button class="button backgr">
+                                Se connecter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

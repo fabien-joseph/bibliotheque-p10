@@ -1,0 +1,33 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html class="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="fragments/head.html :: head">
+</head>
+<body>
+<section class="hero custom-background is-large">
+    <div th:replace="fragments/header.html :: header"></div>
+    <div class="hero-body hero-body-less-padding">
+        <div class="container">
+            <div class="columns is-vcentered">
+
+                <!-- Landing page Title -->
+                <div class="column is-5 is-width-45 landing-caption">
+                    <h1 class="title is-1 is-light is-semibold is-spaced main-title">Contact</h1>
+                    <h2 class="subtitle is-6 is-light is-thin">Ouvert du lundi au samedi de 10h à 18h</h2>
+                    <h2 class="subtitle is-6 is-light is-thin">Numéro : <a class="has-text-info"
+                                                                           href="tel:+330000000000">+33 00 00 00 00
+                        00</a></h2>
+                    <h2 class="subtitle is-6 is-light is-thin">Adresse : <a class="has-text-info"
+                            href="https://www.google.com/maps?q=Le+louvre&um=1&ie=UTF-8&sa=X&ved=0ahUKEwiLg5H4397jAhX9DGMBHQiRA38Q_AUIESgB"
+                            target="_blank">Rue de Rivoli, 75001 Paris </a></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/bandeInfos.html :: bande-info"></div>
+
+<div th:replace="fragments/footer.html :: footer"></div>
+
+</body>
+</html>

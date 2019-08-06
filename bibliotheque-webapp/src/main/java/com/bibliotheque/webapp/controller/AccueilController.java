@@ -22,12 +22,7 @@ public class AccueilController {
         return "accueil";
     }
 
-    @GetMapping("/test")
-    public String test(Model model) {
-        return "test";
-    }
-
-    @GetMapping("/livres")
+    @GetMapping("livres")
     public String livres(Model model) {
         model.addAttribute("livres", fakeLivres.livres);
         return "livres";
@@ -38,4 +33,26 @@ public class AccueilController {
         model.addAttribute("livre", fakeLivres.livres.get((Math.toIntExact(id) - 1)));
         return "livre";
     }
+
+    @GetMapping("inscription")
+    public String inscription() {
+        return "inscription";
+    }
+
+    @GetMapping("reservation")
+    public String reservation() {
+        return "reservation";
+    }
+
+    @GetMapping("contact")
+    public String contact() {
+        return "contact";
+    }
+
+    @GetMapping("connexion")
+    public String connexion() {
+        return "connexion";
+    }
+
+
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html class="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="fragments/head.html :: head">
+</head>
+<body>
+<section class="hero custom-background is-large">
+    <div th:replace="fragments/header.html :: header"></div>
+    <div class="hero-body hero-body-less-padding">
+        <div class="container">
+            <div class="columns is-vcentered">
+
+                <!-- Landing page Title -->
+                <div class="column is-5 is-width-45 landing-caption">
+                    <h1 class="title is-1 is-light is-semibold is-spaced main-title">Comment vous inscrire ?</h1>
+                    <h2 class="subtitle is-6 is-light is-thin">Pour vous inscrire il faut vous rendre à la réception de
+                    la biliothèque. Une bibliothécaire s'occupera de vous inscrire.</h2>
+                    <!-- CTA -->
+                    <p>
+                        <a href="/contact" class="button k-button k-primary raised has-gradient is-fat is-bold">
+                            <span class="text">Contact</span>
+                            <span class="front-gradient"></span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/bandeInfos.html :: bande-info"></div>
+
+<div th:replace="fragments/footer.html :: footer"></div>
+
+</body>
+</html>
