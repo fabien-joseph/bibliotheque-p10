@@ -3,7 +3,7 @@ info:
   description: |
     API de gestion des livres de notre bibliotheque
   version: 1.0.0
-  title: Bibliotheque livres
+  title: Bibliotheque
 tags:
 - name: livre
   description: Tous sur les livres !
@@ -15,25 +15,18 @@ paths:
     get:
       tags:
       - livre
-      summary: Lister des livres par le nom
+      summary: Lister des livres par critères
       description: Plusieurs valeurs peuvent être séparées par une virgule
-      operationId: findlivresByNom
+      operationId: findlivres
       produces:
       - application/json
       parameters:
-      - name: status
-        in: query
-        description: Valeurs qui ont besoin d'être considérée pour le filtre
+      - name: livreId
+        in: path
+        description: ID of livre to return
         required: true
-        type: array
-        items:
-          type: string
-          enum:
-          - available
-          - pending
-          - sold
-          default: available
-        collectionFormat: multi
+        type: integer
+        format: int64
       responses:
         200:
           description: successful operation
@@ -425,9 +418,29 @@ definitions:
       auteur:
         type: string
         example: J. K. Rowling
+      resume:
+        type: string 
+        example: Un jeune sorcier part à l'aventure dans un monde magique
+      imgId:
+        type: string
+        example: Un jeune sorcier part à l'aventure dans un monde magique
+      annee:
+        type: integer
+        example: 2007
       quantite:
         type: integer
         example: 52
+      genre:
+        type: string
+        enum:
+          - biographie
+          - conte
+          - epopee
+          - fantastique
+          - horreur
+          - nouvelle
+          - roman
+          - scienceFiction
     xml:
       name: Livre
       
@@ -488,4 +501,6 @@ schemes:
  - http
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
+# basePath: /fab24/bibliotheque/1.0.0
+# Added by API Auto Mocking Plugin
 basePath: /fab24/bibliotheque-livres/1.0.0

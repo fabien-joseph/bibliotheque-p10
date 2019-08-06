@@ -38,7 +38,7 @@
                 <div class="column is-one-quarter" th:each="livre:${livres}">
                     <a th:href="@{/livres/{id} (id=${livre.getId()})}">
                         <figure class="image is-3by4">
-                            <img th:src="${livre.getImgUrl()}" th:alt="${livre.getNom()}"></figure>
+                            <img th:src="${livre.getImgId()}" th:alt="${livre.getNom()}"></figure>
                     </a>
                 </div>
             </div>

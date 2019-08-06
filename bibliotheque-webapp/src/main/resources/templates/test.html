@@ -1,45 +1,36 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html class="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head th:replace="fragments/head.html :: head">
-    <meta charset="utf-8">
-    <title>AOS - Animate on scroll library</title>
-    <meta name="viewport" content="width=device-width">
-
-    <![endif]-->
 </head>
 <body>
-<div id="transcroller-body" class="aos-all">
-    <div class="aos-item" data-aos="fade-up">
-        <div class="has-text-centered"><a href="/livres"><i class="fas fa-book fa-10x fa-dark-blue"></i>
-            <h1 class="title subtitle-service is-uppercase has-text-info tracking-wide font-normal">
-                Nos livres</h1></a>
-            <div class="is-size-5">Visitez notre catalogue de livres
+<section class="hero is-large">
+    <div th:replace="fragments/header.html :: header"></div>
+    <div class="hero-body hero-body-less-padding">
+        <div class="container">
+            <div class="columns">
+                <!-- Hero image -->
+                <div class="column is-5 is-hidden-touch">
+                    <figure class="image is-3by4">
+                        <img th:src="'https://images-na.ssl-images-amazon.com/images/I/81OdLM-ZyuL.jpg'"></figure>
+                </div>
+                <!-- Landing page Title -->
+                <div class="column has-padding-top-2rem is-7 has-text-black">
+                    <h1 class="title is-1 is-semibold is-spaced main-title">Harry Potter et la chambre des secrets</h1>
+                    <h2 class="subtitle is-6 is-thin">J.K Rowlin, 1998</h2>
+                    <!-- CTA -->
+                    <p>
+                        <a href="#" class="button k-button k-primary raised has-gradient is-fat is-bold">
+                            <span class="text">S'inscrire</span>
+                            <span class="front-gradient"></span>
+                        </a>
+                    </p>
+
+                </div>
             </div>
         </div>
     </div>
-    <div class="aos-item" data-aos="zoom-out-up">
-        <div class="aos-item__inner"><h3>23</h3></div>
-    </div>
-</div>
+</section>
 
-<script src="js/aos.js"></script>
-<script>
-    AOS.init({
-        easing: 'ease-in-out-sine'
-    });
-</script>
-
-<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>
-<script>
-  requirejs.config({
-      baseUrl: '../dist',
-  });
-
-  require(['aos'], function(AOS){
-      AOS.init({
-          easing: 'ease-in-out-sine'
-      });
-  });
-</script> -->
+<div th:replace="fragments/footer.html :: footer"></div>
 </body>
 </html>

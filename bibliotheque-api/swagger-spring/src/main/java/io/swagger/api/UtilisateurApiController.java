@@ -80,5 +80,4 @@ public class UtilisateurApiController implements UtilisateurApi {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 }

@@ -4,27 +4,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.bibliotheque.api</groupId>
-  <artifactId>bibliotheque-api</artifactId>
+  <groupId>com.bibliotheque.api.model</groupId>
+  <artifactId>bibliotheque-api-model</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
 
-  <name>bibliotheque-api</name>
+  <name>bibliotheque-api-model</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
   <parent>
-    <artifactId>bibliotheque</artifactId>
-    <groupId>com.bibliotheque</groupId>
+    <artifactId>bibliotheque-api</artifactId>
+    <groupId>com.bibliotheque.api</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-
-  <modules>
-    <module>swagger-spring</module>
-    <module>bibliotheque-api-consumer</module>
-    <module>bibliotheque-api-model</module>
-    <module>bibliotheque-api-business</module>
-  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,6 +25,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

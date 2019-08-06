@@ -3,11 +3,34 @@
 <head th:replace="fragments/head.html :: head">
 </head>
 <body>
-<section class="hero is-large is-fullheight-with-navbar">
+<section class="hero is-large">
     <div th:replace="fragments/header.html :: header"></div>
     <div class="hero-body hero-body-less-padding">
         <div class="container">
-            <h1 th:text="${livre.getNom()}"></h1>
+            <div class="columns">
+                <!-- Hero image -->
+                <div class="column is-5 is-hidden-touch">
+                    <figure class="image is-3by4">
+                        <img th:src="${livre.getImgId()}"></figure>
+                </div>
+                <!-- Landing page Title -->
+                <div class="column has-padding-top-2rem is-7 has-text-black">
+                    <h1 class="title is-1 is-semibold is-spaced main-title" th:text="${livre.getNom()}"></h1>
+                    <h2 class="subtitle is-4 is-thin"
+                        th:text="${livre.getAuteur()} + ', ' + ${livre.getAnnee()} + ', ' + ${livre.getGenre()}"></h2>
+                    <!-- CTA -->
+                    <h2 class="subtitle is-8 is-thin">Livres restants : 9</h2>
+                    <p>
+                        <a href="#" class="button is-rounded is-large custom-background has-text-white">
+                            <span class="text">Réserver</span>
+                            <span class="front-gradient"></span>
+                        </a>
+                    </p>
+                    <h2 class="subtitle has-padding-top-2rem is-6 is-thin"
+                        th:text="${livre.getResume()}"></h2>
+
+                </div>
+            </div>
         </div>
     </div>
 </section>

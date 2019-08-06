@@ -3,7 +3,7 @@
 <head th:replace="fragments/head.html :: head">
 </head>
 <body>
-<section class="hero home-hero custom-background is-large">
+<section class="hero custom-background is-large">
     <div th:replace="fragments/header.html :: header"></div>
     <div class="hero-body hero-body-less-padding">
         <div class="container">
@@ -12,12 +12,12 @@
                 <!-- Landing page Title -->
                 <div class="column is-5 landing-caption">
                     <h1 class="title is-1 is-light is-semibold is-spaced main-title">Votre bibliothèque préférée !</h1>
-                    <h2 class="subtitle is-6 is-light is-thin">Inscrivez-vous puis connectez-vous pour bénéficier de
+                    <h2 class="subtitle is-6 is-light is-thin">Connectez-vous pour bénéficier de
                         l'entièreté de nos services.</h2>
                     <!-- CTA -->
                     <p>
                         <a href="#" class="button k-button k-primary raised has-gradient is-fat is-bold">
-                            <span class="text">S'inscrire</span>
+                            <span class="text">Se connecter</span>
                             <span class="front-gradient"></span>
                         </a>
                     </p>
@@ -78,11 +78,5 @@
 
 <div th:replace="fragments/footer.html :: footer"></div>
 
-<script src="js/aos.js"></script>
-<script>
-    AOS.init({
-        easing: 'ease-in-out-sine'
-    });
-</script>
 </body>
 </html>
