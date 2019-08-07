@@ -31,7 +31,7 @@ public class Livre {
     private Integer quantite;
 
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "livre", cascade = CascadeType.REMOVE)
     List<Reservation> reservations = new ArrayList<>();
 
     /**

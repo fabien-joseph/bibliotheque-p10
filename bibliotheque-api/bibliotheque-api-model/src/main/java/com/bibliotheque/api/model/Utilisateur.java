@@ -31,6 +31,6 @@ public class Utilisateur {
     private OffsetDateTime dateCreation;
 
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.REMOVE)
     private List<Reservation> reservations = new ArrayList<>();
 }

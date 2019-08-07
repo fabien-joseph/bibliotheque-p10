@@ -9,6 +9,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springfox-version>2.7.0</springfox-version>
+        <project-version>1.0-SNAPSHOT</project-version>
     </properties>
     <parent>
         <artifactId>bibliotheque-api</artifactId>
@@ -32,6 +33,26 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>com.bibliotheque.api.business</groupId>
+            <artifactId>bibliotheque-api-business</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bibliotheque.api.model</groupId>
+            <artifactId>bibliotheque-api-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bibliotheque.api.consumer</groupId>
+            <artifactId>bibliotheque-api-consumer</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -57,6 +78,14 @@
             <artifactId>jackson-datatype-threetenbp</artifactId>
             <version>2.6.4</version>
         </dependency>
+
+    <!-- DB -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
+        </dependency>
+
     <!-- Bean Validation API support -->
         <dependency>
             <groupId>javax.validation</groupId>
