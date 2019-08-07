@@ -2,32 +2,42 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="bibliotheque-webapp" />
+        <module name="bibliotheque-api-business" />
+        <module name="bibliotheque-api-consumer" />
+        <module name="bibliotheque-api-model" />
         <module name="swagger-spring" />
+        <module name="bibliotheque-webapp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bibliotheque-api" target="1.7" />
+      <module name="bibliotheque-api-business" target="1.7" />
       <module name="bibliotheque-business" target="1.7" />
       <module name="bibliotheque-consumer" target="1.7" />
       <module name="bibliotheque-model" target="1.7" />
       <module name="bibliotheque-webapp" target="8" />
       <module name="bibliothequeapi" target="1.7" />
+      <module name="bibliothequeapibusiness" target="1.7" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="bibliotheque" options="-parameters" />
       <module name="bibliotheque-api" options="-parameters" />
+      <module name="bibliotheque-api-business" options="-parameters" />
+      <module name="bibliotheque-api-consumer" options="-parameters" />
+      <module name="bibliotheque-api-model" options="-parameters" />
       <module name="bibliotheque-business" options="-parameters" />
       <module name="bibliotheque-consumer" options="-parameters" />
       <module name="bibliotheque-model" options="-parameters" />
       <module name="bibliotheque-webapp" options="-parameters" />
       <module name="bibliothequeapi" options="-parameters" />
+      <module name="bibliothequeapibusiness" options="-parameters" />
       <module name="swagger-spring" options="-parameters" />
     </option>
   </component>

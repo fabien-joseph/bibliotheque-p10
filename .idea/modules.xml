@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api.iml" filepath="$PROJECT_DIR$/bibliotheque-api/bibliotheque-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-business/bibliotheque-api-business.iml" filepath="$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-business/bibliotheque-api-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/bibliotheque-webapp/bibliotheque-webapp.iml" filepath="$PROJECT_DIR$/bibliotheque-webapp/bibliotheque-webapp.iml" />
     </modules>
   </component>

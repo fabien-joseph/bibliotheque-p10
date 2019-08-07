@@ -111,9 +111,9 @@ body {
 }
 
 @media screen and (min-width: 769px), print {
-    .column.is-5.is-width-45, .column.is-5-tablet {
+    .column.is-5.is-width-45 {
         flex: none;
-        width: 45%;
+        width: 100%;
     }
 }
 
