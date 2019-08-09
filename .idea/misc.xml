@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/bibliotheque-webapp" />
-  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/bibliotheque-api/swagger-api/pom.xml" />
-        <option value="$PROJECT_DIR$/../projet7/bibliotheque/clientui/pom.xml" />
-        <option value="$PROJECT_DIR$/clientui/pom.xml" />
+        <option value="$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-test/target/maven-archiver/pom.properties" />
+        <option value="$PROJECT_DIR$/bibliotheque-webapp/target/generated-sources/swagger/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-business/pom.xml" />
-        <option value="$PROJECT_DIR$/bibliotheque-api/pom.xml" />
-        <option value="$PROJECT_DIR$/bibliotheque-business/pom.xml" />
-        <option value="$PROJECT_DIR$/bibliotheque-consumer/pom.xml" />
-        <option value="$PROJECT_DIR$/bibliotheque-model/pom.xml" />
-        <option value="$PROJECT_DIR$/bibliotheque-webapp/pom.xml" />
+        <option value="$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-test/pom.xml" />
       </set>
     </option>
   </component>

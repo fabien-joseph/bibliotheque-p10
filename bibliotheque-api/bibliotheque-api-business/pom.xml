@@ -8,23 +8,37 @@
   <artifactId>bibliotheque-api-business</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>bibliotheque-api-business</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
-
   <parent>
     <artifactId>bibliotheque-api</artifactId>
     <groupId>com.bibliotheque.api</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
+  <name>bibliotheque-api-business</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.bibliotheque.api.consumer</groupId>
+      <artifactId>bibliotheque-api-consumer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.bibliotheque.api.model</groupId>
+      <artifactId>bibliotheque-api-model</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

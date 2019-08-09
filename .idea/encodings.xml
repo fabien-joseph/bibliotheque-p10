@@ -4,12 +4,12 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bibliotheque-api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-business" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-business" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-consumer" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-model" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bibliotheque-api/bibliotheque-api-test" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bibliotheque-api/swagger-spring" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bibliotheque-webapp" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/bibliotheque-webapp" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/bibliotheque-webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bibliotheque-webapp/target/generated-sources/swagger" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bibliotheque-webapp/target/generated-sources/swagger" charset="UTF-8" />
   </component>
 </project>
