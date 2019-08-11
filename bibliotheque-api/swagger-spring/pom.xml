@@ -69,6 +69,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.bibliotheque.api.business</groupId>
+            <artifactId>bibliotheque-api-business</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -110,12 +117,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.bibliotheque.api.business</groupId>
-            <artifactId>bibliotheque-api-business</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
