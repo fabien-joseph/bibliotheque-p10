@@ -14,7 +14,7 @@ public class FakeLivres {
         harryPotter.setId(1L);
         harryPotter.setAuteur("J.K Rowlin");
         harryPotter.setNom("Harry Potter et la chambre des secrets");
-        harryPotter.setImgId("https://images-na.ssl-images-amazon.com/images/I/81OdLM-ZyuL.jpg");
+        harryPotter.setImgUrl("https://images-na.ssl-images-amazon.com/images/I/81OdLM-ZyuL.jpg");
         harryPotter.setQuantite(7);
         harryPotter.setAnnee(1998);
         harryPotter.setResume("Hinc ille commotus ut iniusta perferens et indigna praefecti custodiam protectoribus " +
@@ -29,7 +29,7 @@ public class FakeLivres {
         leLabyrinthe.setId(2L);
         leLabyrinthe.setAuteur("James Dashner");
         leLabyrinthe.setNom("Le Labyrinthe");
-        leLabyrinthe.setImgId("https://images-na.ssl-images-amazon.com/images/I/91IJ2rIOEDL.jpg");
+        leLabyrinthe.setImgUrl("https://images-na.ssl-images-amazon.com/images/I/91IJ2rIOEDL.jpg");
         leLabyrinthe.setQuantite(18);
         livres.add(leLabyrinthe);
 
@@ -37,7 +37,7 @@ public class FakeLivres {
         lesMiserables.setId(3L);
         lesMiserables.setAuteur("Victor Hugo");
         lesMiserables.setNom("Les misérables");
-        lesMiserables.setImgId("https://images-eu.ssl-images-amazon.com/images/I/510ypkdwIYL.jpg");
+        lesMiserables.setImgUrl("https://images-eu.ssl-images-amazon.com/images/I/510ypkdwIYL.jpg");
         lesMiserables.setQuantite(42);
         livres.add(lesMiserables);
 
@@ -45,7 +45,7 @@ public class FakeLivres {
         sherlock.setId(4L);
         sherlock.setAuteur("Arthur Conan Doyle");
         sherlock.setNom("Sherlock Holmes");
-        sherlock.setImgId("https://images-na.ssl-images-amazon.com/images/I/413FajzGBGL._SX327_BO1,204,203,200_.jpg");
+        sherlock.setImgUrl("https://images-na.ssl-images-amazon.com/images/I/413FajzGBGL._SX327_BO1,204,203,200_.jpg");
         sherlock.setQuantite(8);
         livres.add(sherlock);
 
@@ -53,7 +53,7 @@ public class FakeLivres {
         orgueilEtPrejuges.setId(5L);
         orgueilEtPrejuges.setAuteur("Jane Austen");
         orgueilEtPrejuges.setNom("Orguil et préjugés");
-        orgueilEtPrejuges.setImgId("http://ressources.bragelonne.fr/img/livres/2017-10/1710-Orgueiletprejugescollector_org.jpg");
+        orgueilEtPrejuges.setImgUrl("http://ressources.bragelonne.fr/img/livres/2017-10/1710-Orgueiletprejugescollector_org.jpg");
         orgueilEtPrejuges.setQuantite(8);
         livres.add(orgueilEtPrejuges);
 
@@ -61,7 +61,7 @@ public class FakeLivres {
         hurlevent.setId(5L);
         hurlevent.setAuteur("Emilie Brontë");
         hurlevent.setNom("Les Hauts de Hurle-Vent");
-        hurlevent.setImgId("https://images-na.ssl-images-amazon.com/images/I/51V6VR99Z0L._SX321_BO1,204,203,200_.jpg");
+        hurlevent.setImgUrl("https://images-na.ssl-images-amazon.com/images/I/51V6VR99Z0L._SX321_BO1,204,203,200_.jpg");
         hurlevent.setQuantite(8);
         livres.add(hurlevent);
 
@@ -69,7 +69,7 @@ public class FakeLivres {
         number1984.setId(6L);
         number1984.setAuteur("George Orwell");
         number1984.setNom("1984");
-        number1984.setImgId("https://ec56229aec51f1baff1d-185c3068e22352c56024573e929788ff.ssl.cf1.rackcdn.com/attachments/large/2/2/1/005479221.jpg");
+        number1984.setImgUrl("https://ec56229aec51f1baff1d-185c3068e22352c56024573e929788ff.ssl.cf1.rackcdn.com/attachments/large/2/2/1/005479221.jpg");
         number1984.setQuantite(8);
         livres.add(number1984);
 
@@ -77,7 +77,7 @@ public class FakeLivres {
         etranger.setId(7L);
         etranger.setAuteur("Albert Camus");
         etranger.setNom("L'Étranger");
-        etranger.setImgId("https://images-na.ssl-images-amazon.com/images/I/51MYDidib7L._SX366_BO1,204,203,200_.jpg");
+        etranger.setImgUrl("https://images-na.ssl-images-amazon.com/images/I/51MYDidib7L._SX366_BO1,204,203,200_.jpg");
         etranger.setQuantite(8);
         livres.add(etranger);
 
@@ -85,7 +85,7 @@ public class FakeLivres {
         odyssee.setId(8L);
         odyssee.setAuteur("Homère");
         odyssee.setNom("L'Odyssée");
-        odyssee.setImgId("https://images-na.ssl-images-amazon.com/images/I/41h2kjLuajL._SX328_BO1,204,203,200_.jpg");
+        odyssee.setImgUrl("https://images-na.ssl-images-amazon.com/images/I/41h2kjLuajL._SX328_BO1,204,203,200_.jpg");
         odyssee.setQuantite(8);
         livres.add(odyssee);
 

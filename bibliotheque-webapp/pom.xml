@@ -250,7 +250,7 @@
                         </goals>
                         <configuration>
                             <!-- specify the swagger yaml -->
-                            <inputSpec>${project.basedir}/src/main/resources/fab24-bibliotheque-livres-1.0.0-swagger (6).yaml</inputSpec>
+                            <inputSpec>https://app.swaggerhub.com/apiproxy/schema/file/apis/fab24/bibliotheque-livres/1.0.0?format=yaml</inputSpec>
 
                             <!-- target to generate java client code -->
                             <language>java</language>
