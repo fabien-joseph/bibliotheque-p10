@@ -72,7 +72,6 @@ public class LivresApiController implements LivresApi {
 
     public ResponseEntity<com.bibliotheque.api.model.Livre> getLivreById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("livreId") Long livreId) {
         Optional<com.bibliotheque.api.model.Livre> livre = livreManagement.findById(livreId);
-        System.out.println("Livre URL : " + livre.get().getImgUrl());
         if (livre.isPresent())
             return new ResponseEntity<com.bibliotheque.api.model.Livre>(livre.get(), HttpStatus.OK);
 
