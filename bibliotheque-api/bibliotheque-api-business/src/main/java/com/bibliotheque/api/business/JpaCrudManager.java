@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Optional;
 
 public class JpaCrudManager<T, C extends JpaRepository<T, Long>> {
-    private C repository;
+    C repository;
 
     public JpaCrudManager (C repository) {
         this.repository = repository;
