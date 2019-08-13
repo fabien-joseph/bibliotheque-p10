@@ -20,7 +20,7 @@
   </parent>
 
   <modules>
-    <module>swagger-spring</module>
+    <module>bibliotheque-api-service</module>
     <module>bibliotheque-api-consumer</module>
     <module>bibliotheque-api-model</module>
     <module>bibliotheque-api-business</module>

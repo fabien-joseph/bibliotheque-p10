@@ -24,7 +24,7 @@ public class Livre {
     @NotNull
     private String resume;
     @NotNull
-    private String imgId;
+    private String imgUrl;
     @NotNull
     private Integer annee;
     @NotNull
