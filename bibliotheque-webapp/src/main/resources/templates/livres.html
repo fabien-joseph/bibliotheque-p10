@@ -7,7 +7,7 @@
     <div th:replace="fragments/header.html :: header"></div>
     <div class="hero-body hero-body-less-padding">
         <div class="container">
-            <div class="field search has-addons has-addons-centered">
+            <div class="field columns search has-addons has-addons-centered">
                 <p class="control">
                 <span class="select is-medium">
                     <select>
@@ -24,12 +24,17 @@
                     </select>
                 </span>
                 </p>
-                <p class="control ">
+                <p class="control">
                     <input class="input is-medium" type="text" placeholder="ex: Harry Potter">
                 </p>
-                <p class="control is-medium">
+                <p class="control is-hidden-touch is-medium">
                     <a class="button is-medium background-dark-blue">
                         Rechercher
+                    </a>
+                </p>
+                <p class="control is-hidden-desktop is-medium">
+                    <a class="button is-medium background-dark-blue">
+                        <i class="fas fa-search"></i>
                     </a>
                 </p>
             </div>

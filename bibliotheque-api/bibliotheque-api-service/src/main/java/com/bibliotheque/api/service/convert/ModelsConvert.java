@@ -1,24 +1,12 @@
-package com.bibliotheque.api.business;
+package com.bibliotheque.api.service.convert;
 
-import com.bibliotheque.api.consumer.LivreRepository;
-import com.bibliotheque.api.model.Livre;
-import org.springframework.stereotype.Service;
+import com.bibliotheque.api.service.model.Livre;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-public class LivreManagement extends JpaCrudManager<Livre, LivreRepository> {
-    public LivreManagement(LivreRepository repository) {
-        super(repository);
-    }
-
-    public List<Livre> findAll() {
-        return repository.findAll();
-    }
-
- /*   public com.bibliotheque.api.service.model.Livre convertApi(Livre livre) {
+public class ModelsConvert {
+    public Livre convertLivreApi(com.bibliotheque.api.model.Livre livre) {
         com.bibliotheque.api.service.model.Livre livreApi = new com.bibliotheque.api.service.model.Livre();
 
         livreApi.setId(livre.getId());
@@ -32,13 +20,13 @@ public class LivreManagement extends JpaCrudManager<Livre, LivreRepository> {
         return livreApi;
     }
 
-    public List<com.bibliotheque.api.service.model.Livre> convertListApi(List<Livre> livres) {
+    public List<com.bibliotheque.api.service.model.Livre> convertListLivreApi(List<com.bibliotheque.api.model.Livre> livres) {
         List<com.bibliotheque.api.service.model.Livre> listApi = new ArrayList<>();
 
         for (int i = 0; i < livres.size(); i++) {
-            listApi.add(convertApi(livres.get(i)));
+            listApi.add(convertLivreApi(livres.get(i)));
         }
 
         return listApi;
-    }*/
+    }
 }

@@ -2,6 +2,7 @@ package com.bibliotheque.webapp.controller;
 
 import io.swagger.client.api.LivreApi;
 import com.bibliotheque.webapp.consumer.FakeLivres;
+import io.swagger.client.model.Livre;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class AccueilController {
@@ -32,15 +34,17 @@ public class AccueilController {
     }
 
     @GetMapping("livres")
-    public String livres(Model model) {
+    public String livres(Model model) throws IOException {
+        //System.out.println(service.findLivres().execute());
         model.addAttribute("livres", fakeLivres.livres);
         return "livres";
     }
 
     @GetMapping("livres/{id}")
     public String livre(Model model, @PathVariable Long id) throws IOException {
-
-        model.addAttribute("livre", service.getLivreById(id).execute().body());
+        Livre livre = service.getLivreById(id).execute().body();
+        System.out.println("Nom : " + livre.getNom());
+        model.addAttribute("livre", livre);
         return "livre";
     }
 

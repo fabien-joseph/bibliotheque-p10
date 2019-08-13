@@ -49,7 +49,7 @@ public interface LivresApi {
     @RequestMapping(value = "/livres",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<com.bibliotheque.api.service.model.Livre>> findLivres();
+    ResponseEntity<List<Livre>> findLivres();
 
 
     @ApiOperation(value = "Trouve un livre par son ID", nickname = "getLivreById", notes = "Trouve un livre par son ID", response = Livre.class, tags={ "livre", })
