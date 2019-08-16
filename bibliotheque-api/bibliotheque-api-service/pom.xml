@@ -47,6 +47,7 @@
                             <inputSpec>https://app.swaggerhub.com/apiproxy/schema/file/apis/fab24/bibliotheque-livres/1.0.0?format=yaml</inputSpec>
                             <language>spring</language>
                             <configOptions>
+                                <dateLibrary>joda</dateLibrary>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                             </configOptions>
                         </configuration>

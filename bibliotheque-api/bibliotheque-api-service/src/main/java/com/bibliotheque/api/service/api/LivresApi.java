@@ -49,8 +49,7 @@ public interface LivresApi {
     @RequestMapping(value = "/livres",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<Livre>> findLivres();
-
+    ResponseEntity<List<com.bibliotheque.api.service.model.Livre>> findLivres(@ApiParam(value = "Auteur ou nom du livre à trouver") @Valid @RequestParam(value = "search", required = false) String search);
 
     @ApiOperation(value = "Trouve un livre par son ID", nickname = "getLivreById", notes = "Trouve un livre par son ID", response = Livre.class, tags={ "livre", })
     @ApiResponses(value = {
@@ -60,8 +59,7 @@ public interface LivresApi {
     @RequestMapping(value = "/livres/{livreId}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<Livre> getLivreById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("livreId") Long livreId);
-
+    ResponseEntity<com.bibliotheque.api.service.model.Livre> getLivreById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("livreId") Long livreId);
 
     @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "updateLivre", notes = "", tags={ "livre", })
     @ApiResponses(value = {

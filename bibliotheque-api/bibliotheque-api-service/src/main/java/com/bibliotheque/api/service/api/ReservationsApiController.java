@@ -1,6 +1,8 @@
 package com.bibliotheque.api.service.api;
 
+import com.bibliotheque.api.business.ReservationManagement;
 import com.bibliotheque.api.service.model.Reservation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.threeten.bp.OffsetDateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -17,6 +19,8 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-11T23:01:18.100Z")
 
 @Controller
@@ -27,6 +31,9 @@ public class ReservationsApiController implements ReservationsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+
+    @Autowired
+    private ReservationManagement reservationManagement;
 
     @org.springframework.beans.factory.annotation.Autowired
     public ReservationsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -59,14 +66,10 @@ public class ReservationsApiController implements ReservationsApi {
     }
 
     public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("reservationId") Long reservationId) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Reservation>(objectMapper.readValue("{  \"livreId\" : 62,  \"dateDebut\" : \"2019-07-11T23:58:02.000Z\",  \"utilisateurId\" : 12,  \"id\" : 9,  \"dateFin\" : \"2019-08-11T23:58:02.000Z\"}", Reservation.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Reservation>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
+
+        if (reservation.isPresent()) {
+                //return new ResponseEntity<Reservation>(reservation.get(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<Reservation>(HttpStatus.NOT_IMPLEMENTED);

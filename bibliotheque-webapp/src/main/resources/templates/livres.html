@@ -5,39 +5,26 @@
 <body>
 <section class="hero is-large is-fullheight-with-navbar">
     <div th:replace="fragments/header.html :: header"></div>
-    <div class="hero-body hero-body-less-padding">
+    <div class="hero-body hero-body-less-padding without-valign">
         <div class="container">
-            <div class="field columns search has-addons has-addons-centered">
-                <p class="control">
-                <span class="select is-medium">
-                    <select>
-                        <option th:value="''" selected disabled>Genre</option>
-                        <option>Aucun</option>
-                        <option>Biographie</option>
-                        <option>Conte</option>
-                        <option>Épopée</option>
-                        <option>Fantastique</option>
-                        <option>Horreur</option>
-                        <option>Nouvelle</option>
-                        <option>Roman</option>
-                        <option>Science fiction</option>
-                    </select>
-                </span>
-                </p>
-                <p class="control">
-                    <input class="input is-medium" type="text" placeholder="ex: Harry Potter">
-                </p>
-                <p class="control is-hidden-touch is-medium">
-                    <a class="button is-medium background-dark-blue">
-                        Rechercher
-                    </a>
-                </p>
-                <p class="control is-hidden-desktop is-medium">
-                    <a class="button is-medium background-dark-blue">
-                        <i class="fas fa-search"></i>
-                    </a>
-                </p>
-            </div>
+
+            <form th:action="@{/livres}">
+                <div class="field columns search has-addons has-addons-centered">
+                    <p class="control">
+                        <input name="search" class="input is-medium" type="text" placeholder="ex: Harry Potter">
+                    </p>
+                    <p class="control is-hidden-touch is-medium">
+                        <button class="button is-medium background-dark-blue">
+                            Rechercher
+                        </button>
+                    </p>
+                    <p class="control is-hidden-desktop is-medium">
+                        <button class="button is-medium background-dark-blue">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </p>
+                </div>
+            </form>
 
             <div class="columns is-multiline">
                 <div class="column is-one-quarter" th:each="livre:${livres}">
