@@ -5,19 +5,23 @@
  */
 package com.bibliotheque.api.service.api;
 
-import com.bibliotheque.api.model.Livre;
+import com.bibliotheque.api.service.model.Livre;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-13T09:49:27.089Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-19T17:07:48.877Z")
 
 @Api(value = "livres", description = "the livres API")
 public interface LivresApi {
@@ -49,7 +53,8 @@ public interface LivresApi {
     @RequestMapping(value = "/livres",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<com.bibliotheque.api.service.model.Livre>> findLivres(@ApiParam(value = "Auteur ou nom du livre à trouver") @Valid @RequestParam(value = "search", required = false) String search);
+    ResponseEntity<List<Livre>> findLivres(@ApiParam(value = "Auteur ou nom du livre à trouver") @Valid @RequestParam(value = "search", required = false) String search);
+
 
     @ApiOperation(value = "Trouve un livre par son ID", nickname = "getLivreById", notes = "Trouve un livre par son ID", response = Livre.class, tags={ "livre", })
     @ApiResponses(value = {
@@ -59,7 +64,8 @@ public interface LivresApi {
     @RequestMapping(value = "/livres/{livreId}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<com.bibliotheque.api.service.model.Livre> getLivreById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("livreId") Long livreId);
+    ResponseEntity<Livre> getLivreById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("livreId") Long livreId);
+
 
     @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "updateLivre", notes = "", tags={ "livre", })
     @ApiResponses(value = {

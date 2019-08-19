@@ -6,6 +6,7 @@
 package com.bibliotheque.api.service.api;
 
 import com.bibliotheque.api.service.model.Utilisateur;
+import org.joda.time.DateTime;
 import org.threeten.bp.OffsetDateTime;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -43,15 +44,14 @@ public interface UtilisateursApi {
     ResponseEntity<Void> deleteUtilisateur(@ApiParam(value = "ID de l'utilisateur à supprimer", required = true) @PathVariable("utilisateurId") Long utilisateurId);
 
 
-    @ApiOperation(value = "Trouver des réservations", nickname = "findUtilisateursByNom", notes = "Plusieurs valeurs peuvent être séparées par une virgule", response = Utilisateur.class, responseContainer = "List", tags={ "utilisateur", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = Utilisateur.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Invalid status value") })
+    @ApiOperation(value = "Trouver des réservations", nickname = "findUtilisateursByMail", notes = "Plusieurs valeurs peuvent être séparées par une virgule", response = Utilisateur.class, responseContainer = "List", tags={ "utilisateur", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Utilisateur.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Invalid status value") })
     @RequestMapping(value = "/utilisateurs",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<List<Utilisateur>> findUtilisateursByNom(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail, @NotNull @ApiParam(value = "Trouver un compte par mot de passe", required = true) @Valid @RequestParam(value = "motDePasse", required = true) String motDePasse);
-
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Utilisateur>> findUtilisateursByMail(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail);
 
     @ApiOperation(value = "Trouve une réservation par son ID", nickname = "getUtilisateurById", notes = "Trouve une réservation par son ID", response = Utilisateur.class, tags={ "utilisateur", })
     @ApiResponses(value = { 
@@ -71,6 +71,6 @@ public interface UtilisateursApi {
         produces = { "application/json" }, 
         consumes = { "application/x-www-form-urlencoded" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour", required = true) @PathVariable("utilisateurId") Long utilisateurId, @ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value = "mail", required = false) String mail, @ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value = "motDePasse", required = false) String motDePasse, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "prenom", required = false) String prenom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "nom", required = false) String nom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "dateCreation", required = false) OffsetDateTime dateCreation);
+    ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour", required = true) @PathVariable("utilisateurId") Long utilisateurId, @ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value = "mail", required = false) String mail, @ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value = "motDePasse", required = false) String motDePasse, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "prenom", required = false) String prenom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "nom", required = false) String nom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "dateCreation", required = false) DateTime dateCreation);
 
 }

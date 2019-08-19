@@ -3,6 +3,7 @@ package com.bibliotheque.api.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,7 @@ public class Utilisateur {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    private String nomDeCompte;
+    private String mail;
     @NotNull
     private String motDePasse;
     @NotNull
@@ -28,7 +29,7 @@ public class Utilisateur {
     @NotNull
     private String nom;
     @NotNull
-    private OffsetDateTime dateCreation;
+    private DateTime dateCreation;
 
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.REMOVE)
