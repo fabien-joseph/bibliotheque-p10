@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -64,12 +63,11 @@ public interface ReservationsApi {
 
 
     @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "updateReservation", notes = "", tags={ "reservation", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 405, message = "Invalid input") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 405, message = "Invalid input") })
     @RequestMapping(value = "/reservations/{reservationId}/renew",
-        produces = { "application/json" }, 
-        consumes = { "application/x-www-form-urlencoded" },
-        method = RequestMethod.PUT)
-    ResponseEntity<Void> updateReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId, @ApiParam(value = "Mettre à jour le nom du livre") @RequestParam(value = "livreId", required = false) Long livreId, @ApiParam(value = "Mettre à jour l'auteur d'un livre") @RequestParam(value = "utilisateurId", required = false) Long utilisateurId, @ApiParam(value = "Mettre à jour la quantité d'un livre") @RequestParam(value = "dateDebut", required = false) OffsetDateTime dateDebut, @ApiParam(value = "Mettre à jour la quantité d'un livre") @RequestParam(value = "dateFin", required = false) OffsetDateTime dateFin);
-
+            produces = { "application/json" },
+            consumes = { "application/x-www-form-urlencoded" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> updateReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
 }
