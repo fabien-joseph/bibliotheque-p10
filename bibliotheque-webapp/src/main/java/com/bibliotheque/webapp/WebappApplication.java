@@ -17,19 +17,22 @@ import java.util.List;
 @SpringBootApplication
 public class WebappApplication {
 
-	public static void main(String[] args) throws IOException {
-/*		Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
-				.addConverterFactory(GsonConverterFactory.create()).build();
-		ReservationApi service = retrofit.create(ReservationApi.class);
+    public static void main(String[] args) throws IOException {
+        /*
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        UtilisateurApi service = retrofit.create(UtilisateurApi.class);
 
-		System.out.println(new Date());
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNom("Joseph");
+        utilisateur.setPrenom("Fabien");
+        utilisateur.setMail("superfab@gmail.com");
+        utilisateur.setMotDePasse("azerty123");
+        utilisateur.setDateCreation(new DateTime());
 
-		List<Reservation> reservations = service.findReservations(1L, null).execute().body();
-		if (reservations != null) {
-			System.out.println("Size : " + reservations.size());
-		} else {
-			System.out.println("Pas trouvé");
-		}*/
-		SpringApplication.run(WebappApplication.class, args);
-	}
+		System.out.println("Code : " + service.addUtilisateur(utilisateur).execute().code());
+		*/
+
+        SpringApplication.run(WebappApplication.class, args);
+    }
 }

@@ -43,13 +43,10 @@ public class LivresApiController implements LivresApi {
     }
 
     @Override
-    public ResponseEntity<Void> addLivre(@ApiParam(value = "Un objet Livre doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Livre body) {
+    public ResponseEntity<Void> addLivre(@ApiParam(value = "Un objet Livre doit être envoyé pour être ajouté", required = true) @Valid @RequestBody Livre body) {
         String accept = request.getHeader("Accept");
-        if (!livreManagement.findById(body.getId()).isPresent()) {
-            livreManagement.save(convertLivreApiToLivre(body));
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        livreManagement.save(convertLivreApiToLivre(body));
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteLivre(@ApiParam(value = "ID du livre à supprimer", required = true) @PathVariable("livreId") Long livreId, @ApiParam(value = "") @RequestHeader(value = "api_key", required = false) String apiKey) {

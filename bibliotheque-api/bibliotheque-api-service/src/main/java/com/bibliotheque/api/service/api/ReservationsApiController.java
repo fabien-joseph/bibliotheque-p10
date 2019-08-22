@@ -53,7 +53,8 @@ public class ReservationsApiController implements ReservationsApi {
 
     public ResponseEntity<Void> addReservation(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Reservation body) {
         String accept = request.getHeader("Accept");
-        if (!reservationManagement.findById(body.getId()).isPresent()) {
+        if (reservationManagement.findActualReservations(livreManagement.findById(body.getLivreId()).get(),
+                utilisateurManagement.findById(body.getUtilisateurId()).get()).isEmpty()) {
             reservationManagement.save(convertReservationApiToReservation(body));
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
