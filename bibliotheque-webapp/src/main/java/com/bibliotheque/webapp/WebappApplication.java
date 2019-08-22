@@ -18,20 +18,11 @@ import java.util.List;
 public class WebappApplication {
 
     public static void main(String[] args) throws IOException {
-        /*
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
+/*        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
-        UtilisateurApi service = retrofit.create(UtilisateurApi.class);
+        ReservationApi service = retrofit.create(ReservationApi.class);
 
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setNom("Joseph");
-        utilisateur.setPrenom("Fabien");
-        utilisateur.setMail("superfab@gmail.com");
-        utilisateur.setMotDePasse("azerty123");
-        utilisateur.setDateCreation(new DateTime());
-
-		System.out.println("Code : " + service.addUtilisateur(utilisateur).execute().code());
-		*/
+		System.out.println("Code : " + service.updateReservation(1L).execute().code());*/
 
         SpringApplication.run(WebappApplication.class, args);
     }

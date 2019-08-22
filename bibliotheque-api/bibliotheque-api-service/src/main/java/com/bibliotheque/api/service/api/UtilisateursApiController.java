@@ -46,7 +46,6 @@ public class UtilisateursApiController implements UtilisateursApi {
 
     public ResponseEntity<Void> addUtilisateur(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Utilisateur body) {
         String accept = request.getHeader("Accept");
-        System.out.println(utilisateurManagement.findUtilisateurByMail(body.getMail()));
         if (utilisateurManagement.findUtilisateurByMail(body.getMail()).isEmpty()) {
             utilisateurManagement.save(convertUtilisateurApiToUtilisateur(body));
             return new ResponseEntity<Void>(HttpStatus.OK);

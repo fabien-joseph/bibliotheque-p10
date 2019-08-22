@@ -1,7 +1,6 @@
 package com.bibliotheque.webapp.controller;
 
 import io.swagger.client.api.LivreApi;
-import com.bibliotheque.webapp.consumer.FakeLivres;
 import io.swagger.client.model.Livre;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Controller
 public class AccueilController {
-    private FakeLivres fakeLivres = new FakeLivres();
 
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
             .addConverterFactory(GsonConverterFactory.create()).build();
@@ -38,8 +36,6 @@ public class AccueilController {
     @GetMapping("/livres/{id}")
     public String livre(Model model, @PathVariable Long id) throws IOException {
         Livre livre = service.getLivreById(id).execute().body();
-        System.out.println("Genre : " + livre.getGenre());
-        System.out.println("Nom : " + livre.getNom());
         model.addAttribute("livre", livre);
         return "livre";
     }
