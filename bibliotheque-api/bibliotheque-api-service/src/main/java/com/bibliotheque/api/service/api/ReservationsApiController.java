@@ -3,9 +3,11 @@ package com.bibliotheque.api.service.api;
 import com.bibliotheque.api.business.LivreManagement;
 import com.bibliotheque.api.business.ReservationManagement;
 import com.bibliotheque.api.business.UtilisateurManagement;
+import com.bibliotheque.api.model.Livre;
+import com.bibliotheque.api.model.Utilisateur;
 import com.bibliotheque.api.service.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.threeten.bp.OffsetDateTime;
+import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -16,11 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,11 +69,24 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<List<Reservation>> findReservations(@ApiParam(value = "Réservations faites sur l'id d'un livre",required=true) @PathVariable("livreId") Long livreId, @ApiParam(value = "Réservations faites par un utilisateur",required=true) @PathVariable("utilisateurId") Long utilisateurId, @ApiParam(value = "Réservations faites au de là d'une date",required=true) @PathVariable("dateDebut") OffsetDateTime dateDebut, @ApiParam(value = "Réservations faites au de là d'une date",required=true) @PathVariable("dateFin") OffsetDateTime dateFin) {
+    public ResponseEntity<List<Reservation>> findReservations(@ApiParam(value = "Réservations faites sur l'id d'un livre") @Valid @RequestParam(value = "livreId", required = false) Long livreId,@ApiParam(value = "Réservations faites par un utilisateur") @Valid @RequestParam(value = "utilisateurId", required = false) Long utilisateurId) {
         String accept = request.getHeader("Accept");
+        Livre livre = null;
+        Utilisateur utilisateur = null;
 
-        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_IMPLEMENTED);
+        if (livreId != null)
+            livre = livreManagement.findById(livreId).get();
+        if (utilisateurId != null)
+            utilisateur = utilisateurManagement.findById(utilisateurId).get();
+
+        List<com.bibliotheque.api.model.Reservation> reservations = reservationManagement.findActualReservations(
+                livre, utilisateur);
+        if (reservations != null ) {
+            return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservations), HttpStatus.OK);
+        }
+        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
     }
+
 
     public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("reservationId") Long reservationId) {
         Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
