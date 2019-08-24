@@ -15,14 +15,13 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.dateDebut <= :date AND r.dateFin >= :date")
-    List<Reservation> findActualReservationsWithLivre(@Param("livre") Livre livre, @Param("date") DateTime date);
-
-    @Query("SELECT r FROM Reservation r WHERE r.utilisateur = :utilisateur  AND r.dateDebut <= :date AND r.dateFin >= :date")
-    List<Reservation> findActualReservationsWithUtilisateur(@Param("utilisateur") Utilisateur utilisateur, @Param("date") DateTime date);
-
-    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.utilisateur = :utilisateur  AND r.dateDebut <= :date AND r.dateFin >= :date")
-    List<Reservation> findActualReservationsWithLivreAndUtilisateur(@Param("livre") Livre livre,
-                                                                    @Param("utilisateur") Utilisateur utilisateur, @Param("date") DateTime date);
+    @Query("SELECT r \n" +
+            "FROM Reservation r \n" +
+            "WHERE (:livre IS NULL OR r.livre = :livre) \n" +
+            "AND (:utilisateur IS NULL OR r.utilisateur = :utilisateur )" +
+            " \n" +
+            "AND r.dateDebut <= :date \n" +
+            "AND r.dateFin >= :date")
+    List<Reservation> findActualReservationsWithLivre(@Param("livre") Livre livre, @Param("utilisateur") Utilisateur utilisateur, @Param("date") DateTime date);
 
 }

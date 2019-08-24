@@ -30,6 +30,8 @@ public class Utilisateur {
     private String nom;
     @NotNull
     private DateTime dateCreation;
+    @NotNull
+    private boolean isBibliothecaire;
 
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.REMOVE)

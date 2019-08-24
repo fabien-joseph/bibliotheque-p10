@@ -46,7 +46,7 @@ public class UtilisateursApiController implements UtilisateursApi {
 
     public ResponseEntity<Void> addUtilisateur(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Utilisateur body) {
         String accept = request.getHeader("Accept");
-        if (utilisateurManagement.findUtilisateurByMail(body.getMail()).isEmpty()) {
+        if (utilisateurManagement.findUtilisateurByMail(body.getMail()) == null) {
             utilisateurManagement.save(convertUtilisateurApiToUtilisateur(body));
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
@@ -62,13 +62,13 @@ public class UtilisateursApiController implements UtilisateursApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<List<Utilisateur>> findUtilisateursByMail(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail) {
+    public ResponseEntity<Utilisateur> findUtilisateursByMail(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail) {
         String accept = request.getHeader("Accept");
-        List<com.bibliotheque.api.model.Utilisateur> utilisateurs = utilisateurManagement.findUtilisateurByMail(mail);
-        if (utilisateurs.size() >  0) {
-            return new ResponseEntity<List<Utilisateur>>(convertListUtilisateurToListUtilisateurApi(utilisateurs), HttpStatus.OK);
+        com.bibliotheque.api.model.Utilisateur utilisateur = utilisateurManagement.findUtilisateurByMail(mail);
+        if (utilisateur != null) {
+            return new ResponseEntity<Utilisateur> (convertUtilisateurToUtilisateurApi(utilisateur), HttpStatus.OK);
         }
-        return new ResponseEntity<List<Utilisateur>>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Utilisateur>(HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("utilisateurId") Long utilisateurId) {
@@ -80,8 +80,7 @@ public class UtilisateursApiController implements UtilisateursApi {
         return new ResponseEntity<Utilisateur>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour",required=true) @PathVariable("utilisateurId") Long utilisateurId,@ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value="mail", required=false)  String mail,@ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value="motDePasse", required=false)  String motDePasse,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="prenom", required=false)  String prenom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="nom", required=false)  String nom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="dateCreation", required=false) DateTime dateCreation) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour",required=true) @PathVariable("utilisateurId") Long utilisateurId,@ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value="mail", required=false)  String mail,@ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value="motDePasse", required=false)  String motDePasse,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="prenom", required=false)  String prenom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="nom", required=false)  String nom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="dateCreation", required=false)  DateTime dateCreation) {       String accept = request.getHeader("Accept");
         Optional<com.bibliotheque.api.model.Utilisateur> utilisateur = utilisateurManagement.findById(utilisateurId);
         if (utilisateur.isPresent()) {
             utilisateur.get().setId(utilisateurId);
@@ -95,6 +94,16 @@ public class UtilisateursApiController implements UtilisateursApi {
         }
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
+
+    public ResponseEntity<Void> connectUser(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail,@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "password", required = true) String password) {
+        String accept = request.getHeader("Accept");
+        if (utilisateurManagement.connexion(mail, password)) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+    }
+
+
 
     Utilisateur convertUtilisateurToUtilisateurApi (com.bibliotheque.api.model.Utilisateur utilisateur) {
         Utilisateur utilisateurApi = new Utilisateur();

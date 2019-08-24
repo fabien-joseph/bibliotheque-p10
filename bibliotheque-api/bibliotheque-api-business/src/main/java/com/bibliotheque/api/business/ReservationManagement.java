@@ -28,14 +28,14 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
     }
 
     public List<Reservation> findActualReservations (Livre livre, Utilisateur utilisateur) {
-        if (livre != null && utilisateur != null) {
+        return repository.findActualReservationsWithLivre(livre, utilisateur, new DateTime());
+/*        if (livre != null && utilisateur != null) {
             return repository.findActualReservationsWithLivreAndUtilisateur(livre, utilisateur, new DateTime());
         } else if (utilisateur != null && livre == null) {
             return repository.findActualReservationsWithUtilisateur(utilisateur, new DateTime());
         } else if (utilisateur == null && livre != null){
-            return repository.findActualReservationsWithLivre(livre, new DateTime());
         } else {
             return null;
-        }
+        }*/
     }
 }

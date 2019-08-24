@@ -15,7 +15,6 @@ import java.util.List;
 
 @Controller
 public class AccueilController {
-
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
             .addConverterFactory(GsonConverterFactory.create()).build();
     private LivreApi service = retrofit.create(LivreApi.class);

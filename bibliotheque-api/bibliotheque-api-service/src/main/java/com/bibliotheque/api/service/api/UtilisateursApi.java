@@ -5,72 +5,87 @@
  */
 package com.bibliotheque.api.service.api;
 
-import com.bibliotheque.api.service.model.Utilisateur;
 import org.joda.time.DateTime;
 import org.threeten.bp.OffsetDateTime;
+import com.bibliotheque.api.service.model.Utilisateur;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-11T23:01:18.100Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-24T14:24:35.525Z")
 
 @Api(value = "utilisateurs", description = "the utilisateurs API")
 public interface UtilisateursApi {
 
     @ApiOperation(value = "Ajouter une nouvelle réservation", nickname = "addUtilisateur", notes = "", tags={ "utilisateur", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 405, message = "Invalid input") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 405, message = "Invalid input") })
     @RequestMapping(value = "/utilisateurs",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Void> addUtilisateur(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté", required = true) @Valid @RequestBody Utilisateur body);
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<Void> addUtilisateur(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Utilisateur body);
+
+
+    @ApiOperation(value = "Trouver des réservations", nickname = "connectUser", notes = "Verifier les identifiants d'un utilisateur qui souhaite se connecter", tags={ "utilisateur", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation"),
+            @ApiResponse(code = 400, message = "Invalid status value") })
+    @RequestMapping(value = "/utilisateurs/connexion",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Void> connectUser(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail,@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "password", required = true) String password);
 
 
     @ApiOperation(value = "Supprimer un utilisateur", nickname = "deleteUtilisateur", notes = "", tags={ "utilisateur", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 400, message = "Invalid ID supplied"),
-        @ApiResponse(code = 404, message = "livre not found") })
-    @RequestMapping(value = "/utilisateurs/{utilisateurId}",
-        produces = { "application/json" }, 
-        method = RequestMethod.DELETE)
-    ResponseEntity<Void> deleteUtilisateur(@ApiParam(value = "ID de l'utilisateur à supprimer", required = true) @PathVariable("utilisateurId") Long utilisateurId);
-
-
-    @ApiOperation(value = "Trouver des réservations", nickname = "findUtilisateursByMail", notes = "Plusieurs valeurs peuvent être séparées par une virgule", response = Utilisateur.class, responseContainer = "List", tags={ "utilisateur", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful operation", response = Utilisateur.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Invalid ID supplied"),
+            @ApiResponse(code = 404, message = "livre not found") })
+    @RequestMapping(value = "/utilisateurs/{utilisateurId}",
+            produces = { "application/json" },
+            method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteUtilisateur(@ApiParam(value = "ID de l'utilisateur à supprimer",required=true) @PathVariable("utilisateurId") Long utilisateurId);
+
+
+    @ApiOperation(value = "Trouver des réservations", nickname = "findUtilisateursByMail", notes = "Plusieurs valeurs peuvent être séparées par une virgule", response = Utilisateur.class, tags={ "utilisateur", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Utilisateur.class),
             @ApiResponse(code = 400, message = "Invalid status value") })
     @RequestMapping(value = "/utilisateurs",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<Utilisateur>> findUtilisateursByMail(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail);
+    ResponseEntity<Utilisateur> findUtilisateursByMail(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail);
+
 
     @ApiOperation(value = "Trouve une réservation par son ID", nickname = "getUtilisateurById", notes = "Trouve une réservation par son ID", response = Utilisateur.class, tags={ "utilisateur", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "successful operation", response = Utilisateur.class),
-        @ApiResponse(code = 400, message = "Invalid ID supplied"),
-        @ApiResponse(code = 404, message = "livre not found") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Utilisateur.class),
+            @ApiResponse(code = 400, message = "Invalid ID supplied"),
+            @ApiResponse(code = 404, message = "livre not found") })
     @RequestMapping(value = "/utilisateurs/{utilisateurId}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("utilisateurId") Long utilisateurId);
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("utilisateurId") Long utilisateurId);
 
 
     @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "updateUtilisateurWithForm", notes = "", tags={ "utilisateur", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 405, message = "Invalid input") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 405, message = "Invalid input") })
     @RequestMapping(value = "/utilisateurs/{utilisateurId}",
-        produces = { "application/json" }, 
-        consumes = { "application/x-www-form-urlencoded" },
-        method = RequestMethod.PUT)
-    ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour", required = true) @PathVariable("utilisateurId") Long utilisateurId, @ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value = "mail", required = false) String mail, @ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value = "motDePasse", required = false) String motDePasse, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "prenom", required = false) String prenom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "nom", required = false) String nom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "dateCreation", required = false) DateTime dateCreation);
+            produces = { "application/json" },
+            consumes = { "application/x-www-form-urlencoded" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour",required=true) @PathVariable("utilisateurId") Long utilisateurId,@ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value="mail", required=false)  String mail,@ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value="motDePasse", required=false)  String motDePasse,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="prenom", required=false)  String prenom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="nom", required=false)  String nom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="dateCreation", required=false) DateTime dateCreation);
 
 }
