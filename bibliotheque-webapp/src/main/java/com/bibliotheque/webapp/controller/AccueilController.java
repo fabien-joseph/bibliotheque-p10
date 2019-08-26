@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,7 +22,8 @@ public class AccueilController {
     private LivreApi service = retrofit.create(LivreApi.class);
 
     @GetMapping("/")
-    public String accueil(Model model) {
+    public String accueil(Model model, HttpSession session, HttpServletRequest request) {
+        System.out.println(session.getMaxInactiveInterval());
         return "accueil";
     }
 
