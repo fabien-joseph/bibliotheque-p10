@@ -1,11 +1,15 @@
 package com.bibliotheque.webapp.controller;
 
 import io.swagger.client.api.LivreApi;
+import io.swagger.client.api.UtilisateurApi;
 import io.swagger.client.model.Livre;
+import io.swagger.client.model.Utilisateur;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,11 +23,12 @@ import java.util.List;
 public class AccueilController {
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
             .addConverterFactory(GsonConverterFactory.create()).build();
-    private LivreApi service = retrofit.create(LivreApi.class);
+    private LivreApi serviceLivre = retrofit.create(LivreApi.class);
+    private UtilisateurApi serviceUtilisateur = retrofit.create(UtilisateurApi.class);
 
     @GetMapping("/")
     public String accueil(Model model, HttpSession session, HttpServletRequest request) {
-        System.out.println(session.getMaxInactiveInterval());
+        System.out.println(session.getAttribute("utilisateurId"));
         return "accueil";
     }
 
@@ -31,13 +36,13 @@ public class AccueilController {
     public String livres(Model model,
                          @RequestParam(value = "search", required = false, defaultValue = "") String search)
             throws IOException {
-        model.addAttribute("livres", service.findLivres(search).execute().body());
+        model.addAttribute("livres", serviceLivre.findLivres(search).execute().body());
         return "livres";
     }
 
     @GetMapping("/livres/{id}")
     public String livre(Model model, @PathVariable Long id) throws IOException {
-        Livre livre = service.getLivreById(id).execute().body();
+        Livre livre = serviceLivre.getLivreById(id).execute().body();
         model.addAttribute("livre", livre);
         return "livre";
     }
@@ -47,25 +52,46 @@ public class AccueilController {
         return "profile";
     }
 
-    @GetMapping("inscription")
+    @GetMapping("/inscription")
     public String inscription() {
         return "inscription";
     }
 
-    @GetMapping("reservation")
+    @GetMapping("/reservation")
     public String reservation() {
         return "reservation";
     }
 
-    @GetMapping("contact")
+    @GetMapping("/contact")
     public String contact() {
         return "contact";
     }
 
-    @GetMapping("connexion")
+    @GetMapping("/connexion")
     public String connexion() {
         return "connexion";
     }
+
+    @PostMapping("/connexionPost")
+    public String connexionPost(HttpSession session,
+                                @RequestParam(value = "mail", required = false, defaultValue = "") String mail,
+                                @RequestParam(value = "password", required = false, defaultValue = "") String password) throws IOException {
+        System.out.println("Entrée");
+
+        if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
+            Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(mail).execute().body();
+            System.out.println("200 OK");
+            if (utilisateur != null) {
+                session.setAttribute("utilisateurId", utilisateur.getId());
+                System.out.println("user trouvé");
+                return "redirect:/";
+            }
+        }
+        System.out.println("Fail");
+        return "redirect:/connexion";
+    }
+
+
 
 
 }
