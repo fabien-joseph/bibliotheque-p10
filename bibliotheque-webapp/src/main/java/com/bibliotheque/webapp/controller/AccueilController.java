@@ -46,10 +46,17 @@ public class AccueilController {
         model.addAttribute("livre", livre);
         return "livre";
     }
-
     @GetMapping("/profile")
-    public String profile(Model model) {
-        return "profile";
+    public String profile(Model model, HttpSession session) throws IOException {
+        List<Livre> livres = null;
+        if (session.getAttribute("utilisateurId") != null) {
+            String idToConvert = String.valueOf(session.getAttribute("utilisateurId"));
+            Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(Long.parseLong(idToConvert)).execute().body();
+            model.addAttribute("utilisateur", utilisateur);
+            model.addAttribute("livres", livres);
+            return "profile";
+        }
+        return "redirect:/connexion";
     }
 
     @GetMapping("/inscription")
@@ -91,7 +98,9 @@ public class AccueilController {
         return "redirect:/connexion";
     }
 
-
-
-
+    @GetMapping("/deconnexion")
+    public String deconnexion(HttpSession session) {
+        session.removeAttribute("utilisateurId");
+        return "redirect:/";
+    }
 }
