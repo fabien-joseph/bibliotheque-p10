@@ -1,10 +1,12 @@
 package com.bibliotheque.webapp.controller;
 
 import io.swagger.client.api.LivreApi;
+import io.swagger.client.api.ReservationApi;
 import io.swagger.client.api.UtilisateurApi;
 import io.swagger.client.model.Livre;
+import io.swagger.client.model.Reservation;
 import io.swagger.client.model.Utilisateur;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,10 +27,10 @@ public class AccueilController {
             .addConverterFactory(GsonConverterFactory.create()).build();
     private LivreApi serviceLivre = retrofit.create(LivreApi.class);
     private UtilisateurApi serviceUtilisateur = retrofit.create(UtilisateurApi.class);
+    private ReservationApi serviceReservation = retrofit.create(ReservationApi.class);
 
     @GetMapping("/")
-    public String accueil(Model model, HttpSession session, HttpServletRequest request) {
-        System.out.println(session.getAttribute("utilisateurId"));
+    public String accueil(Model model, HttpSession session) {
         return "accueil";
     }
 
@@ -46,14 +48,33 @@ public class AccueilController {
         model.addAttribute("livre", livre);
         return "livre";
     }
+
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session) throws IOException {
-        List<Livre> livres = null;
+        List<Livre> livresReserves = new ArrayList<>();
+        List<Livre> livresExpires = new ArrayList<>();
         if (session.getAttribute("utilisateurId") != null) {
             String idToConvert = String.valueOf(session.getAttribute("utilisateurId"));
-            Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(Long.parseLong(idToConvert)).execute().body();
+            Long utilisateurId = Long.parseLong(idToConvert);
+            List<Reservation> reservations = serviceReservation.findReservations(null, utilisateurId).execute().body();
+            Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(utilisateurId).execute().body();
+            if (reservations != null) {
+                for (Reservation reservation : reservations)
+                    if (reservation.getDateDebut().getMillis() <= new DateTime().getMillis() &&
+                            reservation.getDateFin().getMillis() >= new DateTime().getMillis()) {
+                        livresReserves.add(serviceLivre.getLivreById(reservation.getLivreId()).execute().body());
+                    } else {
+                        livresExpires.add(serviceLivre.getLivreById(reservation.getLivreId()).execute().body());
+                    }
+            }
+
+            System.out.println("Livres actuels : " + livresReserves.size());
+            System.out.println("Livres expirés : " + livresExpires.size());
+
             model.addAttribute("utilisateur", utilisateur);
-            model.addAttribute("livres", livres);
+            model.addAttribute("livresReserves", livresReserves);
+            model.addAttribute("livresExpires", livresExpires);
+            model.addAttribute("reservations", reservations);
             return "profile";
         }
         return "redirect:/connexion";
@@ -84,14 +105,10 @@ public class AccueilController {
                                 @RequestParam(value = "mail", required = false, defaultValue = "") String mail,
                                 @RequestParam(value = "password", required = false, defaultValue = "") String password)
             throws IOException {
-        System.out.println("Entrée");
-
         if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
             Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(mail).execute().body();
-            System.out.println("200 OK");
             if (utilisateur != null) {
                 session.setAttribute("utilisateurId", utilisateur.getId());
-                System.out.println("user trouvé");
                 return "redirect:/";
             }
         }

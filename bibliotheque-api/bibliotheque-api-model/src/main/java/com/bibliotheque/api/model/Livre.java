@@ -21,8 +21,10 @@ public class Livre {
     private String nom;
     @NotNull
     private String auteur;
+    @Column(length = 2000)
     @NotNull
     private String resume;
+    @Column(length = 2000)
     @NotNull
     private String imgUrl;
     @NotNull

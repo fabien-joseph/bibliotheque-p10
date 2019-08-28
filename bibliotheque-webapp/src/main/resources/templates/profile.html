@@ -10,18 +10,25 @@
             <div class="field columns search has-addons has-addons-centered">
                 <h1 class="title" th:text="'Bonjour ' + ${utilisateur.getPrenom()}"></h1>
             </div>
+            <div class="field columns search has-addons">
+                <h1 class="title">Vos réservations en cours :</h1>
+            </div>
+            <div class="columns is-multiline">
+                <div class="column search is-one-fifth" th:each="livre:${livresReserves}">
+                    <div th:replace="fragments/card_livre.html :: card_livre"></div>
+                </div>
+            </div>
+            <div class="field columns search has-addons">
+                <h1 class="title">Vos réservations expirées :</h1>
+            </div>
+            <div class="columns is-multiline">
+                <div class="column search is-one-fifth" th:each="livre:${livresExpires}">
+                    <div th:replace="fragments/card_livre_expired.html :: card_livre_expired"></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-
-<div class="columns is-multiline">
-    <div class="column is-one-quarter" th:each="livre:${livres}">
-        <a th:href="@{/livres/{id} (id=${livre.getId()})}">
-            <figure class="image is-3by4">
-                <img th:src="${livre.getImgUrl()}" th:alt="${livre.getNom()}"></figure>
-        </a>
-    </div>
-</div>
 <div th:replace="fragments/footer.html :: footer"></div>
 </body>
 </html>

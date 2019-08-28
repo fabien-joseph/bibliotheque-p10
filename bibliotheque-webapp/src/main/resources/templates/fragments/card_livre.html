@@ -1,0 +1,22 @@
+<div class="card" th:fragment="card_livre" xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="livre" type="io.swagger.client.model.Livre"*/-->
+
+    <div class="card-image">
+        <figure class="image is-3by4">
+            <a th:href="@{/livres/{id} (id=${livre.getId()})}">
+                <img th:src="${livre.getImgUrl()}" th:alt="${livre.getNom()}">
+            </a>
+        </figure>
+    </div>
+    <div class="card-content">
+        <div class="media">
+
+            <div class="media-content">
+
+                <p class="title is-6" th:text="${livre.getNom()}"></p>
+                <p class="subtitle is-6" th:text="'Prend fin le 28/09'"></p></div>
+        </div>
+
+
+    </div>
+</div>

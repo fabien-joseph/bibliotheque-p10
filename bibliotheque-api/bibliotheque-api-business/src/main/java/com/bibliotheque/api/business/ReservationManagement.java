@@ -18,8 +18,6 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         super(repository);
     }
 
-
-
     public void renew (Long id) {
         Optional<Reservation> reservation = repository.findById(id);
         if (reservation.isPresent()) {
