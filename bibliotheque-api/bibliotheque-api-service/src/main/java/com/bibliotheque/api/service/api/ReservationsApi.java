@@ -77,4 +77,13 @@ public interface ReservationsApi {
             method = RequestMethod.PATCH)
     ResponseEntity<Void> updateReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
 
+    @ApiOperation(value = "Récupérer la liste de réservations expirées", nickname = "expiredReservation", notes = "", response = Reservation.class, responseContainer = "List", tags={ "reservation", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Reservation.class, responseContainer = "List"),
+            @ApiResponse(code = 404, message = "Aucune réservation expirée trouvée") })
+    @RequestMapping(value = "/reservations/expired",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Reservation>> expiredReservation();
 }

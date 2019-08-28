@@ -82,7 +82,8 @@ public class AccueilController {
     @PostMapping("/connexionPost")
     public String connexionPost(HttpSession session,
                                 @RequestParam(value = "mail", required = false, defaultValue = "") String mail,
-                                @RequestParam(value = "password", required = false, defaultValue = "") String password) throws IOException {
+                                @RequestParam(value = "password", required = false, defaultValue = "") String password)
+            throws IOException {
         System.out.println("Entrée");
 
         if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {

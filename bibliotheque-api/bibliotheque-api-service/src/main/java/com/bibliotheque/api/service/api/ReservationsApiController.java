@@ -6,12 +6,14 @@ import com.bibliotheque.api.business.UtilisateurManagement;
 import com.bibliotheque.api.model.Livre;
 import com.bibliotheque.api.model.Utilisateur;
 import com.bibliotheque.api.service.model.Reservation;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.joda.time.DateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +38,9 @@ public class ReservationsApiController implements ReservationsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+
+    @Value("${bibliotheque.limit.days}")
+    int limitDate;
 
     @Autowired
     private ReservationManagement reservationManagement;
@@ -106,14 +112,29 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     }
 
+    public ResponseEntity<List<Reservation>> expiredReservation() {
+        List<com.bibliotheque.api.model.Reservation> allReservations = reservationManagement.findAll();
+        List<com.bibliotheque.api.model.Reservation> expiredReservations = new ArrayList<>();
+        for (com.bibliotheque.api.model.Reservation reservation : allReservations) {
+            if (reservation.getDateDebut().plusDays(limitDate).getMillis() < new DateTime().getMillis() &&
+            reservation.getDateDebut().plusDays(limitDate+1).getMillis() > new DateTime().getMillis()) {
+                expiredReservations.add(reservation);
+            }
+        }
+        if (expiredReservations != null) {
+            return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(expiredReservations) ,HttpStatus.OK);
+        }
+        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
+    }
+
     Reservation convertReservationToReservationApi(com.bibliotheque.api.model.Reservation reservation) {
         Reservation reservationApi = new Reservation();
 
         reservationApi.setId(reservation.getId());
         reservationApi.setDateDebut(reservation.getDateDebut());
-        reservationApi.setDateFin(reservation.getDateFin());
         reservationApi.setLivreId(reservation.getLivre().getId());
         reservationApi.setUtilisateurId(reservation.getUtilisateur().getId());
+        reservationApi.setDateFin(reservation.getDateDebut().plusDays(limitDate));
         return reservationApi;
     }
 
@@ -131,7 +152,6 @@ public class ReservationsApiController implements ReservationsApi {
 
         reservation.setId(reservationApi.getId());
         reservation.setDateDebut(reservationApi.getDateDebut());
-        reservation.setDateFin(reservationApi.getDateFin());
         reservation.setUtilisateur(utilisateurManagement.findById(reservationApi.getUtilisateurId()).get());
         reservation.setLivre(livreManagement.findById(reservationApi.getLivreId()).get());
 

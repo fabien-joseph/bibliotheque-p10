@@ -18,24 +18,21 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         super(repository);
     }
 
+
+
     public void renew (Long id) {
         Optional<Reservation> reservation = repository.findById(id);
         if (reservation.isPresent()) {
-            DateTime timeUpdate = reservation.get().getDateFin().plusDays(30);
-            reservation.get().setDateFin(timeUpdate);
+            reservation.get().setDateDebut(new DateTime());
             repository.save(reservation.get());
         }
     }
 
     public List<Reservation> findActualReservations (Livre livre, Utilisateur utilisateur) {
         return repository.findActualReservationsWithLivre(livre, utilisateur, new DateTime());
-/*        if (livre != null && utilisateur != null) {
-            return repository.findActualReservationsWithLivreAndUtilisateur(livre, utilisateur, new DateTime());
-        } else if (utilisateur != null && livre == null) {
-            return repository.findActualReservationsWithUtilisateur(utilisateur, new DateTime());
-        } else if (utilisateur == null && livre != null){
-        } else {
-            return null;
-        }*/
+    }
+
+    public List<Reservation> findAll() {
+        return repository.findAll();
     }
 }

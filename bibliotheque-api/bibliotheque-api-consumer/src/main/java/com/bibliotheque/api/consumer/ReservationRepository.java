@@ -20,8 +20,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "WHERE (:livre IS NULL OR r.livre = :livre) \n" +
             "AND (:utilisateur IS NULL OR r.utilisateur = :utilisateur )" +
             " \n" +
-            "AND r.dateDebut <= :date \n" +
-            "AND r.dateFin >= :date")
+            "AND r.dateDebut <= :date")
     List<Reservation> findActualReservationsWithLivre(@Param("livre") Livre livre, @Param("utilisateur") Utilisateur utilisateur, @Param("date") DateTime date);
-
 }

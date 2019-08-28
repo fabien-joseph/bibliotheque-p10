@@ -11,6 +11,7 @@
     <modules>
         <module>bibliotheque-api</module>
         <module>bibliotheque-webapp</module>
+        <module>bibliotheque-batch</module>
     </modules>
 
     <name>bibliotheque</name>
