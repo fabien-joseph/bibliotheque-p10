@@ -51,39 +51,31 @@ public class AccueilController {
 
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session) throws IOException {
-        List<Livre> livresReserves = new ArrayList<>();
-        List<Livre> livresExpires = new ArrayList<>();
         if (session.getAttribute("utilisateurId") != null) {
             String idToConvert = String.valueOf(session.getAttribute("utilisateurId"));
             Long utilisateurId = Long.parseLong(idToConvert);
             List<Reservation> reservations = serviceReservation.findReservations(null, utilisateurId).execute().body();
             Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(utilisateurId).execute().body();
-            if (reservations != null) {
-                for (Reservation reservation : reservations)
-                    if (reservation.getDateDebut().isBefore(new DateTime()) &&
-                            reservation.getDateFin().isAfter( new DateTime())) {
-                        livresReserves.add(serviceLivre.getLivreById(reservation.getLivreId()).execute().body());
-                    } else {
-                        livresExpires.add(serviceLivre.getLivreById(reservation.getLivreId()).execute().body());
-                    }
-            }
 
-            Reservation reservationTest = serviceReservation.getReservationById(2L).execute().body();
-            System.out.println(reservationTest.getDateDebut());
-            System.out.println(reservationTest.getDateFin());
 
             model.addAttribute("utilisateur", utilisateur);
-            model.addAttribute("livresReserves", livresReserves);
-            model.addAttribute("livresExpires", livresExpires);
-            model.addAttribute("reservations", reservations);
+            model.addAttribute("reservations", convertListReservationApiToListReservation(reservations));
             return "profile";
         }
         return "redirect:/connexion";
     }
 
-    @PostMapping("/renouveller/{reservationId}")
-    public String renouveller(@PathVariable Long reservationId) {
-        serviceReservation.updateReservation(reservationId);
+    @GetMapping("/renouveller/{reservationId}")
+    public String renouveller(@PathVariable Long reservationId, HttpSession session) throws IOException {
+        if (session.getAttribute("utilisateurId") != null) {
+        String idString = String.valueOf(session.getAttribute("utilisateurId"));
+        Long idUser;
+            idUser = Long.parseLong(idString);
+            if (idUser.equals(serviceReservation.getReservationById(reservationId).execute().body().getUtilisateurId())) {
+                System.out.println("Nouvelle date part");
+                serviceReservation.updateReservation(reservationId).execute();
+            }
+        }
         return "redirect:/profile";
     }
 
@@ -127,5 +119,23 @@ public class AccueilController {
     public String deconnexion(HttpSession session) {
         session.removeAttribute("utilisateurId");
         return "redirect:/";
+    }
+
+    private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
+        return new com.bibliotheque.webapp.model.Reservation(
+                reservationApi.getId(),
+                reservationApi.getDateDebut(),
+                reservationApi.getDateFin(),
+                serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body(),
+                serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
+    }
+
+    private List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
+        List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
+
+        for (Reservation reservation : reservationsApi) {
+            reservations.add(convertReservationApiToReservation(reservation));
+        }
+        return reservations;
     }
 }

@@ -14,15 +14,7 @@
                 <h1 class="title">Vos réservations en cours :</h1>
             </div>
             <div class="columns is-multiline">
-                <div class="column search is-one-fifth" th:each="livre:${livresReserves}">
-                    <div th:replace="fragments/card_livre.html :: card_livre"></div>
-                </div>
-            </div>
-            <div class="field columns search has-addons">
-                <h1 class="title">Vos réservations expirées :</h1>
-            </div>
-            <div class="columns is-multiline">
-                <div class="column search is-one-fifth" th:each="livre:${livresExpires}">
+                <div class="column search is-one-fifth" th:each="reservation:${reservations}">
                     <div th:replace="fragments/card_livre_expired.html :: card_livre_expired"></div>
                 </div>
             </div>

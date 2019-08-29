@@ -108,7 +108,10 @@ public class ReservationsApiController implements ReservationsApi {
 
     public ResponseEntity<Void> updateReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId) {
         String accept = request.getHeader("Accept");
+        System.out.println("Entrée");
+
         if (reservationManagement.findById(reservationId).isPresent()) {
+            System.out.println("Renouvellement");
             reservationManagement.renew(reservationId);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
