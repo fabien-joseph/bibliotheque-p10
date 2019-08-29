@@ -60,16 +60,17 @@ public class AccueilController {
             Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(utilisateurId).execute().body();
             if (reservations != null) {
                 for (Reservation reservation : reservations)
-                    if (reservation.getDateDebut().getMillis() <= new DateTime().getMillis() &&
-                            reservation.getDateFin().getMillis() >= new DateTime().getMillis()) {
+                    if (reservation.getDateDebut().isBefore(new DateTime()) &&
+                            reservation.getDateFin().isAfter( new DateTime())) {
                         livresReserves.add(serviceLivre.getLivreById(reservation.getLivreId()).execute().body());
                     } else {
                         livresExpires.add(serviceLivre.getLivreById(reservation.getLivreId()).execute().body());
                     }
             }
 
-            System.out.println("Livres actuels : " + livresReserves.size());
-            System.out.println("Livres expirés : " + livresExpires.size());
+            Reservation reservationTest = serviceReservation.getReservationById(2L).execute().body();
+            System.out.println(reservationTest.getDateDebut());
+            System.out.println(reservationTest.getDateFin());
 
             model.addAttribute("utilisateur", utilisateur);
             model.addAttribute("livresReserves", livresReserves);
@@ -78,6 +79,12 @@ public class AccueilController {
             return "profile";
         }
         return "redirect:/connexion";
+    }
+
+    @PostMapping("/renouveller/{reservationId}")
+    public String renouveller(@PathVariable Long reservationId) {
+        serviceReservation.updateReservation(reservationId);
+        return "redirect:/profile";
     }
 
     @GetMapping("/inscription")

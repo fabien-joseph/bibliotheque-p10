@@ -97,7 +97,6 @@ public class UtilisateursApiController implements UtilisateursApi {
 
     public ResponseEntity<Void> connectUser(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail,@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "password", required = true) String password) {
         String accept = request.getHeader("Accept");
-        System.out.println("Accès corrects" + utilisateurManagement.connexion(mail, password));
         if (utilisateurManagement.connexion(mail, password)) {
             return new ResponseEntity<Void>(HttpStatus.OK);
         }

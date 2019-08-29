@@ -98,7 +98,10 @@ public class ReservationsApiController implements ReservationsApi {
     public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("reservationId") Long reservationId) {
         Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
         if (reservation.isPresent()) {
-            return new ResponseEntity<Reservation>(convertReservationToReservationApi(reservation.get()), HttpStatus.OK);
+            Reservation reservationApi = convertReservationToReservationApi(reservation.get());
+            System.out.println(reservationApi.getDateDebut());
+            System.out.println(reservationApi.getDateFin());
+            return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
         }
         return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
     }
