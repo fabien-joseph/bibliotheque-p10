@@ -25,9 +25,13 @@ import java.util.List;
 public class AccueilController {
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
             .addConverterFactory(GsonConverterFactory.create()).build();
-    private LivreApi serviceLivre = retrofit.create(LivreApi.class);
+    private LivreApi serviceLivre;
     private UtilisateurApi serviceUtilisateur = retrofit.create(UtilisateurApi.class);
     private ReservationApi serviceReservation = retrofit.create(ReservationApi.class);
+
+    public AccueilController(LivreApi serviceLivre) {
+        this.serviceLivre = serviceLivre;
+    }
 
     @GetMapping("/")
     public String accueil(Model model, HttpSession session) {
@@ -57,8 +61,8 @@ public class AccueilController {
             List<Reservation> reservations = serviceReservation.findReservations(null, utilisateurId).execute().body();
             Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(utilisateurId).execute().body();
 
-
             model.addAttribute("utilisateur", utilisateur);
+            model.addAttribute("today", new DateTime().getMillis());
             model.addAttribute("reservations", convertListReservationApiToListReservation(reservations));
             return "profile";
         }
@@ -99,11 +103,12 @@ public class AccueilController {
         return "connexion";
     }
 
-    @PostMapping("/connexionPost")
+    @PostMapping("/connexion")
     public String connexionPost(HttpSession session,
                                 @RequestParam(value = "mail", required = false, defaultValue = "") String mail,
                                 @RequestParam(value = "password", required = false, defaultValue = "") String password)
             throws IOException {
+        System.out.println(serviceUtilisateur.connectUser(mail, password).execute().code());
         if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
             Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(mail).execute().body();
             if (utilisateur != null) {
@@ -124,8 +129,8 @@ public class AccueilController {
     private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
         return new com.bibliotheque.webapp.model.Reservation(
                 reservationApi.getId(),
-                reservationApi.getDateDebut(),
-                reservationApi.getDateFin(),
+                new DateTime(reservationApi.getDateDebut()),
+                new DateTime(reservationApi.getDateFin()),
                 serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body(),
                 serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
     }

@@ -4,7 +4,7 @@
     <div class="card-image">
         <figure class="image is-3by4">
             <a th:href="@{/livres/{id} (id=${reservation.livre.getId()})}">
-                <img th:src="${reservation.livre.getImgUrl()}" th:alt="${reservation.livre.getNom()}">
+                <img class="filter-black-white" th:src="${reservation.livre.getImgUrl()}" th:alt="${reservation.livre.getNom()}">
             </a>
         </figure>
     </div>

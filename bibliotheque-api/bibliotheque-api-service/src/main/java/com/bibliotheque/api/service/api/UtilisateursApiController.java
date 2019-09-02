@@ -100,7 +100,7 @@ public class UtilisateursApiController implements UtilisateursApi {
         if (utilisateurManagement.connexion(mail, password)) {
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
-        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
     }
 
     Utilisateur convertUtilisateurToUtilisateurApi (com.bibliotheque.api.model.Utilisateur utilisateur) {

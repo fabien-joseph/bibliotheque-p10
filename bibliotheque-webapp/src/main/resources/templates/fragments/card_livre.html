@@ -14,7 +14,12 @@
             <div class="media-content">
 
                 <p class="title is-6" th:text="${reservation.livre.getNom()}"></p>
-                <p class="subtitle is-6" th:text="'Prend fin le 28/09'"></p></div>
+                <p class="subtitle is-6" th:text="'Prend fin le ' +
+                ${reservation.getDateFin().getYear()} +
+                '/' +
+                ${reservation.getDateFin().getMonthOfYear()} +
+                '/' +
+                ${reservation.getDateFin().getDayOfMonth()}"></p></div>
         </div>
 
 
