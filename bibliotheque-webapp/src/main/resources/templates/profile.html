@@ -23,7 +23,9 @@
                 <h1 class="title">Vos réservations expirées :</h1>
             </div>
             <div class="columns is-multiline">
-                <div class="column search is-one-fifth" th:each="reservation:${reservations}" th:if="${reservation.getDateFin().getMillis() < today}">
+                <div class="column search is-one-fifth" th:each="reservation:${reservations}" th:if="${
+                reservation.getDateFin().getMillis() < today &&
+                !reservation.isRendu()}">
                     <div th:replace="fragments/card_livre_expired.html :: card_livre_expired"></div>
                 </div>
             </div>

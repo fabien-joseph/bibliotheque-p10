@@ -76,8 +76,7 @@ public class AccueilController {
         Long idUser;
             idUser = Long.parseLong(idString);
             if (idUser.equals(serviceReservation.getReservationById(reservationId).execute().body().getUtilisateurId())) {
-                System.out.println("Nouvelle date part");
-                serviceReservation.updateReservation(reservationId).execute();
+                serviceReservation.renewReservation(reservationId).execute();
             }
         }
         return "redirect:/profile";
@@ -108,7 +107,6 @@ public class AccueilController {
                                 @RequestParam(value = "mail", required = false, defaultValue = "") String mail,
                                 @RequestParam(value = "password", required = false, defaultValue = "") String password)
             throws IOException {
-        System.out.println(serviceUtilisateur.connectUser(mail, password).execute().code());
         if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
             Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(mail).execute().body();
             if (utilisateur != null) {
@@ -116,7 +114,6 @@ public class AccueilController {
                 return "redirect:/";
             }
         }
-        System.out.println("Fail");
         return "redirect:/connexion";
     }
 
@@ -127,12 +124,18 @@ public class AccueilController {
     }
 
     private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
-        return new com.bibliotheque.webapp.model.Reservation(
-                reservationApi.getId(),
-                new DateTime(reservationApi.getDateDebut()),
-                new DateTime(reservationApi.getDateFin()),
-                serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body(),
-                serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
+        com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
+        System.out.println(reservationApi.isRendu());
+        reservation.setId(reservationApi.getId());
+        reservation.setDateDebut(new DateTime(reservationApi.getDateDebut()));
+        reservation.setDateFin(new DateTime(reservationApi.getDateFin()));
+        reservation.setRendu(reservationApi.isRendu());
+        reservation.setRenouvelable(reservationApi.isRenouvelable());
+        reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
+        reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
+        System.out.println(reservation.isRendu());
+
+        return reservation;
     }
 
     private List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {

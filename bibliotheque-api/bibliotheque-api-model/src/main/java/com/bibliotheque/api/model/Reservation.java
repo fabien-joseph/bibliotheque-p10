@@ -23,6 +23,12 @@ public class Reservation {
     private Long id;
     @NotNull
     private DateTime dateDebut;
+    @NotNull
+    @Column(columnDefinition = "boolean default true")
+    private boolean renouvelable;
+    @NotNull
+    @Column(columnDefinition = "boolean default false")
+    private boolean rendu;
 
     @ManyToOne
     private Livre livre;

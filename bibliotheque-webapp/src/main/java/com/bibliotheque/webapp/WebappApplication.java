@@ -17,17 +17,8 @@ public class WebappApplication {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
-        UtilisateurApi service = retrofit.create(UtilisateurApi.class);
-/*
-        Utilisateur utilisateur = new Utilisateur();
-        utilisateur.setMail("fab@gmail.com");
-        utilisateur.setMotDePasse("azerty123");
-        utilisateur.setNom("Joseph");
-        utilisateur.setPrenom("Fabien");
-        utilisateur.setIsBibliothecaire(false);
-        service.addUtilisateur(utilisateur).execute();
- */
-        //System.out.println(service.connectUser("fab@gmail.com", "aazerty123").execute().code());
+        /*ReservationApi service = retrofit.create(ReservationApi.class);
+        System.out.println(service.getReservationById(3L).execute().body().isRendu());*/
 
         SpringApplication.run(WebappApplication.class, args);
     }

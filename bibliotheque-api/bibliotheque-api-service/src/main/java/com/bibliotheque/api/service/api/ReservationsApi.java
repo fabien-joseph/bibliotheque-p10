@@ -37,6 +37,18 @@ public interface ReservationsApi {
     ResponseEntity<Void> addReservation(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Reservation body);
 
 
+    @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "comingBack", notes = "", tags={ "reservation", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 403, message = "La réservation ne peut pas être renouvelée"),
+            @ApiResponse(code = 404, message = "Not found") })
+    @RequestMapping(value = "/reservations/{reservationId}/comingBack",
+            produces = { "application/json" },
+            consumes = { "application/x-www-form-urlencoded" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> comingBack(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
+
+
     @ApiOperation(value = "Supprimer un livre", nickname = "deleteReservation", notes = "", tags={ "reservation", })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Invalid ID supplied"),
@@ -45,6 +57,17 @@ public interface ReservationsApi {
             produces = { "application/json" },
             method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteReservation(@ApiParam(value = "ID du livre à supprimer",required=true) @PathVariable("reservationId") Long reservationId);
+
+
+    @ApiOperation(value = "Récupérer la liste de réservations expirées", nickname = "expiredReservation", notes = "", response = Reservation.class, responseContainer = "List", tags={ "reservation", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Reservation.class, responseContainer = "List"),
+            @ApiResponse(code = 404, message = "Aucune réservation expirée trouvée") })
+    @RequestMapping(value = "/reservations/expired",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Reservation>> expiredReservation();
 
 
     @ApiOperation(value = "Trouver des réservations", nickname = "findReservations", notes = "Plusieurs valeurs peuvent être séparées par une virgule", response = Reservation.class, responseContainer = "List", tags={ "reservation", })
@@ -68,22 +91,27 @@ public interface ReservationsApi {
     ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("reservationId") Long reservationId);
 
 
-    @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "updateReservation", notes = "", tags={ "reservation", })
+    @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "renewReservation", notes = "", tags={ "reservation", })
     @ApiResponses(value = {
-            @ApiResponse(code = 405, message = "Invalid input") })
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 403, message = "La réservation ne peut pas être renouvelée"),
+            @ApiResponse(code = 404, message = "Not found") })
     @RequestMapping(value = "/reservations/{reservationId}/renew",
             produces = { "application/json" },
             consumes = { "application/x-www-form-urlencoded" },
             method = RequestMethod.PATCH)
-    ResponseEntity<Void> updateReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
+    ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
 
-    @ApiOperation(value = "Récupérer la liste de réservations expirées", nickname = "expiredReservation", notes = "", response = Reservation.class, responseContainer = "List", tags={ "reservation", })
+
+    @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "toggleRenouvelableReservation", notes = "", tags={ "reservation", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful operation", response = Reservation.class, responseContainer = "List"),
-            @ApiResponse(code = 404, message = "Aucune réservation expirée trouvée") })
-    @RequestMapping(value = "/reservations/expired",
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 403, message = "La réservation ne peut pas être renouvelée"),
+            @ApiResponse(code = 404, message = "Not found") })
+    @RequestMapping(value = "/reservations/{reservationId}/toggleRenouvelable",
             produces = { "application/json" },
-            consumes = { "application/json" },
-            method = RequestMethod.GET)
-    ResponseEntity<List<Reservation>> expiredReservation();
+            consumes = { "application/x-www-form-urlencoded" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> toggleRenouvelableReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
+
 }
