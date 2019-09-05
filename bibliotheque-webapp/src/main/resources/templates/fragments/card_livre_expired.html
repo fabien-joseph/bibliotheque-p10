@@ -8,7 +8,7 @@
             </a>
         </figure>
     </div>
-    <footer class="card-footer">
+    <footer th:if="${reservation.isRenouvelable()}" class="card-footer">
         <!--/*@thymesVar id="reservation" type="io.swagger.client.model.Reservation"*/-->
         <a th:href="@{/renouveller/{reservationId} (reservationId=${reservation.getId()})}" class="card-footer-item">Renouveler</a>
     </footer>

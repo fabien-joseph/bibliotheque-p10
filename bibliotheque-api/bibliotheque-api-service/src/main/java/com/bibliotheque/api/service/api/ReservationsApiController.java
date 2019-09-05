@@ -122,7 +122,7 @@ public class ReservationsApiController implements ReservationsApi {
         String accept = request.getHeader("Accept");
 
         if (reservationManagement.findById(reservationId).isPresent()) {
-            if (!reservationManagement.findById(reservationId).get().isRendu() ||
+            if (!reservationManagement.findById(reservationId).get().isRendu() &&
                     reservationManagement.findById(reservationId).get().isRenouvelable()) {
                 reservationManagement.renew(reservationId);
                 return new ResponseEntity<Void>(HttpStatus.OK);
