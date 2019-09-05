@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -23,14 +21,14 @@ import java.util.List;
 
 @Controller
 public class AccueilController {
-    private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
-            .addConverterFactory(GsonConverterFactory.create()).build();
     private LivreApi serviceLivre;
-    private UtilisateurApi serviceUtilisateur = retrofit.create(UtilisateurApi.class);
-    private ReservationApi serviceReservation = retrofit.create(ReservationApi.class);
+    private UtilisateurApi serviceUtilisateur;
+    private ReservationApi serviceReservation;
 
-    public AccueilController(LivreApi serviceLivre) {
+    public AccueilController(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
         this.serviceLivre = serviceLivre;
+        this.serviceUtilisateur = serviceUtilisateur;
+        this.serviceReservation = serviceReservation;
     }
 
     @GetMapping("/")
@@ -125,7 +123,6 @@ public class AccueilController {
 
     private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
         com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
-        System.out.println(reservationApi.isRendu());
         reservation.setId(reservationApi.getId());
         reservation.setDateDebut(new DateTime(reservationApi.getDateDebut()));
         reservation.setDateFin(new DateTime(reservationApi.getDateFin()));
@@ -133,7 +130,6 @@ public class AccueilController {
         reservation.setRenouvelable(reservationApi.isRenouvelable());
         reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
         reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
-        System.out.println(reservation.isRendu());
 
         return reservation;
     }

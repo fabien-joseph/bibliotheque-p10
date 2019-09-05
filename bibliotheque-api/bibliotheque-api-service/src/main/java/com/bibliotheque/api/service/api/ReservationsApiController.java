@@ -99,7 +99,6 @@ public class ReservationsApiController implements ReservationsApi {
         List<com.bibliotheque.api.model.Reservation> reservations = reservationManagement.findActualReservations(
                 livre, utilisateur);
         for (com.bibliotheque.api.model.Reservation reservation : reservations) {
-            System.out.println(reservation.getDateDebut().getMillis());
         }
         if (reservations != null) {
             return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservations), HttpStatus.OK);
@@ -111,8 +110,6 @@ public class ReservationsApiController implements ReservationsApi {
         Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
         if (reservation.isPresent()) {
             Reservation reservationApi = convertReservationToReservationApi(reservation.get());
-            System.out.println(reservationApi.getDateDebut());
-            System.out.println(reservationApi.getDateFin());
             return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
         }
         return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
