@@ -1,5 +1,6 @@
 package com.bibliotheque.api.service.configuration;
 
+import com.bibliotheque.api.business.UtilisateurManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,24 +15,19 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 @Configuration
 @EnableWebSecurity
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
-    private final
-    RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    private MySavedRequestAwareAuthenticationSuccessHandler mySuccessHandler = new MySavedRequestAwareAuthenticationSuccessHandler();
-
-    private SimpleUrlAuthenticationFailureHandler myFailureHandler = new SimpleUrlAuthenticationFailureHandler();
+    private final UtilisateurManagement utilisateurManagement;
 
     @Autowired
-    public SecurityJavaConfig(RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+    public SecurityJavaConfig(RestAuthenticationEntryPoint restAuthenticationEntryPoint, UtilisateurManagement utilisateurManagement) {
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+        this.utilisateurManagement = utilisateurManagement;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin").password(encoder().encode("adminPass")).roles("ADMIN")
-                .and()
-                .withUser("user").password(encoder().encode("userPass")).roles("USER");
+        auth.userDetailsService(utilisateurManagement);
     }
 
     @Bean
@@ -42,18 +38,10 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and()
                 .authorizeRequests()
-                .antMatchers("/api/foos").authenticated()
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/reservations").hasAnyAuthority("utilisateur", "libraire")
                 .and()
-                .formLogin()
-                .successHandler(mySuccessHandler)
-                .failureHandler(myFailureHandler)
-                .and()
-                .logout();
+                .httpBasic()
+                .authenticationEntryPoint(restAuthenticationEntryPoint);
     }
 }

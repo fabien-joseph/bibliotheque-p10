@@ -75,7 +75,6 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
     }
 
-
     public ResponseEntity<Void> deleteReservation(@ApiParam(value = "ID du livre à supprimer", required = true) @PathVariable("reservationId") Long reservationId) {
         String accept = request.getHeader("Accept");
         if (reservationManagement.findById(reservationId).isPresent()) {
