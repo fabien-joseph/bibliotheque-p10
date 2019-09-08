@@ -12,14 +12,21 @@
                 <!-- Landing page Title -->
                 <div class="column is-5 landing-caption">
                     <h1 class="title is-1 is-light is-semibold is-spaced main-title">Votre bibliothèque préférée !</h1>
-                    <h2 class="subtitle is-6 is-light is-thin">Connectez-vous pour bénéficier de
+                    <h2 th:if="${session.utilisateurId == null}" class="subtitle is-6 is-light is-thin">Connectez-vous pour bénéficier de
                         l'entièreté de nos services.</h2>
+                    <h2 th:if="${session.utilisateurId != null}" class="subtitle is-6 is-light is-thin">Rendez-vous sur votre
+                    profile pour voir vos réservations.</h2>
                     <!-- CTA -->
                     <p>
-                        <a href="/connexion" class="button k-button k-primary raised has-gradient is-fat is-bold">
+                        <a th:if="${session.utilisateurId == null}" href="/connexion" class="button k-button k-primary raised has-gradient is-fat is-bold">
                             <span class="text">Se connecter</span>
                             <span class="front-gradient"></span>
                         </a>
+                        <a th:if="${session.utilisateurId != null}" href="/profile" class="button k-button k-primary raised has-gradient is-fat is-bold">
+                            <span class="text">Votre profile</span>
+                            <span class="front-gradient"></span>
+                        </a>
+
                     </p>
 
                 </div>

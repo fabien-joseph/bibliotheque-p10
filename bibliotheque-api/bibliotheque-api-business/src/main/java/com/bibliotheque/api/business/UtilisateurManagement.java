@@ -43,13 +43,13 @@ public class UtilisateurManagement extends JpaCrudManager<Utilisateur, Utilisate
         return false;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Utilisateur utilisateur = repository.findUtilisateurByMail(s);
         if (utilisateur == null)
             throw new UsernameNotFoundException(s);
         return new UserDetails() {
+
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 if (!utilisateur.isBibliothecaire())

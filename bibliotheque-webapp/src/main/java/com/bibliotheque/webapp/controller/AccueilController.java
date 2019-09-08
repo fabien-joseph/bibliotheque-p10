@@ -70,8 +70,8 @@ public class AccueilController {
     @GetMapping("/renouveller/{reservationId}")
     public String renouveller(@PathVariable Long reservationId, HttpSession session) throws IOException {
         if (session.getAttribute("utilisateurId") != null) {
-        String idString = String.valueOf(session.getAttribute("utilisateurId"));
-        Long idUser;
+            String idString = String.valueOf(session.getAttribute("utilisateurId"));
+            Long idUser;
             idUser = Long.parseLong(idString);
             if (idUser.equals(serviceReservation.getReservationById(reservationId).execute().body().getUtilisateurId())) {
                 serviceReservation.renewReservation(reservationId).execute();
@@ -96,7 +96,9 @@ public class AccueilController {
     }
 
     @GetMapping("/connexion")
-    public String connexion() {
+    public String connexion(HttpSession session) {
+        if (session.getAttribute("utilisateurId") != null)
+            return "redirect:/profile";
         return "connexion";
     }
 
@@ -135,11 +137,13 @@ public class AccueilController {
     }
 
     private List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
-        List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
-
-        for (Reservation reservation : reservationsApi) {
-            reservations.add(convertReservationApiToReservation(reservation));
+        if (reservationsApi != null) {
+            List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
+            for (Reservation reservation : reservationsApi) {
+                reservations.add(convertReservationApiToReservation(reservation));
+            }
+            return reservations;
         }
-        return reservations;
+        return null;
     }
 }
