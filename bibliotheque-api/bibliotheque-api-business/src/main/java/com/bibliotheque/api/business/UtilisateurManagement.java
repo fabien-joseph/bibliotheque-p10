@@ -54,7 +54,7 @@ public class UtilisateurManagement extends JpaCrudManager<Utilisateur, Utilisate
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 if (!utilisateur.isBibliothecaire())
                     return Collections.singleton(new SimpleGrantedAuthority("utilisateur"));
-                return Collections.singleton(new SimpleGrantedAuthority("libraire"));
+                return Collections.singleton(new SimpleGrantedAuthority("bibliothecaire"));
             }
 
             @Override

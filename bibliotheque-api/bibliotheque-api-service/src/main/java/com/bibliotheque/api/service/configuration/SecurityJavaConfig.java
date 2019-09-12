@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 @EnableWebSecurity
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-
     private final UtilisateurManagement utilisateurManagement;
 
     @Autowired
@@ -39,7 +38,8 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/reservations").hasAnyAuthority("utilisateur", "libraire")
+                .antMatchers("/reservations").hasAnyAuthority("utilisateur", "bibliothecaire")
+                .antMatchers("/addReservation").hasAnyAuthority("bibliothecaire")
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(restAuthenticationEntryPoint);

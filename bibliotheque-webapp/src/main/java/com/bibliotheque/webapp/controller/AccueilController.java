@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import retrofit2.http.Header;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -56,7 +57,11 @@ public class AccueilController {
         if (session.getAttribute("utilisateurId") != null) {
             String idToConvert = String.valueOf(session.getAttribute("utilisateurId"));
             Long utilisateurId = Long.parseLong(idToConvert);
-            List<Reservation> reservations = serviceReservation.findReservations(null, utilisateurId).execute().body();
+
+            List<Reservation> reservations = serviceReservation.findReservations(null, utilisateurId)
+                    .execute()
+                    .body();
+
             Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(utilisateurId).execute().body();
 
             model.addAttribute("utilisateur", utilisateur);
@@ -111,6 +116,8 @@ public class AccueilController {
             Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(mail).execute().body();
             if (utilisateur != null) {
                 session.setAttribute("utilisateurId", utilisateur.getId());
+                session.setAttribute("mail", utilisateur.getId());
+                session.setAttribute("password", utilisateur.getId());
                 return "redirect:/";
             }
         }
@@ -120,6 +127,8 @@ public class AccueilController {
     @GetMapping("/deconnexion")
     public String deconnexion(HttpSession session) {
         session.removeAttribute("utilisateurId");
+        session.removeAttribute("mail");
+        session.removeAttribute("password");
         return "redirect:/";
     }
 
