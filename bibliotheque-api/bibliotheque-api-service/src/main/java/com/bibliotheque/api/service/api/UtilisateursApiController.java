@@ -4,6 +4,8 @@ import com.bibliotheque.api.business.UtilisateurManagement;
 import com.bibliotheque.api.service.model.Utilisateur;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.threeten.bp.OffsetDateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -55,11 +57,18 @@ public class UtilisateursApiController implements UtilisateursApi {
 
     public ResponseEntity<Void> deleteUtilisateur(@ApiParam(value = "ID de l'utilisateur à supprimer",required=true) @PathVariable("utilisateurId") Long utilisateurId) {
         String accept = request.getHeader("Accept");
-        if (utilisateurManagement.findById(utilisateurId).isPresent()) {
-            utilisateurManagement.deleteById(utilisateurId);
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            if (utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()).isBibliothecaire()) {
+                if (utilisateurManagement.findById(utilisateurId).isPresent()) {
+                    utilisateurManagement.deleteById(utilisateurId);
+                    return new ResponseEntity<Void>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Utilisateur> findUtilisateursByMail(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail) {
@@ -81,18 +90,25 @@ public class UtilisateursApiController implements UtilisateursApi {
     }
 
     public ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour",required=true) @PathVariable("utilisateurId") Long utilisateurId,@ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value="mail", required=false)  String mail,@ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value="motDePasse", required=false)  String motDePasse,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="prenom", required=false)  String prenom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="nom", required=false)  String nom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="dateCreation", required=false)  DateTime dateCreation) {       String accept = request.getHeader("Accept");
-        Optional<com.bibliotheque.api.model.Utilisateur> utilisateur = utilisateurManagement.findById(utilisateurId);
-        if (utilisateur.isPresent()) {
-            utilisateur.get().setId(utilisateurId);
-            utilisateur.get().setMotDePasse(motDePasse);
-            utilisateur.get().setMail(mail);
-            utilisateur.get().setPrenom(prenom);
-            utilisateur.get().setDateCreation(dateCreation);
-            utilisateur.get().setNom(nom);
-            utilisateurManagement.save(utilisateur.get());
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            if (utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()).isBibliothecaire() ||
+                    utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()) != null) {
+                Optional<com.bibliotheque.api.model.Utilisateur> utilisateur = utilisateurManagement.findById(utilisateurId);
+                if (utilisateur.isPresent()) {
+                    utilisateur.get().setId(utilisateurId);
+                    utilisateur.get().setMotDePasse(motDePasse);
+                    utilisateur.get().setMail(mail);
+                    utilisateur.get().setPrenom(prenom);
+                    utilisateur.get().setDateCreation(dateCreation);
+                    utilisateur.get().setNom(nom);
+                    utilisateurManagement.save(utilisateur.get());
+                    return new ResponseEntity<Void>(HttpStatus.OK);
+                }
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Void> connectUser(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail,@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "password", required = true) String password) {

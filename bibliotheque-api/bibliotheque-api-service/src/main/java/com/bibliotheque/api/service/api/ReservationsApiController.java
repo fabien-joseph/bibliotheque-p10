@@ -62,22 +62,35 @@ public class ReservationsApiController implements ReservationsApi {
 
     public ResponseEntity<Void> addReservation(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté", required = true) @Valid @RequestBody Reservation body) {
         String accept = request.getHeader("Accept");
-        if (reservationManagement.findActualReservations(livreManagement.findById(body.getLivreId()).get(),
-                utilisateurManagement.findById(body.getUtilisateurId()).get()).isEmpty()) {
-            reservationManagement.save(convertReservationApiToReservation(body));
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            if (reservationManagement.findActualReservations(livreManagement.findById(body.getLivreId()).get(),
+                    utilisateurManagement.findById(body.getUtilisateurId()).get()).isEmpty()) {
+                reservationManagement.save(convertReservationApiToReservation(body));
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+
     }
 
     public ResponseEntity<Void> comingBack(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId) {
         String accept = request.getHeader("Accept");
-        if (reservationManagement.findById(reservationId).isPresent()) {
-            com.bibliotheque.api.model.Reservation reservation = reservationManagement.findById(reservationId).get();
-            reservation.setRendu(!reservation.isRendu());
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            if (utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()).isBibliothecaire()) {
+                if (reservationManagement.findById(reservationId).isPresent()) {
+                    com.bibliotheque.api.model.Reservation reservation = reservationManagement.findById(reservationId).get();
+                    reservation.setRendu(!reservation.isRendu());
+                    return new ResponseEntity<Void>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Void> deleteReservation(@ApiParam(value = "ID du livre à supprimer", required = true) @PathVariable("reservationId") Long reservationId) {
@@ -85,15 +98,16 @@ public class ReservationsApiController implements ReservationsApi {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
-
             if (reservationManagement.findById(reservationId).isPresent() &&
                     (reservationManagement.findById(reservationId).get().getUtilisateur().getId() == utilisateurLog.getId() ||
                             utilisateurLog.isBibliothecaire())) {
                 reservationManagement.deleteById(reservationId);
                 return new ResponseEntity<Void>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             }
         }
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<List<Reservation>> findReservations(@ApiParam(value = "Réservations faites sur l'id d'un livre") @Valid @RequestParam(value = "livreId", required = false) Long livreId, @ApiParam(value = "Réservations faites par un utilisateur") @Valid @RequestParam(value = "utilisateurId", required = false) Long utilisateurId) {
@@ -116,12 +130,20 @@ public class ReservationsApiController implements ReservationsApi {
     }
 
     public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("reservationId") Long reservationId) {
-        Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
-        if (reservation.isPresent()) {
-            Reservation reservationApi = convertReservationToReservationApi(reservation.get());
-            return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
+            if (reservationManagement.findById(reservationId).isPresent() &&
+                    (reservationManagement.findById(reservationId).get().getUtilisateur().getId() == utilisateurLog.getId() ||
+                            utilisateurLog.isBibliothecaire())) {
+                Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
+                    Reservation reservationApi = convertReservationToReservationApi(reservation.get());
+                    return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
+            }
         }
-        return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Reservation>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId) {
@@ -141,17 +163,24 @@ public class ReservationsApiController implements ReservationsApi {
                 }
             }
         }
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Void> toggleRenouvelableReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId) {
         String accept = request.getHeader("Accept");
-        if (reservationManagement.findById(reservationId).isPresent()) {
-            com.bibliotheque.api.model.Reservation reservation = reservationManagement.findById(reservationId).get();
-            reservation.setRenouvelable(!reservation.isRenouvelable());
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            if (utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()).isBibliothecaire()) {
+                if (reservationManagement.findById(reservationId).isPresent()) {
+                    com.bibliotheque.api.model.Reservation reservation = reservationManagement.findById(reservationId).get();
+                    reservation.setRenouvelable(!reservation.isRenouvelable());
+                    return new ResponseEntity<Void>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                }
+            }
         }
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<List<Reservation>> expiredReservation() {
