@@ -111,22 +111,37 @@ public class ReservationsApiController implements ReservationsApi {
     }
 
     public ResponseEntity<List<Reservation>> findReservations(@ApiParam(value = "Réservations faites sur l'id d'un livre") @Valid @RequestParam(value = "livreId", required = false) Long livreId, @ApiParam(value = "Réservations faites par un utilisateur") @Valid @RequestParam(value = "utilisateurId", required = false) Long utilisateurId) {
-        Livre livre = null;
-        Utilisateur utilisateur = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
+            boolean isAllowed = true;
 
-        if (livreId != null)
-            livre = livreManagement.findById(livreId).get();
-        if (utilisateurId != null)
-            utilisateur = utilisateurManagement.findById(utilisateurId).get();
+            Livre livre = null;
+            Utilisateur utilisateur = null;
+            if (livreId != null)
+                livre = livreManagement.findById(livreId).get();
+            if (utilisateurId != null)
+                utilisateur = utilisateurManagement.findById(utilisateurId).get();
 
-        List<com.bibliotheque.api.model.Reservation> reservations =
-                reservationManagement.findActualReservations(livre, utilisateur);
-        for (com.bibliotheque.api.model.Reservation reservation : reservations) {
+            List<com.bibliotheque.api.model.Reservation> reservations =
+                    reservationManagement.findActualReservations(livre, utilisateur);
+            List<Reservation> reservationsApi = convertListReservationToListReservationApi(reservations);
+            for (Reservation reservation : reservationsApi) {
+                if (!utilisateurLog.isBibliothecaire() && reservation.getUtilisateurId() != utilisateurLog.getId()) {
+                    isAllowed = false;
+                }
+            }
+            if (reservations != null) {
+                if (isAllowed) {
+                    return new ResponseEntity<List<Reservation>>(reservationsApi, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<List<Reservation>>(HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
+            }
         }
-        if (reservations != null) {
-            return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservations), HttpStatus.OK);
-        }
-        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<List<Reservation>>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("reservationId") Long reservationId) {
@@ -137,8 +152,8 @@ public class ReservationsApiController implements ReservationsApi {
                     (reservationManagement.findById(reservationId).get().getUtilisateur().getId() == utilisateurLog.getId() ||
                             utilisateurLog.isBibliothecaire())) {
                 Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
-                    Reservation reservationApi = convertReservationToReservationApi(reservation.get());
-                    return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
+                Reservation reservationApi = convertReservationToReservationApi(reservation.get());
+                return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
             }
