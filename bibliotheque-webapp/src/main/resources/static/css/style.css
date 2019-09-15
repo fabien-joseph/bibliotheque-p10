@@ -35,10 +35,6 @@ body {
     color: #0F2027;
 }
 
-.fa-dark-blue:hover {
-    color: #203A43;
-}
-
 .background-dark-blue, .background-dark-blue:hover {
     background-color: #0F2027;
     color: white;
@@ -81,6 +77,10 @@ body {
 
 .card:hover {
     box-shadow: 0 4px 9px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.fa-dark-blue:hover {
+    color: #203A43;
 }
 
 .hero.is-large .hero-body-less-padding {

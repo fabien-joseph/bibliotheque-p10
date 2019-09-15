@@ -4,6 +4,7 @@ import com.bibliotheque.api.business.UtilisateurManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,9 +38,20 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/reservations").hasAnyAuthority("utilisateur", "bibliothecaire")
-                .antMatchers("/addReservation").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.GET, "/reservations").hasAnyAuthority("utilisateur", "bibliothecaire")
+                .antMatchers(HttpMethod.POST, "/reservations").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.DELETE, "/reservations").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.PATCH, "/reservations/{reservationId}/renew").hasAnyAuthority("utilisateur", "bibliothecaire")
+                .antMatchers(HttpMethod.PATCH, "/reservations/{reservationId}/comingBack").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.PATCH, "/reservations/{reservationId}/toggleRenouvelable").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.POST, "/livres").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.PUT, "/livres").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.DELETE, "/livres").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.POST, "/utilisateurs").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.PUT, "/utilisateurs/{utilisateurId}").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.DELETE, "/utilisateurs/{utilisateurId}").hasAnyAuthority("bibliothecaire")
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(restAuthenticationEntryPoint);

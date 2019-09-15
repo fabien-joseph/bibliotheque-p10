@@ -38,7 +38,6 @@ public class ReservationExpiredScheduled {
             List<com.bibliotheque.batch.model.Reservation> reservationsExpired =
                     convertListReservationApiToListReservation(reservationsApi);
 
-            System.out.println(reservationsExpired.size());
             if (reservationsExpired.size() > 0) {
                 for (com.bibliotheque.batch.model.Reservation reservation : reservationsExpired) {
                     expirationMail.mailReservationExpired(reservation);

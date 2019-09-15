@@ -23,20 +23,20 @@
                     </div>
 
                     <!-- Profile -->
-                    <div th:if="${session.utilisateurId != null}" class="navbar-item is-nav-link">
+                    <div th:if="${session.mail != null}" class="navbar-item is-nav-link">
                         <a class="is-centered-responsive" href="/profile">Profile</a>
                     </div>
                     <!-- Déconnexion -->
-                    <div th:if="${session.utilisateurId != null}" class="navbar-item is-nav-link">
+                    <div th:if="${session.mail != null}" class="navbar-item is-nav-link">
                         <a class="is-centered-responsive" href="/deconnexion">Se déconnecter</a>
                     </div>
 
                     <!-- Menu item -->
-                    <div th:if="${session.utilisateurId == null}" class="navbar-item is-nav-link">
+                    <div th:if="${session.mail == null}" class="navbar-item is-nav-link">
                         <a class="is-centered-responsive" href="/connexion">Se connecter</a>
                     </div>
                     <!-- Sign up -->
-                    <div th:if="${session.utilisateurId == null}" class="navbar-item">
+                    <div th:if="${session.mail == null}" class="navbar-item">
                         <a href="/inscription" class="button k-button k-primary raised has-gradient slanted">
                             <span class="text">S'inscrire</span>
                             <span class="front-gradient"></span>

@@ -51,14 +51,8 @@ public class LivresApiController implements LivresApi {
     @Override
     public ResponseEntity<Void> addLivre(@ApiParam(value = "Un objet Livre doit être envoyé pour être ajouté", required = true) @Valid @RequestBody Livre body) {
         String accept = request.getHeader("Accept");
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            if (utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()).isBibliothecaire()) {
-                livreManagement.save(convertLivreApiToLivre(body));
-                return new ResponseEntity<Void>(HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+        livreManagement.save(convertLivreApiToLivre(body));
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteLivre(@ApiParam(value = "ID du livre à supprimer", required = true) @PathVariable("livreId") Long livreId, @ApiParam(value = "") @RequestHeader(value = "api_key", required = false) String apiKey) {

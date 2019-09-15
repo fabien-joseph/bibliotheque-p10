@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
@@ -110,7 +111,7 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
-    public ResponseEntity<List<Reservation>> findReservations(@ApiParam(value = "Réservations faites sur l'id d'un livre") @Valid @RequestParam(value = "livreId", required = false) Long livreId, @ApiParam(value = "Réservations faites par un utilisateur") @Valid @RequestParam(value = "utilisateurId", required = false) Long utilisateurId) {
+    public ResponseEntity<List<Reservation>> findReservations(@ApiParam(value = "Envoie de l'utilisateur faisant le requête" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "Réservations faites sur l'id d'un livre") @Valid @RequestParam(value = "livreId", required = false) Long livreId,@ApiParam(value = "Réservations faites par un utilisateur") @Valid @RequestParam(value = "utilisateurId", required = false) Long utilisateurId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
@@ -144,26 +145,17 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<List<Reservation>>(HttpStatus.UNAUTHORIZED);
     }
 
-    public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("reservationId") Long reservationId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
-            if (reservationManagement.findById(reservationId).isPresent() &&
-                    (reservationManagement.findById(reservationId).get().getUtilisateur().getId() == utilisateurLog.getId() ||
-                            utilisateurLog.isBibliothecaire())) {
+    public ResponseEntity<Reservation> getReservationById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("reservationId") Long reservationId,@ApiParam(value = "Envoie de l'utilisateur faisant le requête" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization) {
+            if (reservationManagement.findById(reservationId).isPresent()) {
                 Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
                 Reservation reservationApi = convertReservationToReservationApi(reservation.get());
                 return new ResponseEntity<Reservation>(reservationApi, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
             }
-        }
-        return new ResponseEntity<Reservation>(HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<Reservation>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId) {
+    public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId,@ApiParam(value = "Envoie de l'utilisateur faisant le requête" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization) {
         String accept = request.getHeader("Accept");
-
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());

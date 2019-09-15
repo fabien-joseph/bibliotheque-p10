@@ -18,6 +18,7 @@ import retrofit2.http.Header;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -54,15 +55,18 @@ public class AccueilController {
 
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session) throws IOException {
-        if (session.getAttribute("utilisateurId") != null) {
-            String idToConvert = String.valueOf(session.getAttribute("utilisateurId"));
-            Long utilisateurId = Long.parseLong(idToConvert);
+        if (session.getAttribute("mail") != null) {
+            Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail((String) session.getAttribute("mail")).execute().body();
 
-            List<Reservation> reservations = serviceReservation.findReservations(null, utilisateurId)
+            String base = session.getAttribute("mail") + ":" + session.getAttribute("password");
+
+            assert utilisateur != null;
+            List<Reservation> reservations = serviceReservation.findReservations(
+                    "Basic " + Base64.getEncoder().encodeToString(base.getBytes())
+                    , null, utilisateur.getId())
                     .execute()
                     .body();
 
-            Utilisateur utilisateur = serviceUtilisateur.getUtilisateurById(utilisateurId).execute().body();
 
             model.addAttribute("utilisateur", utilisateur);
             model.addAttribute("today", new DateTime().getMillis());
@@ -72,15 +76,10 @@ public class AccueilController {
         return "redirect:/connexion";
     }
 
-    @GetMapping("/renouveller/{reservationId}")
-    public String renouveller(@PathVariable Long reservationId, HttpSession session) throws IOException {
-        if (session.getAttribute("utilisateurId") != null) {
-            String idString = String.valueOf(session.getAttribute("utilisateurId"));
-            Long idUser;
-            idUser = Long.parseLong(idString);
-            if (idUser.equals(serviceReservation.getReservationById(reservationId).execute().body().getUtilisateurId())) {
-                serviceReservation.renewReservation(reservationId).execute();
-            }
+    @GetMapping("/renouveler/{reservationId}")
+    public String renouveler(@PathVariable Long reservationId, HttpSession session) throws IOException {
+        if (session.getAttribute("mail") != null) {
+            serviceReservation.renewReservation(reservationId, encodeHeaderAuthorization(session)).execute();
         }
         return "redirect:/profile";
     }
@@ -102,7 +101,7 @@ public class AccueilController {
 
     @GetMapping("/connexion")
     public String connexion(HttpSession session) {
-        if (session.getAttribute("utilisateurId") != null)
+        if (session.getAttribute("mail") != null)
             return "redirect:/profile";
         return "connexion";
     }
@@ -113,20 +112,15 @@ public class AccueilController {
                                 @RequestParam(value = "password", required = false, defaultValue = "") String password)
             throws IOException {
         if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
-            Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(mail).execute().body();
-            if (utilisateur != null) {
-                session.setAttribute("utilisateurId", utilisateur.getId());
-                session.setAttribute("mail", utilisateur.getId());
-                session.setAttribute("password", utilisateur.getId());
-                return "redirect:/";
-            }
+            session.setAttribute("mail", mail);
+            session.setAttribute("password", password);
+            return "redirect:/";
         }
         return "redirect:/connexion";
     }
 
     @GetMapping("/deconnexion")
     public String deconnexion(HttpSession session) {
-        session.removeAttribute("utilisateurId");
         session.removeAttribute("mail");
         session.removeAttribute("password");
         return "redirect:/";
@@ -154,5 +148,10 @@ public class AccueilController {
             return reservations;
         }
         return null;
+    }
+
+    private String encodeHeaderAuthorization(HttpSession session) {
+        String baseString = session.getAttribute("mail") + ":" + session.getAttribute("password");
+        return "Basic " + Base64.getEncoder().encodeToString(baseString.getBytes());
     }
 }
