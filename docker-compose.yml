@@ -1,0 +1,18 @@
+version: "3"
+services:
+  bibliotheque-webapp:
+    image: docker-bibliotheque-webapp
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - api-db
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - api-db
+networks:
+  api-db:

@@ -114,6 +114,10 @@ body {
     min-height: 30rem;
 }
 
+.dark-gray-when-hover:hover{
+    color: #0f2027;
+}
+
 .without-valign {
     align-items: normal !important;
 }

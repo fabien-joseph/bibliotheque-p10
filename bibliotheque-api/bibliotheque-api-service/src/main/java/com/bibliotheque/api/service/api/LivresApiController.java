@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,13 +71,16 @@ public class LivresApiController implements LivresApi {
     }
 
     public ResponseEntity<List<Livre>> findLivres(@ApiParam(value = "Auteur ou nom du livre à trouver") @Valid @RequestParam(value = "search", required = false) String search) {
-        search = search.toLowerCase();
-        List<com.bibliotheque.api.model.Livre> livres = livreManagement.findLivresFilters(search);
-        if (livres != null) {
-            List<Livre> livresApi = convertListLivreToListLivreApi(livres);
-            return new ResponseEntity<List<Livre>>(livresApi, HttpStatus.OK);
+        if (search != null) {
+            search = search.toLowerCase();
+            List<com.bibliotheque.api.model.Livre> livres = livreManagement.findLivresFilters(search);
+            if (livres != null) {
+                List<Livre> livresApi = convertListLivreToListLivreApi(livres);
+                return new ResponseEntity<List<Livre>>(livresApi, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     public ResponseEntity<Livre> getLivreById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("livreId") Long livreId) {
