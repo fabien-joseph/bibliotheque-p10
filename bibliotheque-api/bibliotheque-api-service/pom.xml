@@ -63,6 +63,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>bibliotheque-api</finalName>
     </build>
     <dependencies>
         <dependency>
