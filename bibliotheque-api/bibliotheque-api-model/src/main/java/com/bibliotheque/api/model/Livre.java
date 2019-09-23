@@ -1,6 +1,7 @@
 package com.bibliotheque.api.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -18,18 +19,22 @@ public class Livre {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
+    @Column(length = 200)
     private String nom;
     @NotNull
+    @Column(length = 200)
     private String auteur;
-    @Column(length = 2000)
     @NotNull
+    @Column(length = 2000)
     private String resume;
-    @Column(length = 2000)
     @NotNull
+    @Column(length = 2000)
     private String imgUrl;
     @NotNull
+    @Min(0)
     private Integer annee;
     @NotNull
+    @Min(0)
     private Integer quantite;
 
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
