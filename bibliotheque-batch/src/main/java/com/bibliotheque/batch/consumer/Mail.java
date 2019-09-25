@@ -4,11 +4,6 @@ import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
-import io.swagger.client.api.LivreApi;
-import io.swagger.client.api.ReservationApi;
-import io.swagger.client.api.UtilisateurApi;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
     class Mail {
      MailjetRequest request;

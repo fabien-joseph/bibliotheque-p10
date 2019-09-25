@@ -31,8 +31,10 @@ public class Reservation {
     private boolean rendu;
 
     @ManyToOne
+    @NotNull
     private Livre livre;
 
     @ManyToOne
+    @NotNull
     private Utilisateur utilisateur;
 }

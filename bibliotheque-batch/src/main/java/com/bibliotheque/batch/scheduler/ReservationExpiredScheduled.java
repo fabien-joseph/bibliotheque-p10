@@ -10,35 +10,37 @@ import io.swagger.client.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ReservationExpiredScheduled {
-    private Retrofit retrofit = new Retrofit.Builder().baseUrl("http://localhost:9090/fab24/bibliotheque-livres/1.0.0/")
-            .addConverterFactory(GsonConverterFactory.create()).build();
-    private LivreApi serviceLivre = retrofit.create(LivreApi.class);
-    private UtilisateurApi serviceUtilisateur = retrofit.create(UtilisateurApi.class);
-    private ReservationApi serviceReservation = retrofit.create(ReservationApi.class);
+    private LivreApi serviceLivre;
+    private UtilisateurApi serviceUtilisateur;
+    private ReservationApi serviceReservation;
 
     private ExpirationMail expirationMail = new ExpirationMail();
 
     @Autowired
-    public ReservationExpiredScheduled(ExpirationMail expirationMail) {
+    public ReservationExpiredScheduled(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
+        this.serviceLivre = serviceLivre;
+        this.serviceUtilisateur = serviceUtilisateur;
+        this.serviceReservation = serviceReservation;
     }
 
-    @Scheduled(cron = "0 6 * * * *")
+    @Scheduled(cron = "* * * * * *")
     public void checkingReservationExpired() throws IOException, MailjetSocketTimeoutException, MailjetException {
         List<Reservation> reservationsApi = serviceReservation.expiredReservation().execute().body();
+        System.out.println(serviceReservation.expiredReservation().execute().code());
         if (reservationsApi != null) {
+            System.out.println("size : " + reservationsApi.size());
             List<com.bibliotheque.batch.model.Reservation> reservationsExpired =
                     convertListReservationApiToListReservation(reservationsApi);
 
             if (reservationsExpired.size() > 0) {
+                System.out.println("size expiration : " + reservationsExpired.size());
+
                 for (com.bibliotheque.batch.model.Reservation reservation : reservationsExpired) {
                     expirationMail.mailReservationExpired(reservation);
                 }
