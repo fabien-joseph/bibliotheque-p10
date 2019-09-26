@@ -69,4 +69,4 @@ Pour générer la base de données :
 #### Exécution du projet
 
 Pour l'exécution du projet vous aurez besoin de Docker et de Docker-compose. Une fois installés il vous suffira d'ouvrir un terminal dans le dossier contenant le fichier `docker-compose.yml` (présent par défaut à la racine du projet) et d'entrer la commande `docker-compose up` dans votre terminal.
-Il vous est déconseillé de laisser les variables par défaut dans le fichier `docker-compose.yml`, mettez vos proprez variables.
+Il vous est déconseillé de laisser les variables par défaut dans le fichier `docker-compose.yml`, mettez vos propres variables.

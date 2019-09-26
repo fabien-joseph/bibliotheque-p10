@@ -38,48 +38,63 @@ public class AccueilController {
 
     @GetMapping("/livres")
     public String livres(Model model,
-                         @RequestParam(value = "search", required = false, defaultValue = "") String search)
-            throws IOException {
-        model.addAttribute("livres", serviceLivre.findLivres(search).execute().body());
-        return "livres";
+                         @RequestParam(value = "search", required = false, defaultValue = "") String search) {
+        try {
+            model.addAttribute("livres", serviceLivre.findLivres(search).execute().body());
+            return "livres";
+        } catch (Exception e) {
+            return "failConnexion";
+        }
     }
 
     @GetMapping("/livres/{id}")
-    public String livre(Model model, @PathVariable Long id) throws IOException {
-        Livre livre = serviceLivre.getLivreById(id).execute().body();
-        model.addAttribute("livre", livre);
-        return "livre";
+    public String livre(Model model, @PathVariable Long id) {
+        try {
+            Livre livre = serviceLivre.getLivreById(id).execute().body();
+            model.addAttribute("livre", livre);
+            return "livre";
+        } catch (Exception e) {
+            return "failConnexion";
+        }
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, HttpSession session) throws IOException {
-        if (session.getAttribute("mail") != null) {
-            Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail((String) session.getAttribute("mail")).execute().body();
+    public String profile(Model model, HttpSession session) {
+        try {
+            if (session.getAttribute("mail") != null) {
+                Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail((String) session.getAttribute("mail")).execute().body();
 
-            String base = session.getAttribute("mail") + ":" + session.getAttribute("password");
+                String base = session.getAttribute("mail") + ":" + session.getAttribute("password");
 
-            assert utilisateur != null;
-            List<Reservation> reservations = serviceReservation.findReservations(
-                    "Basic " + Base64.getEncoder().encodeToString(base.getBytes())
-                    , null, utilisateur.getId())
-                    .execute()
-                    .body();
+                assert utilisateur != null;
+                List<Reservation> reservations = serviceReservation.findReservations(
+                        "Basic " + Base64.getEncoder().encodeToString(base.getBytes())
+                        , null, utilisateur.getId())
+                        .execute()
+                        .body();
 
 
-            model.addAttribute("utilisateur", utilisateur);
-            model.addAttribute("today", new DateTime().getMillis());
-            model.addAttribute("reservations", convertListReservationApiToListReservation(reservations));
-            return "profile";
+                model.addAttribute("utilisateur", utilisateur);
+                model.addAttribute("today", new DateTime().getMillis());
+                model.addAttribute("reservations", convertListReservationApiToListReservation(reservations));
+                return "profile";
+            }
+            return "redirect:/connexion";
+        } catch (Exception e) {
+            return "failConnexion";
         }
-        return "redirect:/connexion";
     }
 
     @GetMapping("/renouveler/{reservationId}")
-    public String renouveler(@PathVariable Long reservationId, HttpSession session) throws IOException {
-        if (session.getAttribute("mail") != null) {
-            serviceReservation.renewReservation(reservationId, encodeHeaderAuthorization(session)).execute();
+    public String renouveler(@PathVariable Long reservationId, HttpSession session) {
+        try {
+            if (session.getAttribute("mail") != null) {
+                serviceReservation.renewReservation(reservationId, encodeHeaderAuthorization(session)).execute();
+            }
+            return "redirect:/profile";
+        } catch (Exception e) {
+            return "failConnexion";
         }
-        return "redirect:/profile";
     }
 
     @GetMapping("/inscription")
@@ -107,14 +122,17 @@ public class AccueilController {
     @PostMapping("/connexion")
     public String connexionPost(HttpSession session,
                                 @RequestParam(value = "mail", required = false, defaultValue = "") String mail,
-                                @RequestParam(value = "password", required = false, defaultValue = "") String password)
-            throws IOException {
-        if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
-            session.setAttribute("mail", mail);
-            session.setAttribute("password", password);
-            return "redirect:/";
+                                @RequestParam(value = "password", required = false, defaultValue = "") String password) {
+        try {
+            if (serviceUtilisateur.connectUser(mail, password).execute().code() == 200) {
+                session.setAttribute("mail", mail);
+                session.setAttribute("password", password);
+                return "redirect:/";
+            }
+            return "redirect:/connexion";
+        } catch (Exception e) {
+            return "failConnexion";
         }
-        return "redirect:/connexion";
     }
 
     @GetMapping("/deconnexion")
