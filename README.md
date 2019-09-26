@@ -1,6 +1,6 @@
-# Escalado
+# Bibliothèque
 
-Ce dépôt est associé au projet [Créez un site communautaire autour de l’escalade](https://openclassrooms.com/fr/projects/128/assignment) pour [OpenClassRooms](https://openclassrooms.com).
+Ce dépôt est associé au projet [Développez le nouveau système d'information de la bibliothèque d'une grande ville](https://openclassrooms.com/fr/projects/124/assignment) pour [OpenClassRooms](https://openclassrooms.com).
 
 ## Technologies
 
