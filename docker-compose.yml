@@ -11,7 +11,23 @@ services:
     links:
       - biblioapi
     environment:
-      API_URL: http://oezidnaadoidazoiadzinzod:9090/fab24/bibliotheque-livres/1.0.0/
+      API_URL: http://biblioapi:9090/fab24/bibliotheque-livres/1.0.0/
+  bibliobatch:
+    image: fabien24/bibliotheque-batch
+    depends_on:
+      - biblioapi
+    ports:
+      - "8081:8081"
+    networks:
+      - bi
+    links:
+      - biblioapi
+    environment:
+      API_URL: http://biblioapi:9090/fab24/bibliotheque-livres/1.0.0/
+      MJ_APIKEY_PUBLIC: 80958d608558a14a15ebb75567d46fec
+      MJ_APIKEY_PRIVATE: 1d1ed1b11918e2d67b10d90d8478bfd4
+      MJ_NAME_FROM: Bibliotheque
+      MJ_MAIL_FROM: fabjoseph24@gmail.com
   biblioapi:
     image: fabien24/bibliotheque-api
     container_name: biblioapi
@@ -30,8 +46,8 @@ services:
   db:
     image: postgres:9.6
     container_name: db
-#    ports:
-#      - "60000:5432"
+    #    ports:
+    #      - "60000:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:

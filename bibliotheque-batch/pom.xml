@@ -122,6 +122,7 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>bibliotheque-batch</finalName>
     </build>
 
 </project>
