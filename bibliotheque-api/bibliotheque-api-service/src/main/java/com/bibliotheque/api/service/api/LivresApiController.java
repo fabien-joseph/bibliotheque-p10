@@ -2,7 +2,6 @@ package com.bibliotheque.api.service.api;
 
 import com.bibliotheque.api.business.LivreManagement;
 import com.bibliotheque.api.business.UtilisateurManagement;
-import com.bibliotheque.api.model.Utilisateur;
 import com.bibliotheque.api.service.model.Livre;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

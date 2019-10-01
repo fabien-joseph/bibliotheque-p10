@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -40,9 +39,6 @@ public class ReservationsApiController implements ReservationsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
-
-    @Value("${bibliotheque.limit.days}")
-    int limitDate;
 
     @Autowired
     private ReservationManagement reservationManagement;
@@ -184,7 +180,7 @@ public class ReservationsApiController implements ReservationsApi {
         List<com.bibliotheque.api.model.Reservation> allReservations = reservationManagement.findAll();
         List<com.bibliotheque.api.model.Reservation> expiredReservations = new ArrayList<>();
         for (com.bibliotheque.api.model.Reservation reservation : allReservations) {
-            if (reservation.getDateDebut().plusDays(limitDate).getMillis() < new DateTime().getMillis() &&
+            if (reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() < new DateTime().getMillis() &&
                     !reservation.isRendu()) {
                 expiredReservations.add(reservation);
             }
@@ -202,7 +198,7 @@ public class ReservationsApiController implements ReservationsApi {
         reservationApi.setDateDebut(reservation.getDateDebut().getMillis());
         reservationApi.setLivreId(reservation.getLivre().getId());
         reservationApi.setUtilisateurId(reservation.getUtilisateur().getId());
-        reservationApi.setDateFin(reservation.getDateDebut().plusDays(limitDate).getMillis());
+        reservationApi.setDateFin(reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis());
         reservationApi.setRendu(reservation.isRendu());
         reservationApi.setRenouvelable(reservation.isRenouvelable());
         return reservationApi;
