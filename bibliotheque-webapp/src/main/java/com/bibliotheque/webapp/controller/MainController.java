@@ -20,12 +20,12 @@ import java.util.Base64;
 import java.util.List;
 
 @Controller
-public class AccueilController {
+public class MainController {
     private LivreApi serviceLivre;
     private UtilisateurApi serviceUtilisateur;
     private ReservationApi serviceReservation;
 
-    public AccueilController(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
+    public MainController(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
         this.serviceLivre = serviceLivre;
         this.serviceUtilisateur = serviceUtilisateur;
         this.serviceReservation = serviceReservation;
