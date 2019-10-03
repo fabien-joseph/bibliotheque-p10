@@ -1,36 +1,36 @@
 version: "3"
 services:
-  bibliowebapp:
+  webapp:
     image: fabien24/bibliotheque-webapp
     depends_on:
-      - biblioapi
+      - api
     ports:
       - "8080:8080"
     networks:
       - bi
     links:
-      - biblioapi
+      - api
     environment:
-      API_URL: http://biblioapi:9090/fab24/bibliotheque-livres/1.0.0/
-  bibliobatch:
+      API_URL: http://api:9090/fab24/bibliotheque-livres/1.0.0/
+  batch:
     image: fabien24/bibliotheque-batch
     depends_on:
-      - biblioapi
+      - api
     ports:
       - "8081:8081"
     networks:
       - bi
     links:
-      - biblioapi
+      - api
     environment:
-      API_URL: http://biblioapi:9090/fab24/bibliotheque-livres/1.0.0/
+      API_URL: http://api:9090/fab24/bibliotheque-livres/1.0.0/
       MJ_APIKEY_PUBLIC: 80958d608558a14a15ebb75567d46fec
       MJ_APIKEY_PRIVATE: 1d1ed1b11918e2d67b10d90d8478bfd4
       MJ_NAME_FROM: Bibliotheque
       MJ_MAIL_FROM: fabjoseph24@gmail.com
-  biblioapi:
+  api:
     image: fabien24/bibliotheque-api
-    container_name: biblioapi
+    container_name: api
     depends_on:
       - db
     ports:
@@ -41,6 +41,7 @@ services:
       JDBC_DATABASE: jdbc:postgresql://db:5432/bibliotheque
       JDBC_USERNAME: postgres
       JDBC_PASSWORD: azerty123
+      RESERVATION_DUREE: 30
     links:
       - db
   db:
@@ -49,14 +50,13 @@ services:
     #    ports:
     #      - "60000:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./sql/01_create_schema.sql:/docker-entrypoint-initdb.d/01_create_schema.sql
+      - ./sql/02_create_data.sql:/docker-entrypoint-initdb.d/02_create_data.sql
     networks:
       - bi
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: azerty123
       POSTGRES_DB: bibliotheque
-volumes:
-  db_data: {}
 networks:
   bi:
