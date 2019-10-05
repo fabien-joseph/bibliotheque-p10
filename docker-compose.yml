@@ -50,6 +50,7 @@ services:
     #    ports:
     #      - "60000:5432"
     volumes:
+      - db_data:/data
       - ./sql/01_create_schema.sql:/docker-entrypoint-initdb.d/01_create_schema.sql
       - ./sql/02_create_data.sql:/docker-entrypoint-initdb.d/02_create_data.sql
     networks:
@@ -58,5 +59,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: azerty123
       POSTGRES_DB: bibliotheque
+volumes:
+  db_data: {}
 networks:
   bi:
