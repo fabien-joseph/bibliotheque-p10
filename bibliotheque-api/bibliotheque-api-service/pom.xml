@@ -8,7 +8,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springfox-version>2.7.0</springfox-version>
-        <start-class>com.bibliotheque.api.service.Application</start-class>
+        <start-class>com.bibliotheque.api.service.ApiApplication</start-class>
     </properties>
     <parent>
         <artifactId>bibliotheque-api</artifactId>

@@ -61,7 +61,7 @@ Pour le service bibliotheque-api :
 - `JDBC_DATABASE` contenant le nom de la base de données à laquelle le programme doit être connecté
 - `JDBC_USERNAME` contenant le nom d'utilisateur pour se connecter à la base de donnée
 - `JDBC_PASSWORD` contenant le mot de passe pour se connecter à la base de donnée
-
+- `RESERVATION_DUREE` durée d'une réservation (en jour)
 Pour générer la base de données :
 - Si le programme est bien connecté à une base de donnée PostgreSQL, une fois celui-ci exécuté, il créera lui-même la structure de la base de donnée avec Spring Data JPA
 - Pour utiliser le jeu de données il faut utiliser le fichier bibliotheque-dump dans le dossier assets
@@ -70,3 +70,4 @@ Pour générer la base de données :
 
 Pour l'exécution du projet vous aurez besoin de Docker et de Docker-compose. Une fois installés il vous suffira d'ouvrir un terminal dans le dossier contenant le fichier `docker-compose.yml` (présent par défaut à la racine du projet) et d'entrer la commande `docker-compose up` dans votre terminal.
 Il vous est déconseillé de laisser les variables par défaut dans le fichier `docker-compose.yml`, mettez vos propres variables.
+Par défaut, à la première exécution, des scripts SQL seront exécutés pour créer un jeu de données avec deux utilisateurs. Ces scripts SQL sont `01_create_schema.sql` et `02_create_data.sql`. Si vous ne souhaitez pas de l'exécution de ces scripts, il faudra supprimer leur appel dans le fichier `docker-compose.yml`.
