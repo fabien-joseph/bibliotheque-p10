@@ -2,27 +2,20 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="swagger-spring" />
+        <module name="bibliotheque-batch" />
         <module name="bibliotheque-api-consumer" />
         <module name="bibliotheque-webapp" />
-        <module name="swagger-java-client" />
         <module name="bibliotheque-api-business" />
         <module name="bibliotheque-api-model" />
+        <module name="bibliotheque-api-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="bibliotheque-api-test" target="8" />
-      <module name="maven-archiver (1)" target="1.5" />
-      <module name="maven-archiver (2)" target="1.5" />
-      <module name="maven-archiver (3)" target="1.5" />
-      <module name="maven-archiver (4)" target="1.5" />
-      <module name="maven-archiver (5)" target="1.5" />
-      <module name="maven-archiver (6)" target="1.5" />
+      <module name="bibliothequebatch" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -30,9 +23,10 @@
       <module name="bibliotheque-api-business" options="-parameters" />
       <module name="bibliotheque-api-consumer" options="-parameters" />
       <module name="bibliotheque-api-model" options="-parameters" />
-      <module name="bibliotheque-api-test" options="-parameters" />
+      <module name="bibliotheque-api-service" options="-parameters" />
+      <module name="bibliotheque-batch" options="-parameters" />
       <module name="bibliotheque-webapp" options="-parameters" />
-      <module name="swagger-spring" options="-parameters" />
+      <module name="bibliothequebatch" options="-parameters" />
     </option>
   </component>
 </project>
