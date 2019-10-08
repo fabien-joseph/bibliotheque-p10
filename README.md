@@ -69,5 +69,7 @@ Pour générer la base de données :
 #### Exécution du projet
 
 Pour l'exécution du projet vous aurez besoin de Docker et de Docker-compose. Une fois installés il vous suffira d'ouvrir un terminal dans le dossier contenant le fichier `docker-compose.yml` (présent par défaut à la racine du projet) et d'entrer la commande `docker-compose up` dans votre terminal.
-Il vous est déconseillé de laisser les variables par défaut dans le fichier `docker-compose.yml`, mettez vos propres variables.
+
+Il vous est déconseillé de laisser les variables par défaut dans le fichier `docker-compose.yml`, mettez vos propres variables. Il est même vital, pour le bon fonctionnement du service bibliotheque-batch, que vous utilisiez votre propre compte [Mailjet](https://app.mailjet.com/) avec les accès qui lui sont associés.
+
 Par défaut, à la première exécution, des scripts SQL seront exécutés pour créer un jeu de données avec deux utilisateurs. Ces scripts SQL sont `01_create_schema.sql` et `02_create_data.sql`. Si vous ne souhaitez pas de l'exécution de ces scripts, il faudra supprimer leur appel dans le fichier `docker-compose.yml`.
