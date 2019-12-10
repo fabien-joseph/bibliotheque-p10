@@ -29,6 +29,9 @@ public class Reservation {
     @NotNull
     @Column(columnDefinition = "boolean default false")
     private boolean rendu;
+    @NotNull
+    @Column(columnDefinition = "boolean default false")
+    private boolean attente;
 
     @ManyToOne
     @NotNull

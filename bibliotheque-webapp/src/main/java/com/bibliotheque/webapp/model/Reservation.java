@@ -16,4 +16,5 @@ public class Reservation {
     private Utilisateur utilisateur;
     private boolean renouvelable;
     private boolean rendu;
+    private boolean attente;
 }
