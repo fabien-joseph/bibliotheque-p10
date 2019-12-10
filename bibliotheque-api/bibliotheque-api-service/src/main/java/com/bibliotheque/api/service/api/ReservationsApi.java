@@ -119,4 +119,13 @@ public interface ReservationsApi {
             method = RequestMethod.PATCH)
     ResponseEntity<Void> toggleRenouvelableReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour",required=true) @PathVariable("reservationId") Long reservationId);
 
+    @ApiOperation(value = "Récupérer la liste de réservations en cours d'un livre", nickname = "getReservationsOfaBookInProgress", notes = "", response = Reservation.class, responseContainer = "List", tags={ "reservation", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Reservation.class, responseContainer = "List"),
+            @ApiResponse(code = 404, message = "Aucune réservation expirée trouvée") })
+    @RequestMapping(value = "/reservations/{livreId}/progress",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<Reservation>> getReservationsOfaBookInProgress(@ApiParam(value = "Réservations faites sur l'id d'un livre",required=true) @PathVariable("livreId") Long livreId);
 }

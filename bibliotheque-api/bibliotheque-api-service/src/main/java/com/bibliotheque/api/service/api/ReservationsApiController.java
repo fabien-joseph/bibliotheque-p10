@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -187,6 +188,17 @@ public class ReservationsApiController implements ReservationsApi {
         }
         if (expiredReservations != null) {
             return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(expiredReservations), HttpStatus.OK);
+        }
+        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<List<Reservation>> getReservationsOfaBookInProgress(@ApiParam(value = "Réservations faites sur l'id d'un livre",required=true) @PathVariable("livreId") Long livreId) {
+        Optional<Livre> livre = livreManagement.findById(livreId);
+        if (livre.isPresent()) {
+            List<com.bibliotheque.api.model.Reservation> reservations = reservationManagement.getReservationsOfaBookInProgress(livre.get());
+            if (reservations != null) {
+                return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservations), HttpStatus.OK);
+            }
         }
         return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
     }

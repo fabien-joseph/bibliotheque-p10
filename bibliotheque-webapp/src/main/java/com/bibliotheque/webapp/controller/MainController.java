@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,13 @@ public class MainController {
     public String livre(Model model, @PathVariable Long id) {
         try {
             Livre livre = serviceLivre.getLivreById(id).execute().body();
+            List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(id).execute().body();
+            int reservationsSize = 0;
+            if (reservations != null)
+                reservationsSize = reservations.size();
+            System.out.println(reservationsSize);
             model.addAttribute("livre", livre);
+            model.addAttribute("number", reservationsSize);
             return "livre";
         } catch (Exception e) {
             return "failConnexion";
@@ -76,7 +83,9 @@ public class MainController {
 
                 model.addAttribute("utilisateur", utilisateur);
                 model.addAttribute("today", new DateTime().getMillis());
+                model.addAttribute("today2", 18);
                 model.addAttribute("reservations", convertListReservationApiToListReservation(reservations));
+                model.addAttribute("number", 18);
                 return "profile";
             }
             return "redirect:/connexion";
