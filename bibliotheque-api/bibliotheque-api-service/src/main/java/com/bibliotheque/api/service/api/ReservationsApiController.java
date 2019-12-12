@@ -58,10 +58,13 @@ public class ReservationsApiController implements ReservationsApi {
         this.request = request;
     }
 
-    public ResponseEntity<Void> addReservation(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté", required = true) @Valid @RequestBody Reservation body) {
+    public ResponseEntity<Void> addReservation(
+            @ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté", required = true)
+            @Valid @RequestBody Reservation body,
+            @ApiParam(value = "Envoie de l'utilisateur faisant le requête", required = true)
+            @RequestHeader(value = "Authorization", required = true) String authorization) {
         String accept = request.getHeader("Accept");
-        if (livreManagement.findById(body.getLivreId())  != null) {
-
+        if (livreManagement.findById(body.getLivreId()) != null) {
             reservationManagement.save(convertReservationApiToReservation(body));
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
@@ -192,7 +195,7 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<List<Reservation>> getReservationsOfaBookInProgress(@ApiParam(value = "Réservations faites sur l'id d'un livre",required=true) @PathVariable("livreId") Long livreId) {
+    public ResponseEntity<List<Reservation>> getReservationsOfaBookInProgress(@ApiParam(value = "Réservations faites sur l'id d'un livre", required = true) @PathVariable("livreId") Long livreId) {
         Optional<Livre> livre = livreManagement.findById(livreId);
         if (livre.isPresent()) {
             List<com.bibliotheque.api.model.Reservation> reservations = reservationManagement.getReservationsOfaBookInProgress(livre.get());
@@ -213,6 +216,7 @@ public class ReservationsApiController implements ReservationsApi {
         reservationApi.setDateFin(reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis());
         reservationApi.setRendu(reservation.isRendu());
         reservationApi.setRenouvelable(reservation.isRenouvelable());
+        reservationApi.setAttente(reservation.isAttente());
         return reservationApi;
     }
 
@@ -234,6 +238,7 @@ public class ReservationsApiController implements ReservationsApi {
         reservation.setLivre(livreManagement.findById(reservationApi.getLivreId()).get());
         reservation.setRendu(reservationApi.isRendu());
         reservation.setRenouvelable(reservationApi.isRenouvelable());
+        reservation.setAttente(reservationApi.isAttente());
 
         return reservation;
     }

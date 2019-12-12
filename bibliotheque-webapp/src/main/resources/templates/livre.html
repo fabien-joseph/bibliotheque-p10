@@ -19,7 +19,7 @@
                     <h2 class="subtitle is-4 is-thin"
                         th:text="${livre.getAuteur()} + ', ' + ${livre.getAnnee()} + ', ' + ${livre.getGenre()}"></h2>
                     <!-- CTA -->
-                    <h2 class="subtitle is-8 is-thin" th:text="'Livres disponibles : ' + ${number}"></h2>
+                    <h2 class="subtitle is-8 is-thin" th:text="'Livres disponibles : ' + ${reservationsSize}"></h2>
                     <p>
                         <a th:href="@{/reservation/{id} (id=${livre.getId()})}" class="button is-rounded is-large custom-background has-text-white">
                             <span class="text">Réserver</span>

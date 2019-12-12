@@ -50,15 +50,18 @@ public class MainController {
     public String livre(Model model, @PathVariable Long id) {
         try {
             Livre livre = serviceLivre.getLivreById(id).execute().body();
-            List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(id).execute().body();
-            int reservationsSize = 0;
-            if (reservations != null)
-                reservationsSize = livre.getQuantite() - reservations.size();
-            if (reservationsSize <= 0)
-                reservationsSize = 0;
-            model.addAttribute("livre", livre);
-            model.addAttribute("number", reservationsSize);
-            return "livre";
+            if (livre != null) {
+                List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(id).execute().body();
+                int reservationsSize = 0;
+                if (reservations != null)
+                    reservationsSize = livre.getQuantite() - reservations.size();
+                if (reservationsSize < 0)
+                    reservationsSize = 0;
+                model.addAttribute("livre", livre);
+                model.addAttribute("reservationsSize", reservationsSize);
+                return "livre";
+            }
+            return "error";
         } catch (Exception e) {
             return "error";
         }
@@ -105,20 +108,25 @@ public class MainController {
         }
     }
 
-    @PostMapping("/reservation/attente/{livreId}")
+    @GetMapping("/reservation/attente/{livreId}")
     public String reserverAttente(@PathVariable Long livreId, HttpSession session) {
         if (session.getAttribute("mail") == null)
             return "redirect:/connexion";
             try {
-            if (serviceLivre.getLivreById(livreId).execute().body() != null) {
+                Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(session.getAttribute("mail").toString()).execute().body();
+            if (serviceLivre.getLivreById(livreId).execute().body() != null && utilisateur != null) {
                 Calendar calendar = Calendar.getInstance();
                 Reservation reservation = new Reservation();
                 reservation.setLivreId(livreId);
+                reservation.setUtilisateurId(utilisateur.getId());
                 reservation.setDateDebut(calendar.getTimeInMillis());
                 calendar.add(Calendar.DATE, 30);
                 reservation.setDateFin(calendar.getTimeInMillis());
                 reservation.setAttente(true);
-                serviceReservation.addReservation(reservation);
+                reservation.setRendu(false);
+                 reservation.setRenouvelable(true);
+                System.out.println("Ça part");
+                serviceReservation.addReservation(reservation, encodeHeaderAuthorization(session)).execute();
                 return "redirect:/profil";
             }
         } catch (IOException e) {

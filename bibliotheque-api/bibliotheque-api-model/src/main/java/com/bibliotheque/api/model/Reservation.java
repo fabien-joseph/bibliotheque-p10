@@ -30,7 +30,7 @@ public class Reservation {
     @Column(columnDefinition = "boolean default false")
     private boolean rendu;
     @NotNull
-    @Column(columnDefinition = "boolean default false")
+    @Column
     private boolean attente;
 
     @ManyToOne

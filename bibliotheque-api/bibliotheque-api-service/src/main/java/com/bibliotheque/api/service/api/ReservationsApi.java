@@ -26,15 +26,16 @@ import java.util.List;
 @Api(value = "reservations", description = "the reservations API")
 public interface ReservationsApi {
 
-    @ApiOperation(value = "Ajouter une nouvelle réservation", nickname = "addReservation", notes = "", tags={ "reservation", })
+    @ApiOperation(value = "Ajouter une nouvelle réservation", nickname = "addReservation", notes = "", authorizations = {
+            @Authorization(value = "basicAuth")
+    }, tags={ "reservation", })
     @ApiResponses(value = {
             @ApiResponse(code = 405, message = "Invalid input") })
     @RequestMapping(value = "/reservations",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    ResponseEntity<Void> addReservation(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Reservation body);
-
+    ResponseEntity<Void> addReservation(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Reservation body,@ApiParam(value = "Envoie de l'utilisateur faisant le requête" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization);
 
     @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "comingBack", notes = "", tags={ "reservation", })
     @ApiResponses(value = {
