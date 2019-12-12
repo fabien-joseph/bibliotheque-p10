@@ -86,7 +86,8 @@ public class MainController {
                 model.addAttribute("utilisateur", utilisateur);
                 model.addAttribute("today", new DateTime().getMillis());
                 model.addAttribute("today2", 18);
-                model.addAttribute("reservations", convertListReservationApiToListReservation(reservations));
+                List<com.bibliotheque.webapp.model.Reservation> reservationsUser = convertListReservationApiToListReservation(reservations);
+                model.addAttribute("reservations", reservationsUser);
                 model.addAttribute("number", 18);
                 return "profil";
             }
@@ -207,6 +208,7 @@ public class MainController {
         reservation.setDateFin(new DateTime(reservationApi.getDateFin()));
         reservation.setRendu(reservationApi.isRendu());
         reservation.setRenouvelable(reservationApi.isRenouvelable());
+        reservation.setAttente(reservationApi.isAttente());
         reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
         reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
 
