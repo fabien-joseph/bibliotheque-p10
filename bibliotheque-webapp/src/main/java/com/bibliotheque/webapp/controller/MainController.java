@@ -85,10 +85,8 @@ public class MainController {
 
                 model.addAttribute("utilisateur", utilisateur);
                 model.addAttribute("today", new DateTime().getMillis());
-                model.addAttribute("today2", 18);
                 List<com.bibliotheque.webapp.model.Reservation> reservationsUser = convertListReservationApiToListReservation(reservations);
                 model.addAttribute("reservations", reservationsUser);
-                model.addAttribute("number", 18);
                 return "profil";
             }
             return "redirect:/connexion";
