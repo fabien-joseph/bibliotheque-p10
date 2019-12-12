@@ -15,15 +15,15 @@
                     <h2 th:if="${session.mail == null}" class="subtitle is-6 is-light is-thin">Connectez-vous pour bénéficier de
                         l'entièreté de nos services.</h2>
                     <h2 th:if="${session.mail != null}" class="subtitle is-6 is-light is-thin">Rendez-vous sur votre
-                    profile pour voir vos réservations.</h2>
+                    profil pour voir vos réservations.</h2>
                     <!-- CTA -->
                     <p>
                         <a th:if="${session.mail == null}" href="/connexion" class="button k-button k-primary raised has-gradient is-fat is-bold">
                             <span class="text">Se connecter</span>
                             <span class="front-gradient"></span>
                         </a>
-                        <a th:if="${session.mail != null}" href="/profile" class="button k-button k-primary raised has-gradient is-fat is-bold">
-                            <span class="text">Votre profile</span>
+                        <a th:if="${session.mail != null}" href="/profil" class="button k-button k-primary raised has-gradient is-fat is-bold">
+                            <span class="text">Votre profil</span>
                             <span class="front-gradient"></span>
                         </a>
 
