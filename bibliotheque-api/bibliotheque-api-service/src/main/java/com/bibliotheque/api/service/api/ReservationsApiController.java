@@ -65,8 +65,12 @@ public class ReservationsApiController implements ReservationsApi {
             @RequestHeader(value = "Authorization", required = true) String authorization) {
         String accept = request.getHeader("Accept");
         if (livreManagement.findById(body.getLivreId()) != null) {
-            reservationManagement.save(convertReservationApiToReservation(body));
-            return new ResponseEntity<Void>(HttpStatus.OK);
+            if (reservationManagement.canBeSaved(convertReservationApiToReservation(body))) {
+                reservationManagement.save(convertReservationApiToReservation(body));
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            }
         }
         return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }

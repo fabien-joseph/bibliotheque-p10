@@ -45,7 +45,7 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         repository.save(reservation);
     }
 
-    private boolean canBeSaved(Reservation reservation) {
+    public boolean canBeSaved(Reservation reservation) {
         List<Reservation> reservations = repository.getReservationWaitingOfaBook(reservation.getLivre());
         if (reservations != null) {
             if (reservations.size() >= reservation.getLivre().getQuantite() * 2) {
