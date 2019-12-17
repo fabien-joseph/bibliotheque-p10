@@ -82,7 +82,6 @@ public class MainController {
                         .execute()
                         .body();
 
-
                 model.addAttribute("utilisateur", utilisateur);
                 model.addAttribute("today", new DateTime().getMillis());
                 List<com.bibliotheque.webapp.model.Reservation> reservationsUser = convertListReservationApiToListReservation(reservations);
@@ -131,7 +130,7 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/accueil";
+        return "redirect:/";
     }
 
 
@@ -162,6 +161,12 @@ public class MainController {
             e.printStackTrace();
         }
         return "error";
+    }
+
+    @GetMapping("/reservation/annuler/{reservationId}")
+    public String reservationAnnulation(HttpSession session, @PathVariable Long reservationId) throws IOException {
+        serviceReservation.deleteReservation(reservationId, encodeHeaderAuthorization(session)).execute();
+        return "redirect:/profil";
     }
 
     @GetMapping("/contact")

@@ -19,10 +19,10 @@
                 '/' +
                 ${reservation.getDateFin().getDayOfMonth()}"></p>
                 <p th:if="${reservation.isAttente()}" class="subtitle is-6" th:text="'En attente de disponibilité'"></p>
-
-
-
             </div>
         </div>
     </div>
+    <footer th:if="${reservation.isAttente()}" class="card-footer">
+        <a th:href="@{/reservation/annuler/{reservationId} (reservationId=${reservation.getId()})}" class="card-footer-item fa-dark-blue">Annuler</a>
+    </footer>
 </div>

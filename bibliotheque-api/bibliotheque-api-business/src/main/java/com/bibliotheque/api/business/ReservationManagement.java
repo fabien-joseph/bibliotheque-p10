@@ -34,6 +34,12 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         return repository.getReservationsOfaBookInProgress(livre);
     }
 
+    public List<Reservation> getReservationsOfaBookWaiting(Livre livre) {
+        return repository.getReservationWaitingOfaBook(livre);
+    }
+
+
+
     public List<Reservation> findAll() {
         return repository.findAll();
     }
