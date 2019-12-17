@@ -22,6 +22,7 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         Optional<Reservation> reservation = repository.findById(id);
         if (reservation.isPresent()) {
             reservation.get().setDateDebut(new DateTime());
+            reservation.get().setRenouvelable(false);
             repository.save(reservation.get());
         }
     }
