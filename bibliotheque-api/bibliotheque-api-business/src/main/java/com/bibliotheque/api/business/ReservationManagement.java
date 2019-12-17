@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ReservationManagement extends JpaCrudManager<Reservation, ReservationRepository>{
+public class ReservationManagement extends JpaCrudManager<Reservation, ReservationRepository> {
     public ReservationManagement(ReservationRepository repository) {
         super(repository);
     }
 
-    public void renew (Long id) {
+    public void renew(Long id) {
         Optional<Reservation> reservation = repository.findById(id);
         if (reservation.isPresent()) {
             reservation.get().setDateDebut(new DateTime());
@@ -26,11 +26,44 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         }
     }
 
-    public List<Reservation> findActualReservations (Livre livre, Utilisateur utilisateur) {
+    public List<Reservation> findActualReservations(Livre livre, Utilisateur utilisateur) {
         return repository.findActualReservationsWithLivre(livre, utilisateur, new DateTime());
     }
 
+    public List<Reservation> getReservationsOfaBookInProgress(Livre livre) {
+        return repository.getReservationsOfaBookInProgress(livre);
+    }
+
+    public List<Reservation> getReservationsOfaBookWaiting(Livre livre) {
+        return repository.getReservationWaitingOfaBook(livre);
+    }
+
+
+
     public List<Reservation> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public void save(Reservation reservation) {
+        if (!canBeSaved(reservation))
+            return;
+        repository.save(reservation);
+    }
+
+    public boolean canBeSaved(Reservation reservation) {
+        List<Reservation> reservations = repository.getReservationWaitingOfaBook(reservation.getLivre());
+        if (reservations != null) {
+            if (reservations.size() >= reservation.getLivre().getQuantite() * 2) {
+                return false;
+            }
+            for (Reservation res : reservations) {
+                if (reservation.getLivre() == res.getLivre() && reservation.getUtilisateur() == res.getUtilisateur()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

@@ -10,19 +10,35 @@
             <div class="columns is-vcentered">
 
                 <!-- Landing page Title -->
-                <div class="column is-5 is-width-45 landing-caption">
+                <div th:if="${livresDispo > 0}" class="column is-5 is-width-45 landing-caption">
                     <h1 class="title is-1 is-light is-semibold is-spaced main-title">Comment réserver un livre ?</h1>
                     <h2 class="subtitle is-6 is-light is-thin">Pour réserver un livre vous devez vous rendre à la
                         bibliothèque puis présenter le livre que vous souhaitez réserver à la bibliothécaire.<br>
-                    Vous pouvez également prolonger la durée de réservation d'un livre d'un mois en vous rendant sur votre profile.</h2>
+                    Vous pouvez également prolonger la durée de réservation d'un livre d'un mois en vous rendant sur votre profil.</h2>
                     <!-- CTA -->
                     <p>
-                        <a href="/profile" class="button k-button k-primary raised has-gradient is-fat is-bold">
-                            <span class="text">Profile</span>
+                        <a href="/profil" class="button k-button k-primary raised has-gradient is-fat is-bold">
+                            <span class="text">Profil</span>
                             <span class="front-gradient"></span>
                         </a>
                     </p>
                 </div>
+
+                <!-- Landing page Title -->
+                <div th:if="${livresDispo <= 0}" class="column is-5 is-width-45 landing-caption">
+                    <h1 class="title is-1 is-light is-semibold is-spaced main-title">Aucun livre disponible</h1>
+                    <h2 class="subtitle is-6 is-light is-thin">Tous les livres sont actuellement réservés.<br>
+                    Vous pouvez tout de même être informé par mail de sa disponibilité et être prioritaire sur la prochaine réservation !</h2>
+                    <p> <br>
+                        <a th:href="@{/reservation/attente/{id} (id=${livre.getId()})}" class="button is-rounded is-large custom-background-orange has-text-white">
+                            <i class="far fa-bell"></i><span class="text">&nbsp;&nbsp;Être prioritaire</span>
+                            <span class="front-gradient"></span>
+                        </a>
+                    </p>
+                </div>
+
+
+
             </div>
         </div>
     </div>

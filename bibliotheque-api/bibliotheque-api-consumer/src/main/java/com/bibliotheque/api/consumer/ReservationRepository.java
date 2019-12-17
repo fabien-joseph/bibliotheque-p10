@@ -21,4 +21,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "AND r.dateDebut <= :date" +
     " AND r.rendu = false ")
     List<Reservation> findActualReservationsWithLivre(@Param("livre") Livre livre, @Param("utilisateur") Utilisateur utilisateur, @Param("date") DateTime date);
+
+    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.rendu=false AND r.attente = false")
+    List<Reservation> getReservationsOfaBookInProgress(@Param("livre") Livre livre);
+
+    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.attente = true")
+    List<Reservation> getReservationWaitingOfaBook(Livre livre);
 }
