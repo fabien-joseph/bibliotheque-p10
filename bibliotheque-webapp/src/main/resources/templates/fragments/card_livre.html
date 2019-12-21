@@ -22,6 +22,10 @@
             </div>
         </div>
     </div>
+    <footer th:if="${reservation.isRenouvelable() && !reservation.isAttente()}" class="card-footer">
+        <!--/*@thymesVar id="reservation" type="io.swagger.client.model.Reservation"*/-->
+        <a th:href="@{/renouveler/{reservationId} (reservationId=${reservation.getId()})}" class="card-footer-item fa-dark-blue">Renouveler</a>
+    </footer>
     <footer th:if="${reservation.isAttente()}" class="card-footer">
         <a th:href="@{/reservation/annuler/{reservationId} (reservationId=${reservation.getId()})}" class="card-footer-item fa-dark-blue">Annuler</a>
     </footer>

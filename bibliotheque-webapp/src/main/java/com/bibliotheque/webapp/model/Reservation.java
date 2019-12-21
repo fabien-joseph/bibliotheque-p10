@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 @Setter
 public class Reservation {
     private Long id;
+    private DateTime dateCreation;
     private DateTime dateDebut;
     private DateTime dateFin;
     private Livre livre;
