@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -171,11 +172,13 @@ public class ReservationsApiController implements ReservationsApi {
     public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId, @ApiParam(value = "Envoie de l'utilisateur faisant le requête", required = true) @RequestHeader(value = "Authorization", required = true) String authorization) {
         String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Date date = new Date();
         if (principal instanceof UserDetails) {
             Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
             if (reservationManagement.findById(reservationId).isPresent()) {
                 Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
-                if (!reservation.get().isRendu() && reservation.get().isRenouvelable()) {
+                if (!reservation.get().isRendu() && reservation.get().isRenouvelable() &&
+                        reservation.get().getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() > date.getTime()) {
                     if (reservation.get().getUtilisateur().getId() == utilisateurLog.getId() || utilisateurLog.isBibliothecaire()) {
                         reservationManagement.renew(reservationId);
                         return new ResponseEntity<Void>(HttpStatus.OK);

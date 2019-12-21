@@ -126,7 +126,6 @@ public class MainController {
                 reservation.setAttente(true);
                 reservation.setRendu(false);
                  reservation.setRenouvelable(true);
-                System.out.println("Ça part");
                 serviceReservation.addReservation(reservation, encodeHeaderAuthorization(session)).execute();
                 return "redirect:/profil";
             }
