@@ -40,7 +40,6 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
     }
 
 
-
     public List<Reservation> findAll() {
         return repository.findAll();
     }

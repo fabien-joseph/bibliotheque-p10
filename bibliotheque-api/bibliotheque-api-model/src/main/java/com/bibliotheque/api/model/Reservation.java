@@ -22,6 +22,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
+    private DateTime dateCreation;
     private DateTime dateDebut;
     @NotNull
     @Column(columnDefinition = "boolean default true")

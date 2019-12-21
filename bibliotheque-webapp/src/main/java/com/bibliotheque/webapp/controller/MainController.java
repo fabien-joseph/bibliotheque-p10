@@ -52,9 +52,12 @@ public class MainController {
             Livre livre = serviceLivre.getLivreById(id).execute().body();
             if (livre != null) {
                 List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(id).execute().body();
-                int reservationsSize = 0;
-                if (reservations != null)
+                int reservationsSize;
+                if (reservations != null) {
                     reservationsSize = livre.getQuantite() - reservations.size();
+                } else {
+                    reservationsSize = livre.getQuantite();
+                }
                 if (reservationsSize < 0)
                     reservationsSize = 0;
                 model.addAttribute("livre", livre);
@@ -207,6 +210,7 @@ public class MainController {
     private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
         com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
         reservation.setId(reservationApi.getId());
+        reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
         reservation.setDateDebut(new DateTime(reservationApi.getDateDebut()));
         reservation.setDateFin(new DateTime(reservationApi.getDateFin()));
         reservation.setRendu(reservationApi.isRendu());

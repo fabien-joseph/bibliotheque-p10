@@ -243,10 +243,11 @@ public class ReservationsApiController implements ReservationsApi {
         Reservation reservationApi = new Reservation();
 
         reservationApi.setId(reservation.getId());
+        reservationApi.setDateCreation(reservation.getDateCreation().getMillis());
         reservationApi.setDateDebut(reservation.getDateDebut().getMillis());
+        reservationApi.setDateFin(reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis());
         reservationApi.setLivreId(reservation.getLivre().getId());
         reservationApi.setUtilisateurId(reservation.getUtilisateur().getId());
-        reservationApi.setDateFin(reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis());
         reservationApi.setRendu(reservation.isRendu());
         reservationApi.setRenouvelable(reservation.isRenouvelable());
         reservationApi.setAttente(reservation.isAttente());
