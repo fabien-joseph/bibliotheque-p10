@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class Reservation {
     private Long id;
     @NotNull
     private DateTime dateCreation;
+    @Nullable
     private DateTime dateDebut;
     @NotNull
     @Column(columnDefinition = "boolean default true")

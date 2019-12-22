@@ -52,7 +52,10 @@ public class MainController {
             Livre livre = serviceLivre.getLivreById(id).execute().body();
             if (livre != null) {
                 List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(id).execute().body();
+                List<Reservation> reservationsAttente = serviceReservation.getReservationsOfaBookWaiting(id).execute().body();
+
                 int reservationsSize;
+                int reservationsAttenteSize;
                 if (reservations != null) {
                     reservationsSize = livre.getQuantite() - reservations.size();
                 } else {
@@ -60,8 +63,15 @@ public class MainController {
                 }
                 if (reservationsSize < 0)
                     reservationsSize = 0;
+
+                if (reservationsAttente != null) {
+                    reservationsAttenteSize = reservationsAttente.size();
+                } else {
+                    reservationsAttenteSize = 0;
+                }
                 model.addAttribute("livre", livre);
                 model.addAttribute("reservationsSize", reservationsSize);
+                model.addAttribute("reservationsAttenteSize", reservationsAttenteSize);
                 return "livre";
             }
             return "error";
@@ -210,8 +220,8 @@ public class MainController {
         com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
         reservation.setId(reservationApi.getId());
         reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
-        reservation.setDateDebut(new DateTime(reservationApi.getDateDebut()));
-        reservation.setDateFin(new DateTime(reservationApi.getDateFin()));
+        reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : null);
+        reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : null);
         reservation.setRendu(reservationApi.isRendu());
         reservation.setRenouvelable(reservationApi.isRenouvelable());
         reservation.setAttente(reservationApi.isAttente());
