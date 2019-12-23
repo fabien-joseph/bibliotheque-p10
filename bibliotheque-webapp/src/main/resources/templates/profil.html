@@ -22,7 +22,7 @@
                 <h1 class="title">Vos réservations en attente :</h1>
             </div>
             <div class="columns is-multiline">
-                <div class="column search is-one-fifth" th:each="reservation:${reservations}" th:if="${reservation.getDateFin().getMillis() >= today && reservation.isAttente()}">
+                <div class="column search is-one-fifth" th:each="reservation:${reservations}" th:if="${reservation.isAttente()}">
                     <div th:replace="fragments/card_livre.html :: card_livre"></div>
                 </div>
             </div>

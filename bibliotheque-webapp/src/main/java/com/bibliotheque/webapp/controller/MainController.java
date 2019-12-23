@@ -35,51 +35,6 @@ public class MainController {
         return "accueil";
     }
 
-    @GetMapping("/livres")
-    public String livres(Model model,
-                         @RequestParam(value = "search", required = false, defaultValue = "") String search) {
-        try {
-            model.addAttribute("livres", serviceLivre.findLivres(search).execute().body());
-            return "livres";
-        } catch (Exception e) {
-            return "failConnexion";
-        }
-    }
-
-    @GetMapping("/livres/{id}")
-    public String livre(Model model, @PathVariable Long id) {
-        try {
-            Livre livre = serviceLivre.getLivreById(id).execute().body();
-            if (livre != null) {
-                List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(id).execute().body();
-                List<Reservation> reservationsAttente = serviceReservation.getReservationsOfaBookWaiting(id).execute().body();
-
-                int reservationsSize;
-                int reservationsAttenteSize;
-                if (reservations != null) {
-                    reservationsSize = livre.getQuantite() - reservations.size();
-                } else {
-                    reservationsSize = livre.getQuantite();
-                }
-                if (reservationsSize < 0)
-                    reservationsSize = 0;
-
-                if (reservationsAttente != null) {
-                    reservationsAttenteSize = reservationsAttente.size();
-                } else {
-                    reservationsAttenteSize = 0;
-                }
-                model.addAttribute("livre", livre);
-                model.addAttribute("reservationsSize", reservationsSize);
-                model.addAttribute("reservationsAttenteSize", reservationsAttenteSize);
-                return "livre";
-            }
-            return "error";
-        } catch (Exception e) {
-            return "error";
-        }
-    }
-
     @GetMapping("/profil")
     public String profil(Model model, HttpSession session) {
         try {
@@ -107,78 +62,10 @@ public class MainController {
         }
     }
 
-    @GetMapping("/renouveler/{reservationId}")
-    public String renouveler(@PathVariable Long reservationId, HttpSession session) {
-        try {
-            if (session.getAttribute("mail") != null) {
-                serviceReservation.renewReservation(reservationId, encodeHeaderAuthorization(session)).execute();
-            }
-            return "redirect:/profil";
-        } catch (Exception e) {
-            return "failConnexion";
-        }
-    }
-
-    @GetMapping("/reservation/attente/{livreId}")
-    public String reserverAttente(@PathVariable Long livreId, HttpSession session) {
-        if (session.getAttribute("mail") == null)
-            return "redirect:/connexion";
-            try {
-                Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail(session.getAttribute("mail").toString()).execute().body();
-            if (serviceLivre.getLivreById(livreId).execute().body() != null && utilisateur != null) {
-                Calendar calendar = Calendar.getInstance();
-                Reservation reservation = new Reservation();
-                reservation.setLivreId(livreId);
-                reservation.setUtilisateurId(utilisateur.getId());
-                reservation.setDateDebut(calendar.getTimeInMillis());
-                calendar.add(Calendar.DATE, 30);
-                reservation.setDateFin(calendar.getTimeInMillis());
-                reservation.setAttente(true);
-                reservation.setRendu(false);
-                 reservation.setRenouvelable(true);
-                serviceReservation.addReservation(reservation, encodeHeaderAuthorization(session)).execute();
-                return "redirect:/profil";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "redirect:/";
-    }
-
 
     @GetMapping("/inscription")
     public String inscription() {
         return "inscription";
-    }
-
-    @GetMapping("/reservation/{livreId}")
-    public String reservation(Model model, @PathVariable Long livreId) {
-        int livresDispo = 0;
-        try {
-            Livre livre = serviceLivre.getLivreById(livreId).execute().body();
-            if (livre == null)
-                return "error";
-            List<Reservation> reservations = serviceReservation.getReservationsOfaBookInProgress(livre.getId()).execute().body();
-            if (reservations == null) {
-                livresDispo = livre.getQuantite();
-            } else {
-                livresDispo = livre.getQuantite() - reservations.size();
-            }
-            if (livresDispo > 0)
-                livresDispo = 0;
-            model.addAttribute("livresDispo", livresDispo);
-            model.addAttribute("livre", livre);
-            return "reservation";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "error";
-    }
-
-    @GetMapping("/reservation/annuler/{reservationId}")
-    public String reservationAnnulation(HttpSession session, @PathVariable Long reservationId) throws IOException {
-        serviceReservation.deleteReservation(reservationId, encodeHeaderAuthorization(session)).execute();
-        return "redirect:/profil";
     }
 
     @GetMapping("/contact")
@@ -220,8 +107,8 @@ public class MainController {
         com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
         reservation.setId(reservationApi.getId());
         reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
-        reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : null);
-        reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : null);
+        reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : new DateTime(0L));
+        reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : new DateTime(0L));
         reservation.setRendu(reservationApi.isRendu());
         reservation.setRenouvelable(reservationApi.isRenouvelable());
         reservation.setAttente(reservationApi.isAttente());

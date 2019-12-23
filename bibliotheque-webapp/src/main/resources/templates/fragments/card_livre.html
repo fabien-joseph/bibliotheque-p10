@@ -19,6 +19,13 @@
                 '/' +
                 ${reservation.getDateFin().getDayOfMonth()}"></p>
                 <p th:if="${reservation.isAttente()}" class="subtitle is-6" th:text="'En attente de disponibilité'"></p>
+
+                <h2 class="subtitle is-8 is-thin" th:if="${reservationsAttenteSize > 0 && dateRetour != null}"
+                    th:text="'Prochain retour : ' + ${dateRetour.getYear()} +
+                '/' +
+                ${dateRetour.getMonthOfYear()} +
+                '/' +
+                ${dateRetour.getDayOfMonth()}"></h2>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 
 @Getter
 @Setter
-public class Reservation {
+public class Reservation{
     private Long id;
     private DateTime dateCreation;
     private DateTime dateDebut;
