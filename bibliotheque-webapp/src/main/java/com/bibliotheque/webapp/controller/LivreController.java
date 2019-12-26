@@ -1,5 +1,6 @@
 package com.bibliotheque.webapp.controller;
 
+import com.bibliotheque.webapp.business.ApiConfigModel;
 import io.swagger.client.api.LivreApi;
 import io.swagger.client.api.ReservationApi;
 import io.swagger.client.api.UtilisateurApi;
@@ -58,7 +59,7 @@ public class LivreController {
                     livresDispo = 0;
 
                 if (reservations != null && livresDispo == 0)
-                    model.addAttribute("dateRetour", findSmallestDate(reservations));
+                    model.addAttribute("dateRetour", ApiConfigModel.findSmallestDate(reservations));
 
                 model.addAttribute("reservationsAttente", (reservationsAttente != null) ? reservationsAttente.size() : 0);
                 model.addAttribute("livresDispo", livresDispo);
@@ -69,47 +70,5 @@ public class LivreController {
         } catch (Exception e) {
             return "error";
         }
-    }
-
-    private DateTime findSmallestDate (List<Reservation> reservations) {
-        if (reservations == null)
-            return null;
-
-        Long dateLong = 0L;
-        for (int i = 0; i < reservations.size(); i++) {
-            if (i == 0) {
-                dateLong = reservations.get(i).getDateFin();
-            } else {
-                if (reservations.get(i).getDateFin() < dateLong)
-                    dateLong = reservations.get(i).getDateFin();
-            }
-        }
-        return new DateTime(dateLong);
-    }
-
-    private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
-        com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
-        reservation.setId(reservationApi.getId());
-        reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
-        reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : null);
-        reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : null);
-        reservation.setRendu(reservationApi.isRendu());
-        reservation.setRenouvelable(reservationApi.isRenouvelable());
-        reservation.setAttente(reservationApi.isAttente());
-        reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
-        reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
-
-        return reservation;
-    }
-
-    private List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
-        if (reservationsApi != null) {
-            List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
-            for (Reservation reservation : reservationsApi) {
-                reservations.add(convertReservationApiToReservation(reservation));
-            }
-            return reservations;
-        }
-        return null;
     }
 }

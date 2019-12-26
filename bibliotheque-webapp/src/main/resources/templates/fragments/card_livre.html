@@ -18,14 +18,14 @@
                 ${reservation.getDateFin().getMonthOfYear()} +
                 '/' +
                 ${reservation.getDateFin().getDayOfMonth()}"></p>
-                <p th:if="${reservation.isAttente()}" class="subtitle is-6" th:text="'En attente de disponibilité'"></p>
 
-                <h2 class="subtitle is-8 is-thin" th:if="${reservationsAttenteSize > 0 && dateRetour != null}"
-                    th:text="'Prochain retour : ' + ${dateRetour.getYear()} +
+                <h2 class="subtitle is-8 is-thin" th:if="${reservation.isAttente() && reservation.getDateRetourProche() != null}"
+                    th:text="'Prochain retour : ' + ${reservation.getDateRetourProche().getYear()} +
                 '/' +
-                ${dateRetour.getMonthOfYear()} +
+                ${reservation.getDateRetourProche().getMonthOfYear()} +
                 '/' +
-                ${dateRetour.getDayOfMonth()}"></h2>
+                ${reservation.getDateRetourProche().getDayOfMonth()}"></h2>
+                <p th:if="${reservation.isAttente()}" class="subtitle is-6" th:text="'En attente de disponibilité'"></p>
             </div>
         </div>
     </div>

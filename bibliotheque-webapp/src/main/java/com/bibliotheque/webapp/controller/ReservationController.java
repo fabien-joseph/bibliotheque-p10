@@ -1,5 +1,6 @@
 package com.bibliotheque.webapp.controller;
 
+import com.bibliotheque.webapp.business.ApiConfigModel;
 import io.swagger.client.api.LivreApi;
 import io.swagger.client.api.ReservationApi;
 import io.swagger.client.api.UtilisateurApi;
@@ -36,7 +37,7 @@ public class ReservationController {
     public String renouveler(@PathVariable Long reservationId, HttpSession session) {
         try {
             if (session.getAttribute("mail") != null) {
-                serviceReservation.renewReservation(reservationId, encodeHeaderAuthorization(session)).execute();
+                serviceReservation.renewReservation(reservationId, ApiConfigModel.encodeHeaderAuthorization(session)).execute();
             }
             return "redirect:/profil";
         } catch (Exception e) {
@@ -61,7 +62,7 @@ public class ReservationController {
                 reservation.setAttente(true);
                 reservation.setRendu(false);
                 reservation.setRenouvelable(true);
-                serviceReservation.addReservation(reservation, encodeHeaderAuthorization(session)).execute();
+                serviceReservation.addReservation(reservation, ApiConfigModel.encodeHeaderAuthorization(session)).execute();
                 return "redirect:/profil";
             }
         } catch (IOException e) {
@@ -96,38 +97,7 @@ public class ReservationController {
 
     @GetMapping("/reservation/annuler/{reservationId}")
     public String reservationAnnulation(HttpSession session, @PathVariable Long reservationId) throws IOException {
-        serviceReservation.deleteReservation(reservationId, encodeHeaderAuthorization(session)).execute();
+        serviceReservation.deleteReservation(reservationId, ApiConfigModel.encodeHeaderAuthorization(session)).execute();
         return "redirect:/profil";
-    }
-
-    private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
-        com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
-        reservation.setId(reservationApi.getId());
-        reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
-        reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : null);
-        reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : null);
-        reservation.setRendu(reservationApi.isRendu());
-        reservation.setRenouvelable(reservationApi.isRenouvelable());
-        reservation.setAttente(reservationApi.isAttente());
-        reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
-        reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
-
-        return reservation;
-    }
-
-    private List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
-        if (reservationsApi != null) {
-            List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
-            for (Reservation reservation : reservationsApi) {
-                reservations.add(convertReservationApiToReservation(reservation));
-            }
-            return reservations;
-        }
-        return null;
-    }
-
-    private String encodeHeaderAuthorization(HttpSession session) {
-        String baseString = session.getAttribute("mail") + ":" + session.getAttribute("password");
-        return "Basic " + Base64.getEncoder().encodeToString(baseString.getBytes());
     }
 }

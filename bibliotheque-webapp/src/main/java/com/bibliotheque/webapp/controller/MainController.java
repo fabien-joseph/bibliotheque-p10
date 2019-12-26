@@ -1,5 +1,6 @@
 package com.bibliotheque.webapp.controller;
 
+import com.bibliotheque.webapp.business.ApiConfigModel;
 import io.swagger.client.api.LivreApi;
 import io.swagger.client.api.ReservationApi;
 import io.swagger.client.api.UtilisateurApi;
@@ -52,7 +53,8 @@ public class MainController {
 
                 model.addAttribute("utilisateur", utilisateur);
                 model.addAttribute("today", new DateTime().getMillis());
-                List<com.bibliotheque.webapp.model.Reservation> reservationsUser = convertListReservationApiToListReservation(reservations);
+                List<com.bibliotheque.webapp.model.Reservation> reservationsUser = ApiConfigModel.convertListReservationApiToListReservation(reservations);
+                System.out.println(reservationsUser);
                 model.addAttribute("reservations", reservationsUser);
                 return "profil";
             }
@@ -101,36 +103,5 @@ public class MainController {
         session.removeAttribute("mail");
         session.removeAttribute("password");
         return "redirect:/";
-    }
-
-    private com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
-        com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
-        reservation.setId(reservationApi.getId());
-        reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
-        reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : new DateTime(0L));
-        reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : new DateTime(0L));
-        reservation.setRendu(reservationApi.isRendu());
-        reservation.setRenouvelable(reservationApi.isRenouvelable());
-        reservation.setAttente(reservationApi.isAttente());
-        reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
-        reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
-
-        return reservation;
-    }
-
-    private List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
-        if (reservationsApi != null) {
-            List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
-            for (Reservation reservation : reservationsApi) {
-                reservations.add(convertReservationApiToReservation(reservation));
-            }
-            return reservations;
-        }
-        return null;
-    }
-
-    private String encodeHeaderAuthorization(HttpSession session) {
-        String baseString = session.getAttribute("mail") + ":" + session.getAttribute("password");
-        return "Basic " + Base64.getEncoder().encodeToString(baseString.getBytes());
     }
 }
