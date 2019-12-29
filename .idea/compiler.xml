@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="bibliotheque-batch" />
         <module name="bibliotheque-api-consumer" />
         <module name="bibliotheque-webapp" />
-        <module name="bibliotheque-api-business" />
         <module name="bibliotheque-api-model" />
+        <module name="bibliotheque-api-business" />
+        <module name="bibliotheque-batch" />
         <module name="bibliotheque-api-service" />
       </profile>
     </annotationProcessing>
