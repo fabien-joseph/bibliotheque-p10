@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -171,11 +172,13 @@ public class ReservationsApiController implements ReservationsApi {
     public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId, @ApiParam(value = "Envoie de l'utilisateur faisant le requête", required = true) @RequestHeader(value = "Authorization", required = true) String authorization) {
         String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Date date = new Date();
         if (principal instanceof UserDetails) {
             Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
             if (reservationManagement.findById(reservationId).isPresent()) {
                 Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
-                if (!reservation.get().isRendu() && reservation.get().isRenouvelable()) {
+                if (!reservation.get().isRendu() && reservation.get().isRenouvelable() &&
+                        reservation.get().getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() > date.getTime()) {
                     if (reservation.get().getUtilisateur().getId() == utilisateurLog.getId() || utilisateurLog.isBibliothecaire()) {
                         reservationManagement.renew(reservationId);
                         return new ResponseEntity<Void>(HttpStatus.OK);
@@ -243,10 +246,12 @@ public class ReservationsApiController implements ReservationsApi {
         Reservation reservationApi = new Reservation();
 
         reservationApi.setId(reservation.getId());
-        reservationApi.setDateDebut(reservation.getDateDebut().getMillis());
+        reservationApi.setDateCreation(reservation.getDateCreation().getMillis());
+        reservationApi.setDateDebut( (reservation.getDateDebut() != null) ? reservation.getDateDebut().getMillis() : null);
+        reservationApi.setDateFin( (reservation.getDateDebut() != null) ? reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() : null);
+        reservationApi.setDateRetourProche((reservation.getDateDebutPlusProche() != null) ? reservation.getDateDebutPlusProche().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() : null );
         reservationApi.setLivreId(reservation.getLivre().getId());
         reservationApi.setUtilisateurId(reservation.getUtilisateur().getId());
-        reservationApi.setDateFin(reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis());
         reservationApi.setRendu(reservation.isRendu());
         reservationApi.setRenouvelable(reservation.isRenouvelable());
         reservationApi.setAttente(reservation.isAttente());
