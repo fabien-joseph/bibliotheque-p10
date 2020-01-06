@@ -25,7 +25,7 @@
                 ${reservation.getDateRetourProche().getMonthOfYear()} +
                 '/' +
                 ${reservation.getDateRetourProche().getDayOfMonth()}"></h2>
-                <p th:if="${reservation.isAttente()}" class="subtitle is-6" th:text="'En attente de disponibilité'"></p>
+                <p th:if="${reservation.isAttente() && reservation.getPlace() != null}" class="subtitle is-6" th:text="'Position : ' + ${reservation.getPlace()}"></p>
             </div>
         </div>
     </div>

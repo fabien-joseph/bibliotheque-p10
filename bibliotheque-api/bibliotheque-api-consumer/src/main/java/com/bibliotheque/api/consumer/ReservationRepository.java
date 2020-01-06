@@ -25,6 +25,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.rendu=false AND r.attente = false")
     List<Reservation> getReservationsOfaBookInProgress(@Param("livre") Livre livre);
 
-    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.attente = true")
+    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.attente = true ORDER BY r.dateCreation")
     List<Reservation> getReservationWaitingOfaBook(Livre livre);
 }

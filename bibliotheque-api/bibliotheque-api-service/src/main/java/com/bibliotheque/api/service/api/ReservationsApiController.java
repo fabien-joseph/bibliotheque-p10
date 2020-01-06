@@ -242,6 +242,16 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
     }
 
+    public ResponseEntity<Integer> getReservationPlace(@ApiParam(value = "Id de la reservation pour laquelle on souhaite connaitre la position d'attente",required=true) @PathVariable("reservationId") Long reservationId) {
+        Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
+        if (reservation.isPresent()) {
+            Integer place = reservationManagement.getPlaceOfaReservationWaiting(reservation.get());
+            return new ResponseEntity<Integer>(place, HttpStatus.OK);
+        }
+        return new ResponseEntity<Integer>(HttpStatus.NOT_FOUND);
+    }
+
+
     Reservation convertReservationToReservationApi(com.bibliotheque.api.model.Reservation reservation) {
         Reservation reservationApi = new Reservation();
 

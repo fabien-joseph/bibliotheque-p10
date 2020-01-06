@@ -39,6 +39,18 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         return repository.getReservationWaitingOfaBook(livre);
     }
 
+    public Integer getPlaceOfaReservationWaiting(Reservation reservation) {
+        List<Reservation> reservations = repository.getReservationWaitingOfaBook(reservation.getLivre());
+        Integer place = null;
+        for (Reservation reserv :
+                reservations) {
+            if (reserv.getId().equals(reservation.getId())) {
+                place = reservations.indexOf(reserv) + 1;
+                break;
+            }
+        }
+        return place;
+    }
 
     public List<Reservation> findAll() {
         return repository.findAll();

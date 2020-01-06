@@ -17,7 +17,7 @@ import java.util.List;
 public class ApiConfigModel {
     private static LivreApi serviceLivre;
     private static UtilisateurApi serviceUtilisateur;
-    private static  ReservationApi serviceReservation;
+    private static ReservationApi serviceReservation;
 
     public ApiConfigModel(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
         ApiConfigModel.serviceLivre = serviceLivre;
@@ -57,7 +57,7 @@ public class ApiConfigModel {
         return "Basic " + Base64.getEncoder().encodeToString(baseString.getBytes());
     }
 
-    public static DateTime findSmallestDate (List<Reservation> reservations) {
+    public static DateTime findSmallestDate(List<Reservation> reservations) {
         if (reservations == null)
             return null;
 
@@ -71,5 +71,17 @@ public class ApiConfigModel {
             }
         }
         return new DateTime(dateLong);
+    }
+
+    public static List<com.bibliotheque.webapp.model.Reservation> configReservationPlace(List<com.bibliotheque.webapp.model.Reservation> reservations) throws IOException {
+        for (com.bibliotheque.webapp.model.Reservation reservation :
+                reservations) {
+            if (reservation.isAttente()) {
+                Integer place = serviceReservation.getReservationPlace(reservation.getId()).execute().body();
+                if (place != null)
+                    reservation.setPlace(place);
+            }
+        }
+        return reservations;
     }
 }

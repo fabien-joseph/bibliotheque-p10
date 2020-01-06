@@ -142,4 +142,15 @@ public interface ReservationsApi {
             consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<Reservation>> getReservationsOfaBookWaiting(@NotNull @ApiParam(value = "Réservations faites sur l'id d'un livre", required = true) @Valid @RequestParam(value = "livreId", required = true) Long livreId);
+
+    @ApiOperation(value = "Récupérer la position d'une réservation dans la file d'attente", nickname = "getReservationPlace", notes = "", response = Integer.class, tags={ "reservation", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation", response = Integer.class),
+            @ApiResponse(code = 404, message = "Aucune réservation expirée trouvée") })
+    @RequestMapping(value = "/reservations/place/{reservationId}",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Integer> getReservationPlace(@ApiParam(value = "Id de la reservation pour laquelle on souhaite connaitre la position d'attente",required=true) @PathVariable("reservationId") Long reservationId);
+
 }

@@ -17,6 +17,7 @@ public class Reservation{
     private DateTime dateRetourProche;
     private Livre livre;
     private Utilisateur utilisateur;
+    private int place;
     private boolean renouvelable;
     private boolean rendu;
     private boolean attente;
