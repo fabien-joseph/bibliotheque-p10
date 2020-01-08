@@ -251,6 +251,10 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Integer>(HttpStatus.NOT_FOUND);
     }
 
+    public ResponseEntity<List<Reservation>> alertDisponibility() {
+        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
+
+    }
 
     Reservation convertReservationToReservationApi(com.bibliotheque.api.model.Reservation reservation) {
         Reservation reservationApi = new Reservation();
@@ -265,6 +269,7 @@ public class ReservationsApiController implements ReservationsApi {
         reservationApi.setRendu(reservation.isRendu());
         reservationApi.setRenouvelable(reservation.isRenouvelable());
         reservationApi.setAttente(reservation.isAttente());
+        reservationApi.setAlerted(reservation.isAlerted());
         return reservationApi;
     }
 
@@ -282,11 +287,13 @@ public class ReservationsApiController implements ReservationsApi {
 
         reservation.setId(reservationApi.getId());
         reservation.setDateDebut(new DateTime(reservationApi.getDateDebut()));
+        reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
         reservation.setUtilisateur(utilisateurManagement.findById(reservationApi.getUtilisateurId()).get());
         reservation.setLivre(livreManagement.findById(reservationApi.getLivreId()).get());
         reservation.setRendu(reservationApi.isRendu());
         reservation.setRenouvelable(reservationApi.isRenouvelable());
         reservation.setAttente(reservationApi.isAttente());
+        reservation.setAlerted(reservationApi.isAlerted());
 
         return reservation;
     }
