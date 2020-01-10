@@ -169,6 +169,11 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Reservation>(HttpStatus.UNAUTHORIZED);
     }
 
+    public ResponseEntity<List<Reservation>> getReservationsToAlertOfAReturn() {
+        List<com.bibliotheque.api.model.Reservation> reservations = reservationManagement.getReservationsToAlert();
+        return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservations), HttpStatus.OK);
+    }
+
     public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId, @ApiParam(value = "Envoie de l'utilisateur faisant le requête", required = true) @RequestHeader(value = "Authorization", required = true) String authorization) {
         String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -242,7 +247,7 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Integer> getReservationPlace(@ApiParam(value = "Id de la reservation pour laquelle on souhaite connaitre la position d'attente",required=true) @PathVariable("reservationId") Long reservationId) {
+    public ResponseEntity<Integer> getReservationPlace(@ApiParam(value = "Id de la reservation pour laquelle on souhaite connaitre la position d'attente", required = true) @PathVariable("reservationId") Long reservationId) {
         Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
         if (reservation.isPresent()) {
             Integer place = reservationManagement.getPlaceOfaReservationWaiting(reservation.get());
@@ -251,19 +256,14 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<Integer>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<List<Reservation>> alertDisponibility() {
-        return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
-
-    }
-
     Reservation convertReservationToReservationApi(com.bibliotheque.api.model.Reservation reservation) {
         Reservation reservationApi = new Reservation();
 
         reservationApi.setId(reservation.getId());
         reservationApi.setDateCreation(reservation.getDateCreation().getMillis());
-        reservationApi.setDateDebut( (reservation.getDateDebut() != null) ? reservation.getDateDebut().getMillis() : null);
-        reservationApi.setDateFin( (reservation.getDateDebut() != null) ? reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() : null);
-        reservationApi.setDateRetourProche((reservation.getDateDebutPlusProche() != null) ? reservation.getDateDebutPlusProche().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() : null );
+        reservationApi.setDateDebut((reservation.getDateDebut() != null) ? reservation.getDateDebut().getMillis() : null);
+        reservationApi.setDateFin((reservation.getDateDebut() != null) ? reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() : null);
+        reservationApi.setDateRetourProche((reservation.getDateDebutPlusProche() != null) ? reservation.getDateDebutPlusProche().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() : null);
         reservationApi.setLivreId(reservation.getLivre().getId());
         reservationApi.setUtilisateurId(reservation.getUtilisateur().getId());
         reservationApi.setRendu(reservation.isRendu());

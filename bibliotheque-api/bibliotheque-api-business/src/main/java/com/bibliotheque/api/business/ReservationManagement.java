@@ -5,15 +5,20 @@ import com.bibliotheque.api.model.Livre;
 import com.bibliotheque.api.model.Reservation;
 import com.bibliotheque.api.model.Utilisateur;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ReservationManagement extends JpaCrudManager<Reservation, ReservationRepository> {
+    @Autowired
+    LivreManagement livreManagement;
+
     public ReservationManagement(ReservationRepository repository) {
         super(repository);
     }
@@ -50,6 +55,35 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
             }
         }
         return place;
+    }
+
+    public List<Reservation> getReservationsToAlert() {
+        List<Reservation> allReservationsWaiting = repository.findReservationsByAttenteTrue();
+        List<Long> livresId = new ArrayList<>();
+        for (Reservation reservation : allReservationsWaiting) {
+            if (!isAlreadyPresent(livresId, reservation.getLivre().getId()))
+                livresId.add(reservation.getLivre().getId());
+        }
+
+        List<Reservation> reservations = new ArrayList<>();
+        for (Long aLong : livresId) {
+            reservations.add
+                    (repository.findFirstByLivreAndAttenteTrueOrderByDateCreationAsc
+                            (livreManagement.findById(aLong).get()));
+        }
+        return reservations;
+    }
+
+    public List<Reservation> getReservationsToAlertTest() {
+        return repository.findReservationsByAttenteTrue();
+    }
+
+    private boolean isAlreadyPresent(List<Long> livresId, Long id){
+        for (Long aLong : livresId) {
+            if (aLong.equals(id))
+                return true;
+        }
+        return false;
     }
 
     public List<Reservation> findAll() {
