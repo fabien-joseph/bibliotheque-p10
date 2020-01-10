@@ -8,6 +8,7 @@ import io.swagger.client.model.Livre;
 import io.swagger.client.model.Reservation;
 import io.swagger.client.model.Utilisateur;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +23,10 @@ import java.util.List;
 
 @Controller
 public class ReservationController {
-
     private LivreApi serviceLivre;
     private UtilisateurApi serviceUtilisateur;
     private ReservationApi serviceReservation;
+    @Autowired ApiConfigModel apiConfigModel;
 
     public ReservationController(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
         this.serviceLivre = serviceLivre;
@@ -37,7 +38,7 @@ public class ReservationController {
     public String renouveler(@PathVariable Long reservationId, HttpSession session) {
         try {
             if (session.getAttribute("mail") != null) {
-                serviceReservation.renewReservation(reservationId, ApiConfigModel.encodeHeaderAuthorization(session)).execute();
+                serviceReservation.renewReservation(reservationId, apiConfigModel.encodeHeaderAuthorization(session)).execute();
             }
             return "redirect:/profil";
         } catch (Exception e) {
@@ -62,7 +63,7 @@ public class ReservationController {
                 reservation.setAttente(true);
                 reservation.setRendu(false);
                 reservation.setRenouvelable(true);
-                serviceReservation.addReservation(reservation, ApiConfigModel.encodeHeaderAuthorization(session)).execute();
+                serviceReservation.addReservation(reservation, apiConfigModel.encodeHeaderAuthorization(session)).execute();
                 return "redirect:/profil";
             }
         } catch (IOException e) {
@@ -73,7 +74,7 @@ public class ReservationController {
 
     @GetMapping("/reservation/{livreId}")
     public String reservation(Model model, @PathVariable Long livreId) {
-        int livresDispo = 0;
+        int livresDispo;
         try {
             Livre livre = serviceLivre.getLivreById(livreId).execute().body();
             if (livre == null)
@@ -97,7 +98,7 @@ public class ReservationController {
 
     @GetMapping("/reservation/annuler/{reservationId}")
     public String reservationAnnulation(HttpSession session, @PathVariable Long reservationId) throws IOException {
-        serviceReservation.deleteReservation(reservationId, ApiConfigModel.encodeHeaderAuthorization(session)).execute();
+        serviceReservation.deleteReservation(reservationId, apiConfigModel.encodeHeaderAuthorization(session)).execute();
         return "redirect:/profil";
     }
 
@@ -118,9 +119,9 @@ public class ReservationController {
 
                 model.addAttribute("utilisateur", utilisateur);
                 model.addAttribute("today", new DateTime().getMillis());
-                List<com.bibliotheque.webapp.model.Reservation> reservationsUser = ApiConfigModel.convertListReservationApiToListReservation(reservations);
+                List<com.bibliotheque.webapp.model.Reservation> reservationsUser = apiConfigModel.convertListReservationApiToListReservation(reservations);
                 if (reservationsUser != null) {
-                    ApiConfigModel.configReservationPlace(reservationsUser);
+                    apiConfigModel.configReservationPlace(reservationsUser);
                 }
                 model.addAttribute("reservations", reservationsUser);
                 return "profil";

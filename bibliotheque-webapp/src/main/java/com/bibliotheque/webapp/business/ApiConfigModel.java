@@ -5,6 +5,7 @@ import io.swagger.client.api.ReservationApi;
 import io.swagger.client.api.UtilisateurApi;
 import io.swagger.client.model.Reservation;
 import org.joda.time.DateTime;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpSession;
@@ -13,19 +14,19 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-@Controller
+@Component
 public class ApiConfigModel {
-    private static LivreApi serviceLivre;
-    private static UtilisateurApi serviceUtilisateur;
-    private static ReservationApi serviceReservation;
+    private LivreApi serviceLivre;
+    private UtilisateurApi serviceUtilisateur;
+    private ReservationApi serviceReservation;
 
     public ApiConfigModel(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
-        ApiConfigModel.serviceLivre = serviceLivre;
-        ApiConfigModel.serviceUtilisateur = serviceUtilisateur;
-        ApiConfigModel.serviceReservation = serviceReservation;
+        this.serviceLivre = serviceLivre;
+        this.serviceUtilisateur = serviceUtilisateur;
+        this.serviceReservation = serviceReservation;
     }
 
-    public static com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
+    public com.bibliotheque.webapp.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
         com.bibliotheque.webapp.model.Reservation reservation = new com.bibliotheque.webapp.model.Reservation();
         reservation.setId(reservationApi.getId());
         reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
@@ -41,7 +42,7 @@ public class ApiConfigModel {
         return reservation;
     }
 
-    public static List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
+    public List<com.bibliotheque.webapp.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
         if (reservationsApi != null) {
             List<com.bibliotheque.webapp.model.Reservation> reservations = new ArrayList<>();
             for (Reservation reservation : reservationsApi) {
@@ -52,7 +53,7 @@ public class ApiConfigModel {
         return null;
     }
 
-    public static String encodeHeaderAuthorization(HttpSession session) {
+    public String encodeHeaderAuthorization(HttpSession session) {
         String baseString = session.getAttribute("mail") + ":" + session.getAttribute("password");
         return "Basic " + Base64.getEncoder().encodeToString(baseString.getBytes());
     }
@@ -73,7 +74,7 @@ public class ApiConfigModel {
         return new DateTime(dateLong);
     }
 
-    public static List<com.bibliotheque.webapp.model.Reservation> configReservationPlace(List<com.bibliotheque.webapp.model.Reservation> reservations) throws IOException {
+    public List<com.bibliotheque.webapp.model.Reservation> configReservationPlace(List<com.bibliotheque.webapp.model.Reservation> reservations) throws IOException {
         for (com.bibliotheque.webapp.model.Reservation reservation :
                 reservations) {
             if (reservation.isAttente()) {
