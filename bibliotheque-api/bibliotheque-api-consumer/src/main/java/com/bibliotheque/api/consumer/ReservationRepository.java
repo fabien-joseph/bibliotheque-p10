@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
+    List<Reservation> findReservationsByAttenteTrue();
+
     @Query("SELECT r \n" +
             "FROM Reservation r \n" +
             "WHERE (:livre IS NULL OR r.livre = :livre) \n" +
@@ -25,6 +27,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.rendu=false AND r.attente = false")
     List<Reservation> getReservationsOfaBookInProgress(@Param("livre") Livre livre);
 
-    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.attente = true")
+    @Query("SELECT r FROM Reservation r WHERE r.livre = :livre AND r.attente = true ORDER BY r.dateCreation")
     List<Reservation> getReservationWaitingOfaBook(Livre livre);
+
+    Reservation findFirstByLivreAndAttenteTrueOrderByDateCreationAsc(Livre livre);
+
+    List<Reservation> findReservationsByAlertedTrue() ;
 }

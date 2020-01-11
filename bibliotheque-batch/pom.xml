@@ -5,12 +5,12 @@
     <parent>
         <artifactId>bibliotheque</artifactId>
         <groupId>com.bibliotheque</groupId>
-        <version>1.0-RELEASE</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.bibliotheque.batch</groupId>
     <artifactId>bibliotheque-batch</artifactId>
-    <version>1.0-RELEASE</version>
+    <version>1.1-SNAPSHOT</version>
     <name>bibliotheque-batch</name>
     <description>Demo project for Spring Boot</description>
 

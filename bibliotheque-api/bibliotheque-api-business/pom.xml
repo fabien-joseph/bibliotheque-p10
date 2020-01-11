@@ -6,12 +6,12 @@
 
   <groupId>com.bibliotheque.api.business</groupId>
   <artifactId>bibliotheque-api-business</artifactId>
-  <version>1.0-RELEASE</version>
+  <version>1.1-SNAPSHOT</version>
 
   <parent>
     <artifactId>bibliotheque-api</artifactId>
     <groupId>com.bibliotheque.api</groupId>
-    <version>1.0-RELEASE</version>
+    <version>1.1-SNAPSHOT</version>
   </parent>
 
   <name>bibliotheque-api-business</name>

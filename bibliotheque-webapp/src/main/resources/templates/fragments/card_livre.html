@@ -4,7 +4,7 @@
     <div class="card-image">
         <figure class="image is-3by4">
             <a th:href="@{/livres/{id} (id=${reservation.livre.getId()})}">
-                <img th:src="${reservation.livre.getImgUrl()}" th:alt="${reservation.livre.getNom()}">
+                <img th:src="${reservation.livre.getImgUrl()}" th:alt="${reservation.livre.getNom()}" alt="Image du livre">
             </a>
         </figure>
     </div>
@@ -25,7 +25,7 @@
                 ${reservation.getDateRetourProche().getMonthOfYear()} +
                 '/' +
                 ${reservation.getDateRetourProche().getDayOfMonth()}"></h2>
-                <p th:if="${reservation.isAttente()}" class="subtitle is-6" th:text="'En attente de disponibilité'"></p>
+                <p th:if="${reservation.isAttente() && reservation.getPlace() != null}" class="subtitle is-6" th:text="'Position : ' + ${reservation.getPlace()}"></p>
             </div>
         </div>
     </div>

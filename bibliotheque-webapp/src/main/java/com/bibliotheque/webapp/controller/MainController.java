@@ -36,35 +36,6 @@ public class MainController {
         return "accueil";
     }
 
-    @GetMapping("/profil")
-    public String profil(Model model, HttpSession session) {
-        try {
-            if (session.getAttribute("mail") != null) {
-                Utilisateur utilisateur = serviceUtilisateur.findUtilisateursByMail((String) session.getAttribute("mail")).execute().body();
-
-                String base = session.getAttribute("mail") + ":" + session.getAttribute("password");
-
-                assert utilisateur != null;
-                List<Reservation> reservations = serviceReservation.findReservations(
-                        "Basic " + Base64.getEncoder().encodeToString(base.getBytes())
-                        , null, utilisateur.getId())
-                        .execute()
-                        .body();
-
-                model.addAttribute("utilisateur", utilisateur);
-                model.addAttribute("today", new DateTime().getMillis());
-                List<com.bibliotheque.webapp.model.Reservation> reservationsUser = ApiConfigModel.convertListReservationApiToListReservation(reservations);
-                System.out.println(reservationsUser);
-                model.addAttribute("reservations", reservationsUser);
-                return "profil";
-            }
-            return "redirect:/connexion";
-        } catch (Exception e) {
-            return "failConnexion";
-        }
-    }
-
-
     @GetMapping("/inscription")
     public String inscription() {
         return "inscription";

@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +39,9 @@ public class Reservation {
     @NotNull
     @Column
     private boolean attente;
+    @Nullable
+    @Column(columnDefinition = "boolean default false")
+    private boolean alerted;
 
     @ManyToOne
     @NotNull

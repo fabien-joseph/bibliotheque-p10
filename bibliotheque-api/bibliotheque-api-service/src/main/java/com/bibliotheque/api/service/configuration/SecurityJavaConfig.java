@@ -47,6 +47,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/utilisateurs/{utilisateurId}").permitAll()
                 .antMatchers(HttpMethod.GET, "/reservations/progress").permitAll()
                 .antMatchers(HttpMethod.GET, "/reservations/waiting").permitAll()
+                .antMatchers(HttpMethod.GET, "/reservations/return").permitAll()
                 .antMatchers(HttpMethod.GET, "/reservations").hasAnyAuthority("utilisateur", "bibliothecaire")
                 .antMatchers(HttpMethod.GET, "/reservations/{reservationId}").hasAnyAuthority("utilisateur", "bibliothecaire")
                 .antMatchers(HttpMethod.PATCH, "/reservations/{reservationId}/renew").hasAnyAuthority("utilisateur", "bibliothecaire")
