@@ -1,5 +1,6 @@
 package com.bibliotheque.batch.scheduler;
 
+import com.bibliotheque.batch.business.ApiConfigModel;
 import com.bibliotheque.batch.consumer.ExpirationMail;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
@@ -10,26 +11,22 @@ import io.swagger.client.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ReservationExpiredScheduled {
     private LivreApi serviceLivre;
     private UtilisateurApi serviceUtilisateur;
-
     private ReservationApi serviceReservation;
-
+    private final ApiConfigModel apiConfigModel;
     private ExpirationMail expirationMail = new ExpirationMail();
 
-    public ReservationExpiredScheduled(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
+    public ReservationExpiredScheduled(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation, ApiConfigModel apiConfigModel) {
         this.serviceLivre = serviceLivre;
         this.serviceUtilisateur = serviceUtilisateur;
         this.serviceReservation = serviceReservation;
+        this.apiConfigModel = apiConfigModel;
     }
 
     @Scheduled(cron = "0 6 * * * *")
@@ -37,7 +34,7 @@ public class ReservationExpiredScheduled {
         List<Reservation> reservationsApi = serviceReservation.expiredReservation().execute().body();
         if (reservationsApi != null) {
             List<com.bibliotheque.batch.model.Reservation> reservationsExpired =
-                    convertListReservationApiToListReservation(reservationsApi);
+                    apiConfigModel.convertListReservationApiToListReservation(reservationsApi);
 
             if (reservationsExpired.size() > 0) {
                 for (com.bibliotheque.batch.model.Reservation reservation : reservationsExpired) {
@@ -45,30 +42,5 @@ public class ReservationExpiredScheduled {
                 }
             }
         }
-    }
-
-    private com.bibliotheque.batch.model.Reservation convertReservationApiToReservation(Reservation reservationApi) throws IOException {
-        com.bibliotheque.batch.model.Reservation reservation = new com.bibliotheque.batch.model.Reservation();
-
-        System.out.println(reservationApi.getId() + ", " + reservationApi.getLivreId()  + ", " + reservationApi.getUtilisateurId()
-                + ", " + reservationApi.getDateDebut()  + ", " + reservationApi.getDateFin());
-
-        reservation.setId(reservationApi.getId());
-        reservation.setDateDebut(reservationApi.getDateDebut());
-        reservation.setDateFin(reservationApi.getDateFin());
-        reservation.setRenouvelable(reservationApi.isRenouvelable());
-        reservation.setRendu(reservationApi.isRendu());
-        reservation.setLivre(serviceLivre.getLivreById(reservationApi.getLivreId()).execute().body());
-        reservation.setUtilisateur(serviceUtilisateur.getUtilisateurById(reservationApi.getUtilisateurId()).execute().body());
-        return reservation;
-    }
-
-    private List<com.bibliotheque.batch.model.Reservation> convertListReservationApiToListReservation(List<Reservation> reservationsApi) throws IOException {
-        List<com.bibliotheque.batch.model.Reservation> reservations = new ArrayList<>();
-
-        for (Reservation reservationApi : reservationsApi) {
-            reservations.add(convertReservationApiToReservation(reservationApi));
-        }
-        return reservations;
     }
 }

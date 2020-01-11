@@ -79,6 +79,10 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         return false;
     }
 
+    public List<Reservation> findReservationsByAlertedTrue () {
+        return repository.findReservationsByAlertedTrue();
+    }
+
     public List<Reservation> findAll() {
         return repository.findAll();
     }
@@ -90,9 +94,23 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         repository.save(reservation);
     }
 
+
+    public void deleteList(List<Reservation> reservationsToDelete) {
+        for (Reservation reservation : reservationsToDelete) {
+            repository.delete(reservation);
+        }
+    }
+
+    /*
+    * Méthode pour savoir si une réservation peut être enregistrées. Conditions :
+    * - Qu'il y a moins de réservation que 2x la quantité max de livre disponibles
+    * - Si la réservation existe déjà on autorise le save (vu que c'est un update)
+     */
     public boolean canBeSaved(Reservation reservation) {
         List<Reservation> reservations = repository.getReservationWaitingOfaBook(reservation.getLivre());
-        if (reservations != null) {
+        Optional<Reservation> reservationExisting = repository.findById(reservation.getId());
+
+        if (reservations != null && !reservationExisting.isPresent()) {
             if (reservations.size() >= reservation.getLivre().getQuantite() * 2) {
                 return false;
             }

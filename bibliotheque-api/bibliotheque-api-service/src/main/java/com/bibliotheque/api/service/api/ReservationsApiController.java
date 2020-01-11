@@ -170,8 +170,10 @@ public class ReservationsApiController implements ReservationsApi {
     }
 
     public ResponseEntity<List<Reservation>> getReservationsToAlertOfAReturn() {
-        List<com.bibliotheque.api.model.Reservation> reservations = reservationManagement.getReservationsToAlert();
-        return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservations), HttpStatus.OK);
+        List<com.bibliotheque.api.model.Reservation> reservationsToDelete = reservationManagement.findReservationsByAlertedTrue();
+        reservationManagement.deleteList(reservationsToDelete);
+        List<com.bibliotheque.api.model.Reservation> reservationsToAlert = reservationManagement.getReservationsToAlert();
+        return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(reservationsToAlert), HttpStatus.OK);
     }
 
     public ResponseEntity<Void> renewReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId, @ApiParam(value = "Envoie de l'utilisateur faisant le requête", required = true) @RequestHeader(value = "Authorization", required = true) String authorization) {

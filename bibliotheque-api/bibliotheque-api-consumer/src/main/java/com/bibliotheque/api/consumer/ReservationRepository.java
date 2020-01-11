@@ -31,4 +31,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> getReservationWaitingOfaBook(Livre livre);
 
     Reservation findFirstByLivreAndAttenteTrueOrderByDateCreationAsc(Livre livre);
+
+    List<Reservation> findReservationsByAlertedTrue() ;
 }

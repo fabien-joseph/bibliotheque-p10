@@ -32,7 +32,6 @@ public class ApiConfigModel {
         reservation.setDateCreation(new DateTime(reservationApi.getDateCreation()));
         reservation.setDateDebut((reservationApi.getDateDebut() != null) ? new DateTime(reservationApi.getDateDebut()) : null);
         reservation.setDateFin((reservationApi.getDateFin() != null) ? new DateTime(reservationApi.getDateFin()) : null);
-        reservation.setDateRetourProche((reservationApi.getDateRetourProche() != null) ? new DateTime(reservationApi.getDateRetourProche()) : null);
         reservation.setRendu(reservationApi.isRendu());
         reservation.setRenouvelable(reservationApi.isRenouvelable());
         reservation.setAttente(reservationApi.isAttente());
