@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -26,12 +27,13 @@ public class ReservationController {
     private LivreApi serviceLivre;
     private UtilisateurApi serviceUtilisateur;
     private ReservationApi serviceReservation;
-    @Autowired ApiConfigModel apiConfigModel;
+    final ApiConfigModel apiConfigModel;
 
-    public ReservationController(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation) {
+    public ReservationController(LivreApi serviceLivre, UtilisateurApi serviceUtilisateur, ReservationApi serviceReservation, ApiConfigModel apiConfigModel) {
         this.serviceLivre = serviceLivre;
         this.serviceUtilisateur = serviceUtilisateur;
         this.serviceReservation = serviceReservation;
+        this.apiConfigModel = apiConfigModel;
     }
 
     @GetMapping("/renouveler/{reservationId}")
@@ -130,5 +132,11 @@ public class ReservationController {
         } catch (Exception e) {
             return "failConnexion";
         }
+    }
+
+    @GetMapping("/notification/{utilisateurId}")
+    public String toggleNotification(@PathVariable("utilisateurId") Long utilisateurId, HttpSession session) {
+        serviceUtilisateur.toggleNotification(utilisateurId, apiConfigModel.encodeHeaderAuthorization(session));
+        return "redirect:/profil";
     }
 }

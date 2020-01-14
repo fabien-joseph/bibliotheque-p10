@@ -58,6 +58,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/reservations/{reservationId}").hasAnyAuthority("utilisateur", "bibliothecaire")
                 .antMatchers(HttpMethod.PATCH, "/reservations/{reservationId}/toggleRendu").hasAnyAuthority("bibliothecaire")
                 .antMatchers(HttpMethod.POST, "/utilisateurs").hasAnyAuthority("bibliothecaire")
+                .antMatchers(HttpMethod.GET, "/utilisateurs/{utilisateurId}/toggleNotification").hasAnyAuthority("utilisateur", "bibliothecaire")
                 .antMatchers(HttpMethod.PUT, "/utilisateurs/{utilisateurId}").hasAnyAuthority("bibliothecaire")
                 .antMatchers(HttpMethod.DELETE, "/utilisateurs/{utilisateurId}").hasAnyAuthority("bibliothecaire")
                 .and()

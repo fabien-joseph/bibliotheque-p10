@@ -22,11 +22,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -68,22 +66,23 @@ public class ReservationsApiController implements ReservationsApi {
 
         String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
-            if (utilisateurLog.isBibliothecaire() || utilisateurLog.getId() == body.getUtilisateurId()) {
-                if (livreManagement.findById(body.getLivreId()) != null) {
-                    if (reservationManagement.canBeSaved(convertReservationApiToReservation(body))) {
-                        reservationManagement.save(convertReservationApiToReservation(body));
-                        return new ResponseEntity<Void>(HttpStatus.OK);
-                    } else {
-                        return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-                    }
-                } else {
-                    return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-                }
+        if (!(principal instanceof UserDetails)) {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+        }
+        Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
+        if (!utilisateurLog.isBibliothecaire() && utilisateurLog.getId() != body.getUtilisateurId()) {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+        }
+        if (livreManagement.findById(body.getLivreId()) == null) {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        } else {
+            if (reservationManagement.canBeSaved(convertReservationApiToReservation(body))) {
+                reservationManagement.save(convertReservationApiToReservation(body));
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
         }
-        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Void> comingBack(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId) {
@@ -180,26 +179,27 @@ public class ReservationsApiController implements ReservationsApi {
         String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Date date = new Date();
-        if (principal instanceof UserDetails) {
-            Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
-            if (reservationManagement.findById(reservationId).isPresent()) {
-                Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
-                if (!reservation.get().isRendu() && reservation.get().isRenouvelable() &&
-                        reservation.get().getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() > date.getTime()) {
-                    if (reservation.get().getUtilisateur().getId() == utilisateurLog.getId() || utilisateurLog.isBibliothecaire()) {
-                        reservationManagement.renew(reservationId);
-                        return new ResponseEntity<Void>(HttpStatus.OK);
-                    } else {
-                        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
-                    }
-                } else {
-                    return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
-                }
+        if (!(principal instanceof UserDetails)) {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
+        Optional<com.bibliotheque.api.model.Reservation> reservation = reservationManagement.findById(reservationId);
+        if (!reservation.isPresent()) {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
+
+        if (reservation.get().isRendu() || !reservation.get().isRenouvelable() ||
+                reservation.get().getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() <= date.getTime()) {
+            return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
+        } else {
+            if (reservation.get().getUtilisateur().getId() == utilisateurLog.getId() || utilisateurLog.isBibliothecaire()) {
+                reservationManagement.renew(reservationId);
+                return new ResponseEntity<Void>(HttpStatus.OK);
             } else {
-                return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
             }
         }
-        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
     public ResponseEntity<Void> toggleRenouvelableReservation(@ApiParam(value = "ID de la réservation qui doit être mise à jour", required = true) @PathVariable("reservationId") Long reservationId) {

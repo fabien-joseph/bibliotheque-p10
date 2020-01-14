@@ -10,11 +10,22 @@
             <div class="field columns search has-addons has-addons-centered">
                 <h1 class="title" th:text="'Bonjour ' + ${utilisateur.getPrenom()}"></h1>
             </div>
+            <div class="field columns search has-addons has-addons-right">
+                <h1 class="subtitle is-5" th:text="'Notification actuellement :&nbsp'"></h1>
+                <a th:href="@{/notification/{utilisateurId} (utilisateurId=${utilisateur.getId()})}" class="button is-rounded">
+                    <span class="text" th:if="${utilisateur.isNotification()}" th:text="'Activée&nbsp'"></span>
+                    <span class="text" th:if="${!utilisateur.isNotification()}" th:text="'Désactivée&nbsp'"></span>
+                    <i class="fas fa-bell" th:if="${utilisateur.isNotification()}"></i>
+                    <i class="far fa-bell" th:if="${!utilisateur.isNotification()}"></i>
+                    <span class="front-gradient"></span>
+                </a>
+            </div>
             <div class="field columns search has-addons">
                 <h1 class="title">Vos réservations en cours :</h1>
             </div>
             <div class="columns is-multiline">
-                <div class="column search is-one-fifth" th:each="reservation:${reservations}" th:if="${reservation.getDateFin().getMillis() >= today && !reservation.isAttente()}">
+                <div class="column search is-one-fifth" th:each="reservation:${reservations}"
+                     th:if="${reservation.getDateFin().getMillis() >= today && !reservation.isAttente()}">
                     <div th:replace="fragments/card_livre.html :: card_livre"></div>
                 </div>
             </div>
@@ -22,7 +33,8 @@
                 <h1 class="title">Vos réservations en attente :</h1>
             </div>
             <div class="columns is-multiline">
-                <div class="column search is-one-fifth" th:each="reservation:${reservations}" th:if="${reservation.isAttente()}">
+                <div class="column search is-one-fifth" th:each="reservation:${reservations}"
+                     th:if="${reservation.isAttente()}">
                     <div th:replace="fragments/card_livre.html :: card_livre"></div>
                 </div>
             </div>
