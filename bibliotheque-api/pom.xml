@@ -6,7 +6,7 @@
 
   <groupId>com.bibliotheque.api</groupId>
   <artifactId>bibliotheque-api</artifactId>
-  <version>1.0-RELEASE</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>bibliotheque-api</name>
@@ -16,7 +16,7 @@
   <parent>
     <artifactId>bibliotheque</artifactId>
     <groupId>com.bibliotheque</groupId>
-    <version>1.0-RELEASE</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
   <modules>

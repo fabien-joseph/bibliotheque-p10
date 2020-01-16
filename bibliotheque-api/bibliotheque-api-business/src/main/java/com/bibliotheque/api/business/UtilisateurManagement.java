@@ -21,12 +21,15 @@ public class UtilisateurManagement extends JpaCrudManager<Utilisateur, Utilisate
     }
 
     @Override
-    public void save(Utilisateur utilisateur) {
-        if (findUtilisateurByMail(utilisateur.getMail()) == null) {
+    public void save(Utilisateur utilisateur) throws Error {
+        if (findUtilisateurByMail(utilisateur.getMail()) == null ||
+        findById(utilisateur.getId()).isPresent()) {
             DateTime date = new DateTime(System.currentTimeMillis());
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             utilisateur.setDateCreation(date);
-            utilisateur.setMotDePasse(bCryptPasswordEncoder.encode(utilisateur.getMotDePasse()));
+            if (!findById(utilisateur.getId()).isPresent()) {
+                BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+                utilisateur.setMotDePasse(bCryptPasswordEncoder.encode(utilisateur.getMotDePasse()));
+            }
             repository.save(utilisateur);
         }
     }

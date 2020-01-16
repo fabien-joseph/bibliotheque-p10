@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.threeten.bp.OffsetDateTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -46,16 +47,18 @@ public class UtilisateursApiController implements UtilisateursApi {
         this.request = request;
     }
 
-    public ResponseEntity<Void> addUtilisateur(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté" ,required=true )  @Valid @RequestBody Utilisateur body) {
+    public ResponseEntity<Void> addUtilisateur(@ApiParam(value = "Un objet Reservation doit être envoyé pour être ajouté", required = true) @Valid @RequestBody Utilisateur body) {
         String accept = request.getHeader("Accept");
-        if (utilisateurManagement.findUtilisateurByMail(body.getMail()) == null) {
+        Optional<com.bibliotheque.api.model.Utilisateur> utilisateurTest = utilisateurManagement.findById(body.getId());
+
+        if (utilisateurManagement.findUtilisateurByMail(body.getMail()) == null || utilisateurTest.isPresent()) {
             utilisateurManagement.save(convertUtilisateurApiToUtilisateur(body));
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         return new ResponseEntity<Void>(HttpStatus.CONFLICT);
     }
 
-    public ResponseEntity<Void> deleteUtilisateur(@ApiParam(value = "ID de l'utilisateur à supprimer",required=true) @PathVariable("utilisateurId") Long utilisateurId) {
+    public ResponseEntity<Void> deleteUtilisateur(@ApiParam(value = "ID de l'utilisateur à supprimer", required = true) @PathVariable("utilisateurId") Long utilisateurId) {
         String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -75,12 +78,12 @@ public class UtilisateursApiController implements UtilisateursApi {
         String accept = request.getHeader("Accept");
         com.bibliotheque.api.model.Utilisateur utilisateur = utilisateurManagement.findUtilisateurByMail(mail);
         if (utilisateur != null) {
-            return new ResponseEntity<Utilisateur> (convertUtilisateurToUtilisateurApi(utilisateur), HttpStatus.OK);
+            return new ResponseEntity<Utilisateur>(convertUtilisateurToUtilisateurApi(utilisateur), HttpStatus.OK);
         }
         return new ResponseEntity<Utilisateur>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("utilisateurId") Long utilisateurId) {
+    public ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return", required = true) @PathVariable("utilisateurId") Long utilisateurId) {
         String accept = request.getHeader("Accept");
         Optional<com.bibliotheque.api.model.Utilisateur> utilisateur = utilisateurManagement.findById(utilisateurId);
         if (utilisateur.isPresent()) {
@@ -89,7 +92,24 @@ public class UtilisateursApiController implements UtilisateursApi {
         return new ResponseEntity<Utilisateur>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour",required=true) @PathVariable("utilisateurId") Long utilisateurId,@ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value="mail", required=false)  String mail,@ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value="motDePasse", required=false)  String motDePasse,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="prenom", required=false)  String prenom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="nom", required=false)  String nom,@ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value="dateCreation", required=false)  DateTime dateCreation) {       String accept = request.getHeader("Accept");
+    public ResponseEntity<Void> toggleNotification(@ApiParam(value = "ID de l'utilisateur qui doit être mise à jour", required = true) @PathVariable("utilisateurId") Long utilisateurId, @ApiParam(value = "Envoie de l'utilisateur faisant le requête", required = true) @RequestHeader(value = "Authorization", required = true) String authorization) {
+        String accept = request.getHeader("Accept");
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!(principal instanceof UserDetails)) {
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+        }
+        com.bibliotheque.api.model.Utilisateur utilisateurLog = utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername());
+        if (utilisateurLog.isBibliothecaire() || utilisateurLog.getId() == utilisateurId) {
+            utilisateurLog.setNotification(!utilisateurLog.isNotification());
+            utilisateurManagement.save(utilisateurLog);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+
+    }
+
+    public ResponseEntity<Void> updateUtilisateurWithForm(@ApiParam(value = "ID de l'utilisateur qui doit être mis à jour", required = true) @PathVariable("utilisateurId") Long utilisateurId, @ApiParam(value = "Mettre à jour le mail de l'utilisateur") @RequestParam(value = "mail", required = false) String mail, @ApiParam(value = "Mettre à jour le mot de passe de l'utilisateur") @RequestParam(value = "motDePasse", required = false) String motDePasse, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "prenom", required = false) String prenom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "nom", required = false) String nom, @ApiParam(value = "Mettre à jour le prenom de l'utilisateur") @RequestParam(value = "dateCreation", required = false) DateTime dateCreation) {
+        String accept = request.getHeader("Accept");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             if (utilisateurManagement.findUtilisateurByMail(((UserDetails) principal).getUsername()).isBibliothecaire() ||
@@ -111,7 +131,7 @@ public class UtilisateursApiController implements UtilisateursApi {
         return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 
-    public ResponseEntity<Void> connectUser(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail,@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "password", required = true) String password) {
+    public ResponseEntity<Void> connectUser(@NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "mail", required = true) String mail, @NotNull @ApiParam(value = "Trouver un compte par mail", required = true) @Valid @RequestParam(value = "password", required = true) String password) {
         String accept = request.getHeader("Accept");
         if (utilisateurManagement.connexion(mail, password)) {
             return new ResponseEntity<Void>(HttpStatus.OK);
@@ -119,7 +139,7 @@ public class UtilisateursApiController implements UtilisateursApi {
         return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
     }
 
-    Utilisateur convertUtilisateurToUtilisateurApi (com.bibliotheque.api.model.Utilisateur utilisateur) {
+    Utilisateur convertUtilisateurToUtilisateurApi(com.bibliotheque.api.model.Utilisateur utilisateur) {
         Utilisateur utilisateurApi = new Utilisateur();
 
         utilisateurApi.setId(utilisateur.getId());
@@ -128,6 +148,8 @@ public class UtilisateursApiController implements UtilisateursApi {
         utilisateurApi.setMotDePasse(utilisateur.getMotDePasse());
         utilisateurApi.setNom(utilisateur.getNom());
         utilisateurApi.setPrenom(utilisateur.getPrenom());
+        utilisateurApi.setNotification(utilisateur.isNotification());
+        utilisateurApi.setIsBibliothecaire(utilisateur.isBibliothecaire());
         return utilisateurApi;
     }
 
@@ -149,6 +171,8 @@ public class UtilisateursApiController implements UtilisateursApi {
         utilisateur.setDateCreation(utilisateurApi.getDateCreation());
         utilisateur.setMail(utilisateurApi.getMail());
         utilisateur.setMotDePasse(utilisateurApi.getMotDePasse());
+        utilisateur.setNotification(utilisateurApi.isNotification());
+        utilisateur.setBibliothecaire(utilisateurApi.isIsBibliothecaire());
         return utilisateur;
     }
 

@@ -6,7 +6,7 @@
 
     <groupId>com.bibliotheque.api.consumer</groupId>
     <artifactId>bibliotheque-api-consumer</artifactId>
-    <version>1.0-RELEASE</version>
+    <version>1.2-SNAPSHOT</version>
 
     <name>bibliotheque-api-consumer</name>
     <!-- FIXME change it to the project's website -->
@@ -15,7 +15,7 @@
     <parent>
         <artifactId>bibliotheque-api</artifactId>
         <groupId>com.bibliotheque.api</groupId>
-        <version>1.0-RELEASE</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
 
     <properties>

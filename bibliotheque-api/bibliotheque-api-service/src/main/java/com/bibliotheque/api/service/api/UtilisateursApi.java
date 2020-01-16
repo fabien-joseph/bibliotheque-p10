@@ -9,11 +9,7 @@ import org.joda.time.DateTime;
 import com.bibliotheque.api.service.model.Utilisateur;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -72,6 +68,17 @@ public interface UtilisateursApi {
             method = RequestMethod.GET)
     ResponseEntity<Utilisateur> getUtilisateurById(@ApiParam(value = "ID of livre to return",required=true) @PathVariable("utilisateurId") Long utilisateurId);
 
+    @ApiOperation(value = "Toggle l'activation des notification pour un utilisateur", nickname = "toggleNotification", notes = "", authorizations = {
+            @Authorization(value = "basicAuth")
+    }, tags={ "utilisateur", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "successful operation"),
+            @ApiResponse(code = 404, message = "Not found") })
+    @RequestMapping(value = "/utilisateurs/{utilisateurId}/toggleNotification",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> toggleNotification(@ApiParam(value = "ID de l'utilisateur qui doit être mise à jour",required=true) @PathVariable("utilisateurId") Long utilisateurId,@ApiParam(value = "Envoie de l'utilisateur faisant le requête" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization);
 
     @ApiOperation(value = "Mettre à jour un livre avec un form data", nickname = "updateUtilisateurWithForm", notes = "", tags={ "utilisateur", })
     @ApiResponses(value = {
