@@ -225,12 +225,6 @@ public class ReservationsApiController implements ReservationsApi {
 
     public ResponseEntity<List<Reservation>> expiredReservation(@ApiParam(value = "Nombre de jour avant l'expiration") @Valid @RequestParam(value = "numberDay", required = false) Integer numberDay) {
         List<com.bibliotheque.api.model.Reservation> expiredReservations = reservationManagement.findReservationsSoonExpired(numberDay);
-/*        for (com.bibliotheque.api.model.Reservation reservation : allReservations) {
-            if (reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() < new DateTime().getMillis() &&
-                    !reservation.isRendu()) {
-                expiredReservations.add(reservation);
-            }
-        }*/
         if (expiredReservations != null) {
             return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(expiredReservations), HttpStatus.OK);
         }

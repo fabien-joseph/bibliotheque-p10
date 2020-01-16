@@ -46,15 +46,20 @@ public class ExpirationSoonMail extends Mail {
     }
 
     private String generateStringHtmlPart(List<Reservation> reservations) {
-        StringBuilder stringReservationExpiredSoon = new StringBuilder("<ul>");
+        StringBuilder stringReservationExpiredSoon = new StringBuilder("<h2>Livres à rendre :</h2><br>");
+        stringReservationExpiredSoon.append("<ul>");
         for (Reservation reservation :
                 reservations) {
             stringReservationExpiredSoon.append("<li>");
             stringReservationExpiredSoon.append(reservation.getLivre().getNom());
             stringReservationExpiredSoon.append(", à rendre le ");
-            stringReservationExpiredSoon.append(reservation.getDateFin().dayOfMonth());
+            stringReservationExpiredSoon.append((reservation.getDateFin().dayOfMonth().get() >= 10) ?
+                    reservation.getDateFin().dayOfMonth().get() : ("0") + reservation.getDateFin().dayOfMonth().get());
             stringReservationExpiredSoon.append("/");
-            stringReservationExpiredSoon.append(reservation.getDateFin().monthOfYear());
+            stringReservationExpiredSoon.append((reservation.getDateFin().monthOfYear().get() >= 10) ?
+                    reservation.getDateFin().monthOfYear().get() : ("0" + reservation.getDateFin().monthOfYear().get()));
+            stringReservationExpiredSoon.append("/");
+            stringReservationExpiredSoon.append(reservation.getDateFin().year().get());
             stringReservationExpiredSoon.append("</li>");
 
         }

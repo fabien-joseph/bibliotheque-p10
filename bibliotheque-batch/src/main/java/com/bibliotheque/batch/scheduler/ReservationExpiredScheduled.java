@@ -12,6 +12,7 @@ import io.swagger.client.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -47,20 +48,14 @@ public class ReservationExpiredScheduled {
         }
     }
 
-    @Scheduled (cron = "* * * * * *")
+    @Scheduled(cron = "0 6 * * * *")
     public void checkReservationExpiredSoon() throws IOException, MailjetSocketTimeoutException, MailjetException {
         List<Reservation> reservationsApi = serviceReservation.expiredReservation(5).execute().body();
 
-        System.out.println("Size = " + (reservationsApi != null ? reservationsApi.size() : 0));
-/*        if (reservationsApi == null) {
+        if (reservationsApi == null) {
             return;
         }
 
-        List<com.bibliotheque.batch.model.Reservation> reservationsWillExpire =
-                apiConfigModel.convertListReservationApiToListReservation(reservationsApi);
-
-        if (reservationsWillExpire.size() > 0) {
-            expirationSoonMail.mailReservationExpiredSoon(reservationsWillExpire);
-        }*/
+        expirationSoonMail.mailReservationExpiredSoon(apiConfigModel.convertListReservationApiToListReservation(reservationsApi));
     }
 }
