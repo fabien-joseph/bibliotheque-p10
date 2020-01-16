@@ -7,6 +7,7 @@ import com.bibliotheque.api.model.Utilisateur;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +72,7 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         return reservations;
     }
 
-    private boolean isAlreadyPresent(List<Long> livresId, Long id){
+    private boolean isAlreadyPresent(List<Long> livresId, Long id) {
         for (Long aLong : livresId) {
             if (aLong.equals(id))
                 return true;
@@ -79,12 +80,41 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
         return false;
     }
 
-    public List<Reservation> findReservationsByAlertedTrue () {
+    public List<Reservation> findReservationsByAlertedTrue() {
         return repository.findReservationsByAlertedTrue();
     }
 
     public List<Reservation> findAll() {
         return repository.findAll();
+    }
+
+    public List<Reservation> findReservationsSoonExpired(Integer days) {
+        List<Reservation> reservations = repository.findReservationsByAttenteFalseAndRenduFalse();
+        List<Reservation> reservatinosToReturn = new ArrayList<>();
+
+        for (com.bibliotheque.api.model.Reservation reservation : reservations) {
+            if (reservation.getDateDebut() == null) {
+                continue;
+            }
+            if (days == null || days ==0) {
+                if (
+                        reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE")))
+                                .getMillis() < new DateTime().getMillis() &&
+                                !reservation.isRendu() && !reservation.isAttente()) {
+                    reservatinosToReturn.add(reservation);
+                }
+            } else {
+                if (
+                        reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE")))
+                                .getMillis() > new DateTime().getMillis() &&
+                                reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE")) - days).getMillis() < new DateTime().getMillis() &&
+                                !reservation.isRendu() && !reservation.isAttente()) {
+                    reservatinosToReturn.add(reservation);
+                }
+            }
+        }
+
+        return reservatinosToReturn;
     }
 
     @Override
@@ -102,9 +132,9 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
     }
 
     /*
-    * Méthode pour savoir si une réservation peut être enregistrées. Conditions :
-    * - Qu'il y a moins de réservation que 2x la quantité max de livre disponibles
-    * - Si la réservation existe déjà on autorise le save (vu que c'est un update)
+     * Méthode pour savoir si une réservation peut être enregistrées. Conditions :
+     * - Qu'il y a moins de réservation que 2x la quantité max de livre disponibles
+     * - Si la réservation existe déjà on autorise le save (vu que c'est un update)
      */
     public boolean canBeSaved(Reservation reservation) {
         List<Reservation> reservations = repository.getReservationWaitingOfaBook(reservation.getLivre());

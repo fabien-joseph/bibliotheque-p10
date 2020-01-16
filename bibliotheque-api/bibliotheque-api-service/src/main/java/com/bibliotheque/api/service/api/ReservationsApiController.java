@@ -223,15 +223,14 @@ public class ReservationsApiController implements ReservationsApi {
         return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<List<Reservation>> expiredReservation() {
-        List<com.bibliotheque.api.model.Reservation> allReservations = reservationManagement.findAll();
-        List<com.bibliotheque.api.model.Reservation> expiredReservations = new ArrayList<>();
-        for (com.bibliotheque.api.model.Reservation reservation : allReservations) {
+    public ResponseEntity<List<Reservation>> expiredReservation(@ApiParam(value = "Nombre de jour avant l'expiration") @Valid @RequestParam(value = "numberDay", required = false) Integer numberDay) {
+        List<com.bibliotheque.api.model.Reservation> expiredReservations = reservationManagement.findReservationsSoonExpired(numberDay);
+/*        for (com.bibliotheque.api.model.Reservation reservation : allReservations) {
             if (reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE"))).getMillis() < new DateTime().getMillis() &&
                     !reservation.isRendu()) {
                 expiredReservations.add(reservation);
             }
-        }
+        }*/
         if (expiredReservations != null) {
             return new ResponseEntity<List<Reservation>>(convertListReservationToListReservationApi(expiredReservations), HttpStatus.OK);
         }

@@ -67,7 +67,7 @@ public interface ReservationsApi {
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<Reservation>> expiredReservation();
+    ResponseEntity<List<Reservation>> expiredReservation(@ApiParam(value = "Nombre de jour avant l'expiration") @Valid @RequestParam(value = "numberDay", required = false) Integer numberDay);
 
 
     @ApiOperation(value = "Trouver des réservations", nickname = "findReservations", notes = "Plusieurs valeurs peuvent être séparées par une virgule", response = Reservation.class, responseContainer = "List", authorizations = {

@@ -33,4 +33,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Reservation findFirstByLivreAndAttenteTrueOrderByDateCreationAsc(Livre livre);
 
     List<Reservation> findReservationsByAlertedTrue() ;
+
+    List<Reservation> findReservationsByAttenteFalseAndRenduFalse();
 }
