@@ -108,7 +108,7 @@ public class ReservationManagement extends JpaCrudManager<Reservation, Reservati
                         reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE")))
                                 .getMillis() > new DateTime().getMillis() &&
                                 reservation.getDateDebut().plusDays(Integer.parseInt(System.getenv("RESERVATION_DUREE")) - days).getMillis() < new DateTime().getMillis() &&
-                                !reservation.isRendu() && !reservation.isAttente()) {
+                                !reservation.isRendu() && !reservation.isAttente() && reservation.getUtilisateur().isNotification()) {
                     reservatinosToReturn.add(reservation);
                 }
             }

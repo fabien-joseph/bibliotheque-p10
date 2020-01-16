@@ -135,8 +135,8 @@ public class ReservationController {
     }
 
     @GetMapping("/notification/{utilisateurId}")
-    public String toggleNotification(@PathVariable("utilisateurId") Long utilisateurId, HttpSession session) {
-        serviceUtilisateur.toggleNotification(utilisateurId, apiConfigModel.encodeHeaderAuthorization(session));
+    public String toggleNotification(@PathVariable("utilisateurId") Long utilisateurId, HttpSession session) throws IOException {
+        serviceUtilisateur.toggleNotification(utilisateurId, apiConfigModel.encodeHeaderAuthorization(session)).execute();
         return "redirect:/profil";
     }
 }
