@@ -6,7 +6,7 @@
 
   <groupId>com.bibliotheque.api.model</groupId>
   <artifactId>bibliotheque-api-model</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.1-RELEASE</version>
 
   <name>bibliotheque-api-model</name>
   <!-- FIXME change it to the project's website -->
@@ -15,7 +15,7 @@
   <parent>
     <artifactId>bibliotheque-api</artifactId>
     <groupId>com.bibliotheque.api</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.1-RELEASE</version>
   </parent>
 
   <properties>
